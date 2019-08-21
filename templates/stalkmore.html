@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{# VARIABLES IN:
+  members - all registered users
+  
+  VARIABLES OUT:
+#}
+
+{% block content %}
+
+      <div>
+        <table class="download">
+          <tr class="centerheader" >
+            <td>ID</id>
+            <td>NAME</td>
+            <td>DOWNLOADS</td>
+            <td>CATCHPHRASE</td>
+            <td>COMPANY</td>
+            <td>STATE</td>
+          </tr>
+          <tr>
+            <td>{{memberdata.id}}</td>
+            {% if memberdata.memberlevel==1 %}
+              <td class="funtimes">{{memberdata.username}}</td>
+            {% elif memberdata.memberlevel==0 %}
+              <td class="siltimes">{{memberdata.username}}</td>
+            {% elif memberdata.memberlevel==2 %}
+              <td class="giver">{{memberdata.username}}</td>
+            {% endif %}
+            <td>{{memberdata.benefactor}}</td>
+            <td>{{memberdata.catchphrase}}</td>
+            <td>{{memberdata.company}}</td>
+            <td>{{memberdata.state}}</td>
+          </tr>
+        
+        </table>
+        
+        {% if memberdata.id != 1 %}
+        
+          <p class="scoot">Send
+          a 20 character message to {{memberdata.username}} through silicatewastes@gmail.com.
+          Your email
+          address will
+          be included.</p>
+          
+          <form action="/stalk" method='POST'>
+            <input type="hidden" name="victim" value="{{memberdata.id}}" >
+            <input class="scootmore" type="text" name="harassment" maxlength="20">
+            <input class="clonebutton" type="submit" value="SEND">
+          </form>
+        {% else %}
+          <p class="scoot">Email addresses will remain hidden on this website.  Except for
+          mine.  Here it is:<br/>
+          <a href="mailto:dustyweasel@protonmail.com">dustyweasel@protonmail.com</a></p>
+        
+        {% endif %}
+          
+        <form action="/sink" method='GET'>
+        
+          {% if memberdata.memberlevel==1 %}
+            <p class="scoot"><span class="funtimes">{{memberdata.username}}'s sink ratings:</span></p>
+          {% elif memberdata.memberlevel==0 %}
+            <p class="scoot"><span class="siltimes">{{memberdata.username}}'s sink ratings:</span></p>
+          {% elif memberdata.memberlevel==2 %}
+            <p class="scoot"><span class="giver">{{memberdata.username}}'s sink ratings:</span></p>
+          {% endif %}
+        
+          {% if memberratings %}
+            <table class="download scoot">
+              <tr class="centerheader">
+                <td>SINK</td>
+                <td>RATING</td>
+                <td>COMMENT</td>
+              </tr>
+              {% for memberrating in memberratings %}
+                <tr class="gridded">
+                  <td><button class="neutraltimes" name="cad" value="{{memberrating.sink_id}}">
+                  {{memberrating.location}}</button></td>
+                  <td>{{memberrating.stars}}</td>
+                  <td>{{memberrating.comment}}</td>
+                </tr>
+              {% endfor %}
+            </table>
+          {% else %}
+            <p class="errormessage scoot">{{memberdata.username}} hasn't rated any sinks.</p>
+          {% endif %}
+        
+        </form>
+        
+        
+      </div>
+      
+      
+
+{% endblock %}

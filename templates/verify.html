@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{# VARIABLES IN:
+  user - class User
+  
+  VARIABLES OUT:
+  later.
+  plus maybe i can kill some of them
+#}
+
+{% block content %}
+  <h1>Those who seek to wander the silicate wastes must first enter the secret key.
+  Checketh thy email, {{user.username}}.</h1>
+  <form class="scoot" action="/verify" method='POST'>
+    <input type="hidden" name="username" value="{{user.username}}">
+    <input type="hidden" name="password" value="{{user.hashpass}}">
+    <input type="hidden" name="email" value="{{user.email}}">
+    <input type="hidden" name="company" value="{{user.company}}">
+    <input type="hidden" name="catchphrase" value="{{user.catchphrase}}">
+    <input type="hidden" name="state" value="{{user.state}}">
+    <input type="hidden" name="dust" value="{{user.dustmask}}">
+    <input class="scoot" name="secretpass" type="text" maxlength="6">
+    <input class="clonebutton" type="submit" value="ENTER">
+  </form>
+  <p class="lesscenter" >Don't close this page.  Open your email in another tab.<br/>
+  Contact me with problems at dustyweasel@protonmail.com.  Don't email silicatewastes@gmail.com.  I never check that.</p>
+
+{% endblock %}

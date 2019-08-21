@@ -1,0 +1,80 @@
+<!doctype html>
+
+{# VARIABLES:
+  title - tab title
+  username - logged on username
+  staticsearchval - search value
+  blanco - copy of staticsearchval if it exists
+  babble - trash variable, on if chat menu
+#}
+
+<html>
+  <head>
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='hangslab.css') }}" />
+  </head>
+  <body>
+    <form action="/" method='GET'>
+        <h1><button class="other" name="home" value="home" >www.silicatewastes.com</button></h1>
+    </form>
+    <div class="logpanel">
+      {% if username %}
+        <a href="/logout">logout {{username}}</a>
+      {% else %} 
+        <a href="/register">register</a>&nbsp<a href="/login">login</a>
+      {% endif %}
+    </div>
+    
+    <p class="tiny">The shadiest source of sink DXF files on the internet.<br/>
+    Also a questionable source of ARD'S, ASD'S, DWG's, &amp; TAG'S.<br/>
+    by: dustyweasel</p>
+    <form class="bar" action="/" method='GET'>
+      <input class="thickprompt" type="text" name='searchval' value="{{staticsearchval}}"
+      maxlength="10" >
+      <div class="phonestick">
+      {% if staticsearchval and not blanco %}
+        <button class="picked" name="home" value="search" >FILTER</button>
+      {% else %}
+        <button class="real" name="home" value="search" >FILTER</button>
+      {% endif %}
+      {% if blanco %}
+        <button class="picked" name="home" value="blanco" >BLANCO</button>
+      {% else %}
+        <button class="real" name="home" value="blanco" >BLANCO</button>
+      {% endif %}
+      </div>
+      <div class="phonehide">
+      {% if babble %}
+        <button class="picked" name="home" value="chat" >NEWS</button>
+      {% else %}
+        <button class="real" name="home" value="chat" >NEWS</button>
+      {% endif %}
+      {% if stalk %}
+        <button class="picked" name="home" value="stalk" >STALK</button>
+      {% else %}
+        <button class="real" name="home" value="stalk" >STALK</button>
+      {% endif %}
+      </div>
+      {# <button class="real" name="more" >MORE</button> #}
+        
+      <div class="error">
+        {% with messages = get_flashed_messages() %}
+          <p class="errormessage">
+          {% for message in messages %}
+            {{message}}
+            <br/>
+          {% endfor %}
+          </p>
+        {% endwith %}
+      </div>
+        
+        
+    </form>
+
+    <hr />
+
+    {% block content %}
+    {% endblock %}
+
+  </body>
+</html>

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{# VARIABLES IN:
+  members - all registered users
+  
+  VARIABLES OUT:
+#}
+
+{% block content %}
+
+<div>
+        <p class="scoot">
+            <span class="funtimes">DICTATOR FOR LIFE</span>
+            <span class="siltimes">STANDARD USER</span>
+            <span class="giver">CAD FILE DONATOR</span>
+        </p>
+        <div class="scrollable2">
+        <form action="/stalk" method='GET'>
+          <table class="download">
+            <tr class="centerheader" >
+              <td>ID</id>
+              <td>NAME</td>
+              <td>DOWNLOADS</td>
+              <td>CATCHPHRASE</td>
+              <td>COMPANY</td>
+              <td>STATE</td>
+            </tr>
+            {% for member in members %}
+            <tr class="gridded">
+              <td>{{member.id}}</td>
+              {% if member.memberlevel==1 %}
+                <td><button class="funtimes" name="member"
+                value="{{member.id}}">{{member.username}}</button></td>
+              {% elif member.memberlevel==0 %}
+                <td><button class="siltimes" name="member"
+                value="{{member.id}}">{{member.username}}</button></td>
+              {% elif member.memberlevel==2 %}
+                <td><button class="giver" name="member"
+                value="{{member.id}}">{{member.username}}</button></td>
+              {% endif %}
+              <td>{{member.benefactor}}</td>
+              <td>{{member.catchphrase}}</td>
+              <td>{{member.company}}</td>
+              <td>{{member.state}}</td>
+            </tr>
+            {% endfor %}
+          </table>
+        </form>
+      </div>
+</div>
+
+{% endblock %}

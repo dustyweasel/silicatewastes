@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{# VARIABLES IN:
+  babblings - list of Babblings
+  
+  VARIABLES OUT:
+  later.
+  plus maybe i can kill some of them
+#}
+
+{% block content %}
+  
+  <p>
+  This has nothing to do with sinks or cad files.  Just some old game demos I worked on
+  years ago.
+  I recommend trying Release.zip.  Or if you want to see me playing with 3D graphics try
+  demo2_5b.zip.  Or if you want to try the editor I created and actually built these demos with
+  then try edit2_5b.zip.  Don't ask me how the editor works I don't even remember.  The interface
+  is awful,
+  I don't know what I was thinking.<br/><br/>JUST REMEMBER ARROW KEYS, ALT, CTRL, AND ALT-Q.
+  <br/><br/>
+  <form action="/demos" method='GET'>
+    <button class="unguessed" name="demofile" value="Release.zip">Release.zip</button><br/>
+    <button class="unguessed" name="demofile" value="demo2_5b.zip">demo2_5b.zip</button><br/>
+    <button class="unguessed" name="demofile" value="edit2_5b.zip">edit2_5b.zip</button><br/>
+    <button class="unguessed" name="demofile" value="demo2.zip">demo2.zip</button>
+  </form>
+  
+  </p>
+    
+{% endblock %}

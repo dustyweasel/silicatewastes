@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{# VARIABLES IN:
+  babblings - list of Babblings
+  
+  VARIABLES OUT:
+  later.
+  plus maybe i can kill some of them
+#}
+
+{% block content %}
+
+  <form class="scootcrazy" action="/chat" method='POST'>
+    <p>wail into the deafening silence of the silicate wastes</p>
+    <input type="text" name="babble" value="" maxlength="60">
+    <input class="clonebutton" type="submit" value='SCREAM'>
+  </form>
+  
+  <form action="/stalk" method='GET'>
+    <ul class="newsscrollable scootmore" >
+      
+      {% if babblings %}
+        {% for babble in babblings %}
+          {% if babble[1].babbler.memberlevel==1 %}
+            <li><button class="funtimes" name="member"
+                  value="{{babble[1].babbler.id}}" >{{babble[1].babbler.username}}: </button>
+          {% elif babble[1].babbler.memberlevel==0 %}
+            <li><button class="siltimes" name="member"
+                  value="{{babble[1].babbler.id}}" >{{babble[1].babbler.username}}: </button>
+          {% elif babble[1].babbler.memberlevel==2 %}
+            <li><button class="giver" name="member"
+                  value="{{babble[1].babbler.id}}" >{{babble[1].babbler.username}}: </button>
+          {% endif %}
+          {% if babble[0]==0 %}
+            <span class="funnertimes" >{{babble[1].babble}}
+            </span></li>
+          {% else %}
+            <span class="sillytimes" >{{babble[1].babble}}
+            </span></li>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </ul>
+  </form>
+  
+  {# <div class="scrollable3">
+    <h1>RULES:</h1>
+    <p>There are no rules.  If you spam or annoy the crap out of everyone you'll probably get
+    one warning if I'm in a good mood.  The 2nd time I'll probably revoke your chat privileges
+    forever.  Have fun!<br/><br/>
+    There's no auto-refresh.  If someone else is posting tap the scream
+    button to update.</p>
+  </div> #}
+{# </div> #}
+    
+{% endblock %}

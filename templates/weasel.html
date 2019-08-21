@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{# VARIABLES IN:
+  name - what to do
+  message - flash
+  adds - list of files added to db
+  
+  VARIABLES OUT:
+  later.
+  plus maybe i can kill some of them
+#}
+
+{% block content %}
+  <h1>WeaselWork!</h1>
+
+  <form action="/weaselwork" method="POST">
+    {% for name in dxfs %}
+      <button name="orders" value={{name}}>{{name}}</button><br/><br/>
+    {% endfor %}
+    <button name="orders" value="death">DEATH!!</button>
+  </form>
+  <p>{{message}}</p>
+  <p>
+    ADDS:<br/>
+    {% for val in adds %}
+      {{val}}<br/>
+    {% endfor %}
+  </p>
+   
+{% endblock %}

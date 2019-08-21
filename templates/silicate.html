@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{# VARIABLES IN:
+  donor - which guy
+  guys - list of class Donator
+  cloneguys - list of relevant guys
+  current_folder - selected folder
+  staticsearchval - search value
+  folders - all the relevant folders in donor's root directory
+  cads - all the relevant cads in current_folder
+  
+  VARIABLES OUT:
+  later.
+  plus maybe i can kill some of them
+#}
+
+{% block content %}
+
+
+{# why did i put forms on the outside of other elements and put classes in them?
+i see so much stuff i would do different on my 2nd project and i don't want to fix
+any of it #}
+
+  <div class="lrscrollable">
+    <form class="stick" action="/" method='GET'>
+      {# COLUMN 1 #}
+      <ul class="scrollable">
+        <li class="centerheader">PICK A GUY BELOW:</li>
+        {% if donor %}
+          {% for guy in guys %}
+            {% if guy != donor %}
+              {% if guy in cloneguys %}
+                <li><button class="worthy" name="donor" value="{{guy}}">{{guy}}
+                </button></li>
+              {% else %}
+                <li><button class="unguessed" name="donor" value="{{guy}}">{{guy}}
+                </button></li>
+              {% endif %}
+            {% else %}
+              <li><button class="guessed" name="donor" value="{{guy}}">{{guy}}
+              </button></li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      </ul>
+      {# COLUMN 2 #}
+      <ul class="scrollable">
+        <li class="centerheader">PICK A FOLDER BELOW:</li>
+        {% if current_folder %}
+          {% for folder in folders %}
+            {% if folder == current_folder %}
+              <li id="current" ><button class="guessed" name="other_folder"
+              value="{{folder}}" >{{folder}}</button></li>
+            {% elif staticsearchval %}
+              <li><button class="worthy" name="other_folder" value="{{folder}}" >
+              {{folder}}</button></li>
+            {% else %}
+              <li><button class="unguessed" name="other_folder" value="{{folder}}" >
+              {{folder}}</button></li>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <li>No root folders.</li>
+        {% endif %}
+      </ul>
+    </form>
+    <form class="stick" action="/sink" method='GET'>
+      {# COLUMN 3 #}
+        <table class="scrollable">
+          <tr>
+            <td class="centerheader">
+              {{donor}}/{{display_current}}</td>
+            <td class="centerheader" >AVG. RATING</td>
+          </tr>
+          {% for cad in cads %}
+              <tr class="gridded">
+                <td><button class="unguessed" name="cad" value="{{cad[2]}}" >{{cad[0]}}</button></td>
+                {% if cad[1] == -1 %}
+                  <td>X</td>
+                {% elif cad[1] >= 2 %}
+                  <td class="great">{{cad[1]}}</td>
+                {% elif cad[1] >= 1.5 %}
+                  <td class="caution">{{cad[1]}}</td>
+                {% elif cad[1] < 1.5 %}
+                  <td class="doom">{{cad[1]}}</td>
+                {% endif %}
+              </tr>
+       {#     {% endif %} #}
+          {% endfor %}
+        </table>
+      
+    </form>
+  </div>
+  
+{# ******************************************************************************************* #}
+{# ******************************************************************************************* #}
+{# ******************************************************************************************* #}
+{# ******************************************************************************************* #}
+{# ******************************************************************************************* #}
+{# ******************************************************************************************* #}
+{# ******************************************************************************************* #}
+{# ******************************************************************************************* #}
+
+
+  {# phone display #}
+  <div class="phonescroll">
+  
+  <form action="/" method='GET'>
+      {# COLUMN 1 #}
+      <select class="subprompt" id="donor" name="donor"
+      onchange='if(this.value != 0) { this.form.submit(); }'>
+        {% if donor %}
+          {% if cloneguys %}
+            {% for guy in cloneguys %}
+              {% if guy == donor %}
+                <option value="{{guy}}">{{guy}}
+                </option>
+              {% endif %}
+            {% endfor %}
+            {% for guy in cloneguys %}
+              {% if guy != donor %}
+                <option value="{{guy}}">{{guy}}
+                </option>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for guy in guys %}
+              {% if guy == donor %}
+                <option value="{{guy}}">{{guy}}
+                </option>
+              {% endif %}
+            {% endfor %}
+            {% for guy in guys %}
+              {% if guy != donor %}
+                <option value="{{guy}}">{{guy}}
+                </option>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+      </select>
+    </form>
+    <form action="/" method='GET'>
+      {# COLUMN 2 #}
+        {# <p class="centerheader">PICK A FOLDER BELOW:</p> #}
+        <select class="subprompt" id="other_folder" name="other_folder"
+        onchange='if(this.value != 0) { this.form.submit(); }'>
+        {% if current_folder %}
+          {% for folder in folders %}
+            {% if folder == current_folder %}
+              <option name="other_folder"
+              value="{{folder}}" >{{folder}}</option>
+            {% endif %}
+          {% endfor %}
+          {% for folder in folders %}
+            {% if folder != current_folder %}
+              <option name="other_folder" value="{{folder}}" >
+              {{folder}}</option>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <p class="guessed">No root folders.</p>
+        {% endif %}
+        </select>
+    </form>
+  
+  <form class="stick" action="/sink" method='GET'>
+      {# COLUMN 3 #}
+        <p class="guessed">{{donor}}/{{display_current}}</p>
+        <ul>
+          {% for cad in cads %}
+            {% if cad[1] == -1 %}
+              <li class="none" name="cad" value="{{cad[2]}}" >{{cad[0]}}</li>
+            {% elif cad[1] >=2 %}
+              <li class="great" name="cad" value="{{cad[2]}}" >{{cad[0]}}</li>
+            {% elif cad[1] >=1.5 %}
+              <li class="caution" name="cad" value="{{cad[2]}}" >{{cad[0]}}</li>
+            {% elif cad[1] < 1.5 %}
+              <li class="doom" name="cad" value="{{cad[2]}}" >{{cad[0]}}</li>
+            {% endif %}
+          {% endfor %}
+        </ul>      
+    </form>
+    </div>
+
+{% endblock %}
