@@ -8,4 +8,4 @@ I didn't use Bootstrap so I learned a lot about css.  I think if I made another 
 
 My Python code would be a little different if I did it again.  I think the biggest problem is I didn't separate each approute into 2 separate blocks for GET and POST.  I remember wondering that when I started and I decided there was some stuff I wanted to do if it was either GET or POST but in the end it just made a mess and I ended up checking the same stuff over and over.  Now that I learned java/spring I see that in there I don't think you even have the option of handling GET and POST in the same approute so it makes it kind of plain that they should be completely separated.
 
-Also I suppose I need to pull the model code out and put in a separate file from the contoller code but I don't really want to mess with it anymore, I want to work on my next project.
+Also I suppose I need to pull the model code out and put it in a separate file from the contoller code but I don't really want to mess with it anymore, I want to work on my next project.
