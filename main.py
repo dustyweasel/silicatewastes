@@ -340,9 +340,11 @@ def index():
           blancopackage=[]
           blancopackage.append(session['searchval'])
           blancopackage.append(session['searchval'][:3]+'-'+session['searchval'][3:])
-          if 'blanco' in request.form:
-            flash("No identical cutouts.  Searching only for "+blancopackage[0]+
-                  " and "+blancopackage[1])
+          #flash("gobbledygook")
+          #i don't know why i had the following if statement
+          #if 'blanco' in request.form:
+          flash("No identical cutouts.  Searching only for "+blancopackage[0]+
+                " and "+blancopackage[1])
 ####################################################################################################
           
       #i'm a noob at exceptions, this will catch file i/o issues
