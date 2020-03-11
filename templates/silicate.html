@@ -24,8 +24,10 @@ any of it #}
   <div class="lrscrollable">
     <form class="stick" action="/" method='GET'>
       {# COLUMN 1 #}
-      <ul class="scrollable">
-        <li class="centerheader">PICK A GUY BELOW:</li>
+      <div class="stick">
+      <span class="stick2 centerheader">DONOR:</span>
+      <ul class="stick scrollable">
+        {# <li class="centerheader">PICK A GUY BELOW:</li> #}
         {% if donor %}
           {% for guy in guys %}
             {% if guy != donor %}
@@ -43,9 +45,12 @@ any of it #}
           {% endfor %}
         {% endif %}
       </ul>
+      </div>
       {# COLUMN 2 #}
-      <ul class="scrollable">
-        <li class="centerheader">PICK A FOLDER BELOW:</li>
+      <div class="stick">
+      <span class="stick2 centerheader">FOLDER:</span>
+      <ul class="scrollable stick">
+        {# <li class="centerheader">PICK A FOLDER BELOW:</li> #}
         {% if current_folder %}
           {% for folder in folders %}
             {% if folder == current_folder %}
@@ -63,15 +68,18 @@ any of it #}
           <li>No root folders.</li>
         {% endif %}
       </ul>
+      </div>
     </form>
     <form class="stick" action="/sink" method='GET'>
       {# COLUMN 3 #}
-        <table class="scrollable">
-          <tr>
-            <td class="centerheader">
-              {{donor}}/{{display_current}}</td>
-            <td class="centerheader" >AVG. RATING</td>
-          </tr>
+        <div class="stick">
+        <span class="stick2 centerheader2">{{donor}}/{{display_current}}</span>
+        <table class="stick scrollable">
+          {# <tr>
+            <th class="centerheader2">
+              {{display_current}}</th>
+            <th class="centerheader" >AVG. RATING</th>
+          </tr> #}
           {% for cad in cads %}
               <tr class="gridded">
                 <td><button class="unguessed" name="cad" value="{{cad[2]}}" >{{cad[0]}}</button></td>
@@ -85,10 +93,10 @@ any of it #}
                   <td class="doom">{{cad[1]}}</td>
                 {% endif %}
               </tr>
-       {#     {% endif %} #}
+          {#     {% endif %} #}
           {% endfor %}
         </table>
-      
+        </div>
     </form>
   </div>
   

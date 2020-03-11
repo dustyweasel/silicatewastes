@@ -77,8 +77,12 @@ body {
     border: dotted, thin, white;
 }
 
-.centerheader{
+.centerheader {
     color: cornflowerblue;
+}
+
+.centerheader2 {
+    color: aqua;
 }
 
 .bar{
@@ -110,6 +114,10 @@ body {
   padding-top: 0em;
   border: none;
 }*/
+
+td {
+  padding-right: 1em;
+}
 
 .info {
   display: inline-block;
@@ -146,8 +154,18 @@ body {
 }
 
 .scrollable {
-  display: inline-block;
+  #display: inline-block;
   height: 70vh; /* or any value */
+  padding: 0em 1em 1em 1em;
+  overflow: scroll;
+  overflow-x: hidden;
+  vertical-align: top;
+  margin-top: 0;
+}
+
+.scrollable4 {
+  display: inline-block;
+  height: 55vh; /* or any value */
   padding: 1em;
   overflow: scroll;
   overflow-x: hidden;
@@ -177,10 +195,17 @@ body {
   display: inline-block;
 }
 
+.stick2 {
+  display: block;
+  font-family: "Alegreya Sans SC";
+  padding-left: 1em;
+}
+
 .lrscrollable {
   display: inline-block;
   white-space: nowrap;
   margin-left: 1em;
+  margin-top: 1em;
   overflow: scroll;
   overflow-y: hidden;
   overflow-x: hidden;

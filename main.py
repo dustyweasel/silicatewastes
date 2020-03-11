@@ -13,6 +13,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 
 app.config['SQLALCHEMY_ECHO'] = True
 
+#been awhile?
+#. ../../config.sh
+#that first lone dot is like the sh command, i think
+#. ./venv/bin/activate
+#put some topsecret info in config.sh, stuff that doesn't go on github
+
 #learn the delete button at get-it-done #3
 #flask migrate get-it-done #4
 #alter a table without dropping and recreating
@@ -95,9 +101,9 @@ def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
   return ''.join(random.choice(chars) for _ in range(size))
 
 def cadchecker(cadfile):
-  if (cadfile.lower().endswith('dxf') or cadfile.lower().endswith('.dwg') or
-      cadfile.lower().endswith('ard') or cadfile.lower().endswith('.asd') or
-      cadfile.lower().endswith('.tag')):
+  if (cadfile.lower().endswith('.dxf') or cadfile.lower().endswith('.dwg') or
+      cadfile.lower().endswith('.ard') or cadfile.lower().endswith('.asd') or
+      cadfile.lower().endswith('.tag') or cadfile.lower().endswith('.est')):
     return True
   else:
     return False
