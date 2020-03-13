@@ -294,6 +294,8 @@ def index():
       return redirect("/chat")
     elif request.args.get('home') == 'stalk':
       return redirect("/stalk")
+    elif request.args.get('home') == 'stats':
+      return redirect("/stats")
           
   #this all happens with every call to '/', see indentation above
   #setup cloneguys according to searchval or blanco
@@ -682,6 +684,7 @@ def downloadfile():
   #really should check all this stuff in /
   
   if request.method=='GET' and request.args.get('cancel')!=None:
+    reset()
     session['current_folder'] = request.args.get('current_folder')
     return redirect("/")
     
@@ -728,6 +731,41 @@ def downloadfile():
   return render_template("sink.html", folder=session['current_folder'], donor=session['donor'],
                          sink=sink, ratings=ratings, username=username, user_rating=user_rating)
 
+##########################/stats##################################################################
+##########################/stats##################################################################
+##########################/stats##################################################################
+##########################/stats##################################################################
+##########################/stats##################################################################
+##########################/stats##################################################################
+@app.route("/stats", methods=['GET'])
+def stats():
+  username=""
+  if 'username' in session:
+    username=session['username']
+  
+  #query = users.select().order_by(users.c.id.desc()).limit(5)
+  
+  if request.method=='GET':
+    #SELECT location, downloads from silicatewastes.sink ORDER BY downloads desc LIMIT 100;
+    topdownloads=Sink.query.with_entities(Sink.downloads, Sink.location, Sink.id).order_by(Sink.downloads.desc()).limit(100)
+    supertopdownloads=[]
+    
+    ix=1
+    for download in topdownloads:
+      rated_sink = Sink.query.filter_by(location=download.location).first()
+      ratings = Rating.query.filter_by(sink_id=rated_sink.id).all()
+      ival=0
+      for blah in range(len(ratings)):
+        ival+=ratings[blah].stars
+      if len(ratings) == 0:
+        ival=-1
+      else:
+        ival=round(float(ival)/float(len(ratings)),1)
+      supertopdownloads.append((ix,download.location,download.downloads,ival,download.id))
+      ix+=1
+    
+    return render_template("stats.html", supertopdownloads=supertopdownloads, username=username, stats="stats")
+  
 ##########################/demos##################################################################
 ##########################/demos##################################################################
 ##########################/demos##################################################################

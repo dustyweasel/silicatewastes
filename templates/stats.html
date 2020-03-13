@@ -1,12 +1,51 @@
 {% extends "base.html" %}
 
 {# VARIABLES IN:
+  members - all registered users
   
   VARIABLES OUT:
 #}
 
 {% block content %}
 
-{% bah some other day %}
+<div>
+        {# <div class="scrollable2"> #}
+        <form action="/sink" method='GET'>
+          <table class="download">
+            <thead>
+            <tr class="centerheader" >
+              <th class="stick3 narrow"></th>
+              <th class="stick3 narrow"></th>
+              <th class="stick3 superwide">SINK</th>
+              <th class="stick3 medium">DOWNLOADS</th>
+            </tr>
+            </thead>
+            <tbody class="tscroll">
+            {% for download in supertopdownloads %}
+            <tr class="gridded">
+              <td class="narrow">{{download[0]}}</td>
+              
+              {% if download[3] == -1 %}
+                <td>X</td>
+              {% elif download[3] >= 2 %}
+                <td class="narrow great">{{download[3]}}</td>
+              {% elif download[3] >= 1.5 %}
+                <td class="narrow caution">{{download[3]}}</td>
+              {% elif download[3] < 1.5 %}
+                <td class="narrow doom">{{download[3]}}</td>
+              {% endif %}
+              
+              {# <td class="superwide">{{download[1]}}</td> #}
+              <td class="superwide"><button class="smallunguessed" name="cad" value="{{download[4]}}" >
+              {{download[1]}}</button></td>
+              <td class="medium">{{download[2]}}</td>
+              
+            </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        </form>
+      {# </div> #}
+</div>
 
 {% endblock %}

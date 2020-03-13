@@ -82,7 +82,7 @@ any of it #}
           </tr> #}
           {% for cad in cads %}
               <tr class="gridded">
-                <td><button class="unguessed" name="cad" value="{{cad[2]}}" >{{cad[0]}}</button></td>
+                <td><button class="smallunguessed" name="cad" value="{{cad[2]}}" >{{cad[0]}}</button></td>
                 {% if cad[1] == -1 %}
                   <td>X</td>
                 {% elif cad[1] >= 2 %}

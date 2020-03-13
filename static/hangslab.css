@@ -136,6 +136,10 @@ table thead th.wide {
   width: 13em;
 }
 
+table thead th.superwide {
+  width: 30em;
+}
+
 table thead th.medium {
   width: 8em;
 }
@@ -146,6 +150,10 @@ table thead th.narrow {
 
 table tbody td.wide {
   width: 13em;
+}
+
+table tbody td.superwide {
+  width: 30em;
 }
 
 table tbody td.medium {
@@ -335,21 +343,21 @@ span.giver, button.giver, td.giver, li.giver {
 
 td.doom, li.doom {
   font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
+  font-size: 1em;
   color: tomato;
   list-style-type: none;
 }
 
 td.great, li.great {
   font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
+  font-size: 1em;
   color: mediumaquamarine;
   list-style-type: none;
 }
 
 td.caution, li.caution {
   font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
+  font-size: 1em;
   color: orange;
   list-style-type: none;
 }
@@ -460,14 +468,22 @@ button.guessed {
     background-color: inherit;
     /*color: palegoldenrod;*/
     color: aqua;
-    font-size: 1.5em;
+    font-size: 1.3em;
     /*color: wheat;
     /*color: sandybrown;*/
     /*background-color: sandybrown;*/
 }
 
 button.unguessed {
-    font-size: 1.5em;
+    font-size: 1.3em;
+    border: none;
+    background-color: inherit;
+    color: lightsteelblue;
+    /*background-color: teal;*/
+}
+
+button.smallunguessed {
+    /*font-size: 1.5em;*/
     border: none;
     background-color: inherit;
     color: lightsteelblue;
@@ -525,6 +541,11 @@ button.real:hover {
 }
 
 button.unguessed:hover {
+    color: sandybrown;
+    /*border: solid;*/
+}
+
+button.smallunguessed:hover {
     color: sandybrown;
     /*border: solid;*/
 }
