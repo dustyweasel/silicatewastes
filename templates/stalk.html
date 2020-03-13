@@ -14,39 +14,43 @@
             <span class="siltimes">STANDARD USER</span>
             <span class="giver">CAD FILE DONATOR</span>
         </p>
-        <div class="scrollable2">
+        {# <div class="scrollable2"> #}
         <form action="/stalk" method='GET'>
           <table class="download">
+            <thead>
             <tr class="centerheader" >
-              <td>ID</id>
-              <td>NAME</td>
-              <td>DOWNLOADS</td>
-              <td>CATCHPHRASE</td>
-              <td>COMPANY</td>
-              <td>STATE</td>
+              <th class="stick3 narrow">ID</th>
+              <th class="stick3 wide">NAME</th>
+              <th class="stick3 medium">DOWNLOADS</th>
+              <th class="stick3 wide">CATCHPHRASE</th>
+              <th class="stick3 wide">COMPANY</th>
+              <th class="stick3 narrow">STATE</th>
             </tr>
+            </thead>
+            <tbody class="tscroll">
             {% for member in members %}
             <tr class="gridded">
-              <td>{{member.id}}</td>
+              <td class="narrow">{{member.id}}</td>
               {% if member.memberlevel==1 %}
-                <td><button class="funtimes" name="member"
+                <td class="wide"><button class="funtimes" name="member"
                 value="{{member.id}}">{{member.username}}</button></td>
               {% elif member.memberlevel==0 %}
-                <td><button class="siltimes" name="member"
+                <td class="wide"><button class="siltimes" name="member"
                 value="{{member.id}}">{{member.username}}</button></td>
               {% elif member.memberlevel==2 %}
-                <td><button class="giver" name="member"
+                <td class="wide"><button class="giver" name="member"
                 value="{{member.id}}">{{member.username}}</button></td>
               {% endif %}
-              <td>{{member.benefactor}}</td>
-              <td>{{member.catchphrase}}</td>
-              <td>{{member.company}}</td>
-              <td>{{member.state}}</td>
+              <td class="medium">{{member.benefactor}}</td>
+              <td class="wide">{{member.catchphrase}}</td>
+              <td class="wide">{{member.company}}</td>
+              <td class="narrow">{{member.state}}</td>
             </tr>
             {% endfor %}
+            </tbody>
           </table>
         </form>
-      </div>
+      {# </div> #}
 </div>
 
 {% endblock %}

@@ -56,7 +56,8 @@ body {
     background-repeat:   no-repeat;
     background-position: center center;
     color: lightsteelblue;
-    /*background-image: url('dark-black-sand-texture-8k-p8.jpg');*/
+    background-image: url('virus.jpg');
+    background-size: cover;
 }
 
 .fakecenter {
@@ -114,9 +115,56 @@ body {
   padding-top: 0em;
   border: none;
 }*/
+table thead {
+  display: block;
+  padding: 0em 1em 0em 1em;
+}
+
+table tbody.tscroll {
+  display: block;
+  height: 70vh; /* or any value */
+  padding: 0em 1em 1em 1em;
+  overflow: scroll;
+  overflow-x: hidden;
+  vertical-align: top;
+  margin-top: 0em;
+  width: 70em;
+  white-space: normal;
+}
+
+table thead th.wide {
+  width: 13em;
+}
+
+table thead th.medium {
+  width: 8em;
+}
+
+table thead th.narrow {
+  width: 3em;
+}
+
+table tbody td.wide {
+  width: 13em;
+}
+
+table tbody td.medium {
+  width: 8em;
+}
+
+table tbody td.narrow {
+  width: 3em;
+}
+
+th {
+  margin: 0;
+  padding: 0em 1em 0em 0em;
+  text-align: left;
+}
 
 td {
-  padding-right: 1em;
+  margin: 0;
+  padding: 0em 1em 0em 0em;
 }
 
 .info {
@@ -197,6 +245,11 @@ td {
 
 .stick2 {
   display: block;
+  font-family: "Alegreya Sans SC";
+  padding-left: 1em;
+}
+
+.stick3 {
   font-family: "Alegreya Sans SC";
   padding-left: 1em;
 }

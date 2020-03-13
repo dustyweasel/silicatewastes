@@ -1,3 +1,5 @@
 static/sinks
 __pycache__
 venv
+static/*.jpg
+
