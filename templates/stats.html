@@ -1,15 +1,11 @@
 {% extends "base.html" %}
 
-{# VARIABLES IN:
-  members - all registered users
-  
-  VARIABLES OUT:
-#}
-
 {% block content %}
 
 <div>
         {# <div class="scrollable2"> #}
+        
+        
         <form action="/sink" method='GET'>
           <table class="download">
             <thead>
@@ -26,7 +22,7 @@
               <td class="narrow">{{download[0]}}</td>
               
               {% if download[3] == -1 %}
-                <td>X</td>
+                <td class="narrow">X</td>
               {% elif download[3] >= 2 %}
                 <td class="narrow great">{{download[3]}}</td>
               {% elif download[3] >= 1.5 %}

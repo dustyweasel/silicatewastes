@@ -77,30 +77,7 @@
     </form>
    
     <hr />
-    {% if stats %}
-      <div class="scoot">
-        <form action="/stats" method='GET'>
-          {% if screen == "topdownloads" %}
-            <button class="utility" name="cycle" value="previous" >&larr;</button>
-            <button class="utility" name="cycle" value="next" >&rarr;</button>
-          {% else %}
-            <button class="disutility" name="cycle" value="previous" disabled>&larr;</button>
-            <button class="disutility" name="cycle" value="next" disabled>&rarr;</button>
-          {% endif %}
-          {% if screen == "topdownloads" %}
-            <button class="picked tight" name="screen" value="topdownloads" >SINKS</button>
-          {% else %}
-            <button class="real tight" name="screen" value="topdownloads" >SINKS</button>
-          {% endif %}
-          {% if screen == "raters" %}
-            <button class="picked tight" name="screen" value="raters" >RATERS</button>
-          {% else %}
-            <button class="real tight" name="screen" value="raters" >RATERS</button>
-          {% endif %}
-          <input type="hidden" name="page" value="{{page}}" />
-        </form>
-      </div>
-    {% endif %}
+
     {% block content %}
     {% endblock %}
 

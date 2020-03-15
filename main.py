@@ -56,7 +56,7 @@ class User(db.Model):
   catchphrase = db.Column(db.String(60))
   state = db.Column(db.String(2))
   dustmask = db.Column(db.Integer)
-  benefactor = db.Column(db.Integer)
+  benefactor = db.Column(db.Integer)  #i think i stored downloads here
   lastsink = db.Column(db.Integer)
   memberlevel = db.Column(db.Integer)
   elephant = db.relationship('Rating', backref="rater")
@@ -84,8 +84,8 @@ class Rating(db.Model):
   def __init__(self, stars, comment, rater, ratified):
     self.stars=stars
     self.comment=comment
-    self.rater=rater
-    self.ratified=ratified
+    self.rater=rater        #user_id?
+    self.ratified=ratified  #sink_id?
     
 class Babblings(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -177,7 +177,7 @@ def sinksplit(sinkid):
   
 @app.before_request
 def require_login():
-  allowed_routes = ['index', 'login', 'register', 'sink', 'verify', 'downloadfile', 'stalk', 'demos']
+  allowed_routes = ['index', 'login', 'register', 'stats', 'verify', 'downloadfile', 'stalk', 'demos']
   if (request.endpoint not in allowed_routes and 'username' not in session and
     '/static/' not in request.path):
     
@@ -746,25 +746,87 @@ def stats():
   #query = users.select().order_by(users.c.id.desc()).limit(5)
   
   if request.method=='GET':
-    #SELECT location, downloads from silicatewastes.sink ORDER BY downloads desc LIMIT 100;
-    topdownloads=Sink.query.with_entities(Sink.downloads, Sink.location, Sink.id).order_by(Sink.downloads.desc()).limit(100)
-    supertopdownloads=[]
-    
-    ix=1
-    for download in topdownloads:
-      rated_sink = Sink.query.filter_by(location=download.location).first()
-      ratings = Rating.query.filter_by(sink_id=rated_sink.id).all()
-      ival=0
-      for blah in range(len(ratings)):
-        ival+=ratings[blah].stars
-      if len(ratings) == 0:
-        ival=-1
+    #sent to /stats from another page
+    if(request.args.get('screen') == None or request.args.get('screen') == "topdownloads"):
+      screen="topdownloads"
+      #first time they hit an arrow
+      if(request.args.get('page') == None and request.args.get('cycle') == None):
+        page=0
+      #gonna need both page and cycle variables
+      elif(request.args.get('page') != None and request.args.get('cycle') != None):
+        try:
+          page = int(request.args.get('page'))
+        except Exception as e:
+          flash("Stop messing with the URL")
+          return redirect('/')
+        cycle=request.args.get('cycle')
+        if(cycle != "previous" and cycle != "next"):
+          flash("Stop messing with the URL")
+          return redirect('/')
+        if(cycle == "previous" and page > 0):
+          page-=1
+        elif(cycle == "next"):
+          page+=1
+      #unless maybe they just clicked the sink button
+      elif(request.args.get('page') != None):
+        try:
+          page=int(request.args.get('page'))
+        except Exception as e:
+          flash("Stop messing with the URL"+str(request.args.get('page')))
+          return redirect('/')
       else:
-        ival=round(float(ival)/float(len(ratings)),1)
-      supertopdownloads.append((ix,download.location,download.downloads,ival,download.id))
-      ix+=1
-    
-    return render_template("stats.html", supertopdownloads=supertopdownloads, username=username, stats="stats")
+        flash(str(page)+str(cycle)+"Messing with the URL? Needs a cycle variable.  Click an arrow.")
+        return redirect('/')
+        
+      topdownloads=Sink.query.with_entities(Sink.downloads, Sink.location, Sink.id).order_by(
+        Sink.downloads.desc()).order_by(Sink.id).limit(100).offset(100*page)
+        
+      supertopdownloads=[]
+      
+      ix=1+(100*page)
+      for download in topdownloads:
+        rated_sink = Sink.query.filter_by(location=download.location).first()
+        ratings = Rating.query.filter_by(sink_id=rated_sink.id).all()
+        ival=0
+        for blah in range(len(ratings)):
+          ival+=ratings[blah].stars
+        if len(ratings) == 0:
+          ival=-1
+        else:
+          ival=round(float(ival)/float(len(ratings)),1)
+        supertopdownloads.append((ix,download.location,download.downloads,ival,download.id))
+        ix+=1
+      
+      return render_template("stats.html", supertopdownloads=supertopdownloads, username=username,
+                            stats="stats", page=page, screen=screen)
+    else:
+      screen = request.args.get('screen')
+      if(screen == "raters"):
+        
+        #grab all users, rank by prolific raters
+        raters=User.query.with_entities(User.id, User.username, User.memberlevel, User.benefactor)
+        superraters=[]
+        totalrates=0 #okay this is the WORST way to do this
+        for rater in raters:
+          #do something here to get number of ratings
+          #okay this has to be the worst way ever.  need to figure out backref
+          rateval=Rating.query.with_entities(Rating.id).filter_by(user_id=rater.id).all()
+          ratenum=0
+          for val in rateval:
+            ratenum+=1
+            totalrates+=1
+            
+          superraters.append((rater.id, rater.username, ratenum, rater.memberlevel, rater.benefactor))
+          #s = sorted(s, key = lambda x: (x[1], x[2]))
+          superraters = sorted(superraters, key=lambda tup: (tup[0]))
+          superraters = sorted(superraters, key=lambda tup: (tup[2]), reverse = True)
+          
+        return render_template("raters.html", username=username,
+                              stats="stats", screen="raters", superraters=superraters, page=0,
+                              totalrates=totalrates)
+      else:
+        flash("Stop messing with the URL")
+        return redirect('/')
   
 ##########################/demos##################################################################
 ##########################/demos##################################################################
