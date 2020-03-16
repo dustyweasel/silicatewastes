@@ -128,7 +128,31 @@ table tbody.tscroll {
   overflow-x: hidden;
   vertical-align: top;
   margin-top: 0em;
-  width: 70em;
+  /*width: 70em;*/
+  white-space: normal;
+}
+
+table tbody.tscrollshort {
+  display: block;
+  height: 50vh; /* or any value */
+  padding: 0em 1em 1em 1em;
+  overflow: scroll;
+  overflow-x: hidden;
+  vertical-align: top;
+  margin-top: 0em;
+  /*width: 70em;*/
+  white-space: normal;
+}
+
+table tbody.tscrollshorter {
+  display: block;
+  height: 35vh; /* or any value */
+  padding: 0em 1em 1em 1em;
+  overflow: scroll;
+  overflow-x: hidden;
+  vertical-align: top;
+  margin-top: 0em;
+  /*width: 70em;*/
   white-space: normal;
 }
 
@@ -145,7 +169,7 @@ table thead th.medium {
 }
 
 table thead th.narrow {
-  width: 3em;
+  width: 4em;
 }
 
 table tbody td.wide {
@@ -161,7 +185,7 @@ table tbody td.medium {
 }
 
 table tbody td.narrow {
-  width: 3em;
+  width: 4em;
 }
 
 th {
@@ -331,6 +355,16 @@ span.siltimes, button.siltimes, td.siltimes, li.siltimes {
   border: none;
 }
 
+button.disastertimes {
+  font-family: "Alegreya Sans SC";
+  font-size: 1.2em;
+  color: aqua;
+  list-style-type: none;
+  
+  background-color: inherit;
+  border: none;
+}
+
 span.giver, button.giver, td.giver, li.giver {
   font-family: "Alegreya Sans SC";
   font-size: 1.2em;
@@ -341,32 +375,47 @@ span.giver, button.giver, td.giver, li.giver {
   border: none;
 }
 
-td.doom, li.doom {
+td.doom, li.doom, p.doom {
   font-family: "Alegreya Sans SC";
-  font-size: 1em;
+  font-size: 1.2em;
   color: tomato;
   list-style-type: none;
+  margin: 0;
+  padding: 0em 1em 0em 0em;
 }
 
-td.great, li.great {
+td.great, li.great, p.great {
   font-family: "Alegreya Sans SC";
-  font-size: 1em;
+  font-size: 1.2em;
   color: mediumaquamarine;
   list-style-type: none;
+  margin: 0;
+  padding: 0em 1em 0em 0em;
 }
 
-td.caution, li.caution {
+td.caution, li.caution, p.caution {
   font-family: "Alegreya Sans SC";
-  font-size: 1em;
+  font-size: 1.2em;
   color: orange;
   list-style-type: none;
+  margin: 0;
+  padding: 0em 1em 0em 0em;
+}
+
+p.ambiguous {
+  font-family: "Alegreya Sans SC";
+  font-size: 1.2em;
+  color: #66AACD;;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 td.selfline, li.selfline {
-  font-family: "Alegreya Sans SC";
+  /*font-family: "Alegreya Sans SC";*/
   font-size: 1.2em;
-  color: aqua;
-  list-style-type: none;
+  /*color: aqua;
+  list-style-type: none;*/
 }
 
 .funnertimes {
@@ -514,8 +563,32 @@ button.smallunguessed {
     /*background-color: teal;*/
 }
 
+button.doomunguessed {
+    /*font-size: 1.5em;*/
+    border: none;
+    background-color: inherit;
+    color: tomato;
+    /*background-color: teal;*/
+}
+
+button.greatunguessed {
+    /*font-size: 1.5em;*/
+    border: none;
+    background-color: inherit;
+    color: mediumaquamarine;
+    /*background-color: teal;*/
+}
+
+button.cautionunguessed {
+    /*font-size: 1.5em;*/
+    border: none;
+    background-color: inherit;
+    color: orange;
+    /*background-color: teal;*/
+}
+
 button.worthy {
-    font-size: 1.5em;
+    font-size: 1.3em;
     border: none;
     background-color: inherit;
     /*color: lemonchiffon;*/
@@ -542,7 +615,7 @@ button.other {
 
 button.tight {
   font-size: 0.75em;
-  width: 4em;
+  width: 4.5em;
 }
 
 button.list {
@@ -581,6 +654,11 @@ button.unguessed:hover {
 
 button.smallunguessed:hover {
     color: sandybrown;
+    /*border: solid;*/
+}
+
+button.greatunguessed:hover, button.cautionunguessed:hover, button.doomunguessed:hover {
+    color: aqua;
     /*border: solid;*/
 }
 

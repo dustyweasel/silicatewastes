@@ -509,6 +509,10 @@ def index():
 def sink():
   #if url makes sense, load the sink row grab the truncated location
 
+  #3/15/20 wtf why did i do i this way????
+  #did i not want to make more <form>s? click a username and get sent to /sink?  why?
+  #oh god, why did i put get and post in the same mess.  wtf  i can't even read this garbage
+  
   #get request.  either:
   #1 home page sent us here by clicking sink
   #2 stalkmore sent us here by clicking user ratings
@@ -660,9 +664,23 @@ def sink():
   #it here or in the query directly above but i'll figure it out some other day
   ratings = Rating.query.filter_by(sink_id=sinkentry.id).all()
   
+  average=0.0
+  num=0.0
+  for rating in ratings:
+    average+=rating.stars
+    num+=1.0
+  if num>0:
+    average=average/num
+  
+  #3/15/20 god i can't read any of this.  cad is the sink id i hope
+  downloads = Sink.query.with_entities(Sink.downloads).filter_by(id=cad).first()[0]
+  
+  #topdownloads=Sink.query.with_entities(Sink.downloads, Sink.location, Sink.id).order_by(
+        #Sink.downloads.desc()).order_by(Sink.id).limit(100).offset(100*page)
+  
   return render_template("sink.html", folder=session['current_folder'], donor=session['donor'],
                          sink=sink, ratings=ratings, username=username, user_rating=user_rating,
-                         previous_sink=previous_sink, cad=cad)
+                         previous_sink=previous_sink, cad=cad, downloads=downloads, average=average)
 
 
 #######################/downloadfile/downloadfile/downloadfile###############################
@@ -780,6 +798,13 @@ def stats():
         
       topdownloads=Sink.query.with_entities(Sink.downloads, Sink.location, Sink.id).order_by(
         Sink.downloads.desc()).order_by(Sink.id).limit(100).offset(100*page)
+      
+      #downloads = Sink.query.with_entities(Sink.downloads).filter_by(id=cad).first()[0]
+      alldownloads = Sink.query.with_entities(Sink.downloads).all()
+      totaldownloads=0
+      #wait is there SQL/sqlalchemy for this?
+      for download in alldownloads:
+        totaldownloads+=download.downloads
         
       supertopdownloads=[]
       
@@ -798,7 +823,7 @@ def stats():
         ix+=1
       
       return render_template("stats.html", supertopdownloads=supertopdownloads, username=username,
-                            stats="stats", page=page, screen=screen)
+                            stats="stats", page=page, screen=screen, totaldownloads=totaldownloads)
     else:
       screen = request.args.get('screen')
       if(screen == "raters"):
@@ -824,6 +849,47 @@ def stats():
         return render_template("raters.html", username=username,
                               stats="stats", screen="raters", superraters=superraters, page=0,
                               totalrates=totalrates)
+      elif(screen == "dust"):
+        dusters=User.query.with_entities(User.dustmask).all()
+        yes=0
+        no=0
+        abstain=0
+        for duster in dusters:
+          if(duster.dustmask==1):
+            yes+=1
+          elif(duster.dustmask==0):
+            no+=1
+          else:
+            abstain+=1
+        
+        return render_template("dust.html", username=username,
+                              stats="stats", screen="dust", page=0, yes=yes, no=no, abstain=abstain)
+      elif(screen == "recent"):
+        
+        ratings=Rating.query.with_entities(Rating.user_id, Rating.sink_id, Rating.stars,
+                                           Rating.comment).order_by(Rating.id.desc()).limit(100)
+        superratings=[]
+        for rating in ratings:
+          #downloads = Sink.query.with_entities(Sink.downloads).filter_by(id=cad).first()[0]
+          location=Sink.query.with_entities(Sink.location).filter_by(id=rating.sink_id).first()[0]
+          name=User.query.with_entities(User.username).filter_by(id=rating.user_id).first()[0]
+          memberlevel=User.query.with_entities(User.memberlevel).filter_by(id=rating.user_id).first()[0]
+          
+          sinkratings = Rating.query.filter_by(sink_id=rating.sink_id).all()
+          average=0.0
+          num=0.0
+          for sinkrating in sinkratings:
+            average+=sinkrating.stars
+            num+=1.0
+          if num>0:
+            average=average/num
+          
+          superratings.append((location,name,rating.stars,rating.comment,memberlevel,
+                               rating.user_id,rating.sink_id,average))
+        
+        return render_template("recent.html", username=username,
+                              stats="stats", screen="recent", page=0, ratings=superratings)
+      
       else:
         flash("Stop messing with the URL")
         return redirect('/')

@@ -97,6 +97,16 @@
           {% else %}
             <button class="real tight" name="screen" value="raters" >RATERS</button>
           {% endif %}
+          {% if screen == "dust" %}
+            <button class="picked tight" name="screen" value="dust" >DUST</button>
+          {% else %}
+            <button class="real tight" name="screen" value="dust" >DUST</button>
+          {% endif %}
+          {% if screen == "recent" %}
+            <button class="picked tight" name="screen" value="recent" >RECENT</button>
+          {% else %}
+            <button class="real tight" name="screen" value="recent" >RECENT</button>
+          {% endif %}
           <input type="hidden" name="page" value="{{page}}" />
         </form>
       </div>

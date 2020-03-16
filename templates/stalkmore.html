@@ -66,20 +66,24 @@
           {% endif %}
         
           {% if memberratings %}
-            <table class="scrollable4 download scoot">
+            <table class="download">
+              <thead>
               <tr class="centerheader">
-                <td>SINK</td>
-                <td>RATING</td>
-                <td>COMMENT</td>
+                <th class="stick3 superwide">SINK</th>
+                <th class="stick3 narrow">RATING</th>
+                <th class="stick3 wide">COMMENT</th>
               </tr>
+              </thead>
+              <tbody class="tscrollshort">
               {% for memberrating in memberratings %}
                 <tr class="gridded">
-                  <td><button class="neutraltimes" name="cad" value="{{memberrating.sink_id}}">
+                  <td class="superwide"><button class="neutraltimes" name="cad" value="{{memberrating.sink_id}}">
                   {{memberrating.location}}</button></td>
-                  <td>{{memberrating.stars}}</td>
-                  <td>{{memberrating.comment}}</td>
+                  <td class="narrow">{{memberrating.stars}}</td>
+                  <td class="wide">{{memberrating.comment}}</td>
                 </tr>
               {% endfor %}
+              </tbody>
             </table>
           {% else %}
             <p class="errormessage scoot">{{memberdata.username}} hasn't rated any sinks.</p>
