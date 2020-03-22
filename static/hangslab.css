@@ -7,8 +7,10 @@
   font-family: 'Patua One';
   font-style: normal;
   font-weight: 400;
-  src: local('Patua One'), local('PatuaOne-Regular'), url(https://fonts.gstatic.com/s/patuaone/v9/ZXuke1cDvLCKLDcimxB44_lu.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: local('Patua One'), local('PatuaOne-Regular'), url(
+    https://fonts.gstatic.com/s/patuaone/v9/ZXuke1cDvLCKLDcimxB44_lu.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+  U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 /* latin */
@@ -16,8 +18,11 @@
   font-family: 'IM Fell DW Pica SC';
   font-style: normal;
   font-weight: 400;
-  src: local('IM FELL DW Pica SC'), local('IM_FELL_DW_Pica_SC'), url(https://fonts.gstatic.com/s/imfelldwpicasc/v8/0ybjGCAu5PfqkvtGVU15aBhXz3EUrnTm_xKL.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: local('IM FELL DW Pica SC'), local('IM_FELL_DW_Pica_SC'), url(
+    https://fonts.gstatic.com/s/imfelldwpicasc/v8/0ybjGCAu5PfqkvtGVU15aBhXz3EUrnTm_xKL.woff2)
+  format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+  U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 /* latin */
@@ -26,1394 +31,156 @@
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: local('Alegreya Sans SC ExtraBold'), local('AlegreyaSansSC-ExtraBold'), url(https://fonts.gstatic.com/s/alegreyasanssc/v8/mtGm4-RGJqfMvt7P8FUr0Q1j-Hf1Du5D4iNhMA.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  src: local('Alegreya Sans SC ExtraBold'), local('AlegreyaSansSC-ExtraBold'), url(
+    https://fonts.gstatic.com/s/alegreyasanssc/v8/mtGm4-RGJqfMvt7P8FUr0Q1j-Hf1Du5D4iNhMA.woff2)
+  format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+  U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 a:link                         {color: aqua}
 a:visited                      {color: aqua}
 a:focus, a:hover, a:active     {color: #cf0021}
 
-h1 {
-    font-family: "IM Fell DW Pica SC";
-    color: lightsteelblue;
-    margin: 0em;
-    padding: 0em;
-    border: none;
-    margin-left: 2em;
-    /*float: left;*/
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-/*body         {background: #000000;
-              font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-              color: #2EFE64;
-              font-weight:bold}*/
+/*not sure why i can't just stick this in body*/
+section {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+/*might move this out of div and into other stuff later, haven't thought it through*/
+div.fill {
+  flex: 1;
+  overflow: hidden;
+}
+
+header {
+  margin: 0.5em 0em 0em 2em;
+  position: relative;
+}
+
+footer {
+  margin: 1em 0em 1em 2em;
+}
 
 body {
-    font-family: "Patua One";
-    background-color: #101010;
-    background-size:     cover;                      /* <------ */
-    background-repeat:   no-repeat;
-    background-position: center center;
-    color: lightsteelblue;
-    background-image: url('virus.jpg');
-    background-size: cover;
+  font-family: "Patua One";
+  background-color: #101010;
+  color: lightsteelblue;
+  margin: 0em 0em 0em 0em;
+  
+  background-size:     cover;
+  background-repeat:   no-repeat;
+  background-position: center center;
+  background-image: url('scuffedstatic_dark1400x900_2.jpg');
+  background-size: cover;
 }
 
-.fakecenter {
-  margin-left: 7em; 
+h1 {
+  margin-left: 1.5em;
 }
 
-.lesscenter {
-  margin-left: 3em; 
-}
-
-.thickprompt {
-    font-family: "Patua One";
-    font-size: 1em;
-    width: 8em;
-}
-
-.box {
-    border: dotted, thin, white;
-}
-
-.centerheader {
-    color: cornflowerblue;
-}
-
-.centerheader2 {
-    color: aqua;
-}
-
-.bar{
-    display: inline-block;
-    clear: left;
-    margin-left: 2em;
-}
-
-.download{
-    margin: 0em 1em 1em 1em;
-}
-
-.offstate {
-    opacity: 0.1;
-}
-
-/*this is the one that allowed horizontal tiling*/
-.shortscroll {
-    height: 50vh; /* or any value */
-    padding: 1em;
-    margin-left: 2em;
-    float: left;
-    overflow: scroll;
-    overflow-x: hidden;
-}
-
-/*table {
-  margin-top: 0em;
-  padding-top: 0em;
-  border: none;
-}*/
-table thead {
-  display: block;
-  padding: 0em 1em 0em 1em;
-}
-
-table tbody.tscroll {
-  display: block;
-  height: 70vh; /* or any value */
-  padding: 0em 1em 1em 1em;
-  overflow: scroll;
-  overflow-x: hidden;
-  vertical-align: top;
-  margin-top: 0em;
-  /*width: 70em;*/
-  white-space: normal;
-}
-
-table tbody.tscrollshort {
-  display: block;
-  height: 50vh; /* or any value */
-  padding: 0em 1em 1em 1em;
-  overflow: scroll;
-  overflow-x: hidden;
-  vertical-align: top;
-  margin-top: 0em;
-  /*width: 70em;*/
-  white-space: normal;
-}
-
-table tbody.tscrollshorter {
-  display: block;
-  height: 35vh; /* or any value */
-  padding: 0em 1em 1em 1em;
-  overflow: scroll;
-  overflow-x: hidden;
-  vertical-align: top;
-  margin-top: 0em;
-  /*width: 70em;*/
-  white-space: normal;
-}
-
-table thead th.wide {
-  width: 13em;
-}
-
-table thead th.superwide {
-  width: 30em;
-}
-
-table thead th.medium {
-  width: 8em;
-}
-
-table thead th.narrow {
-  width: 4em;
-}
-
-table tbody td.wide {
-  width: 13em;
-}
-
-table tbody td.superwide {
-  width: 30em;
-}
-
-table tbody td.medium {
-  width: 8em;
-}
-
-table tbody td.narrow {
-  width: 4em;
-}
-
-th {
-  margin: 0;
-  padding: 0em 1em 0em 0em;
-  text-align: left;
-}
-
-td {
-  margin: 0;
-  padding: 0em 1em 0em 0em;
-}
-
-.info {
-  display: inline-block;
-  height: 70vh; /* or any value */
-  padding: 1em;
-  vertical-align: top;
-  margin-top: 1em;
-  white-space: normal;
-}
-
-
-.scrollable2 {
-  display: inline-block;
-  height: 70vh; /* or any value */
-  padding: 1em;
-  overflow: scroll;
-  overflow-x: hidden;
-  vertical-align: top;
-  margin-top: 1em;
-  width: 60em;
-  white-space: normal;
-}
-
-.scrollable3 {
-  display: inline-block;
-  height: 70vh; /* or any value */
-  padding: 1em;
-  /*overflow: scroll;*/
-  overflow-x: hidden;
-  vertical-align: top;
-  margin-top: 2em;
-  width: 20em;
-  white-space: normal;
+hr {
+  background-color: gray;
+  margin: 0.5em 0em 0.5em 0em;
+  height: 2px;
 }
 
 .scrollable {
-  #display: inline-block;
-  height: 70vh; /* or any value */
-  padding: 0em 1em 1em 1em;
-  overflow: scroll;
-  overflow-x: hidden;
-  vertical-align: top;
-  margin-top: 0;
-}
-
-.scrollable4 {
   display: inline-block;
-  height: 55vh; /* or any value */
-  padding: 1em;
-  overflow: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
-  vertical-align: top;
-  margin-top: 1em;
-}
-
-.newsscrollable {
-  display: inline-block;
-  height: 70vh; /* or any value */
-  padding: 1em;
-  overflow: scroll;
-  overflow-x: hidden;
-  vertical-align: top;
-  margin-top: 0em;
-}
-
-.oldscrollable {
-  height: 70vh; /* or any value */
-  padding: 1em;
-  float: left;
-  overflow: scroll;
-  overflow-x: hidden;
-}
-
-.stick {
-  display: inline-block;
-}
-
-.stick2 {
-  display: block;
-  font-family: "Alegreya Sans SC";
-  padding-left: 1em;
-}
-
-.stick3 {
-  font-family: "Alegreya Sans SC";
-  padding-left: 1em;
-}
-
-.lrscrollable {
-  display: inline-block;
-  white-space: nowrap;
-  margin-left: 1em;
-  margin-top: 1em;
-  overflow: scroll;
-  overflow-y: hidden;
-  overflow-x: hidden;
-}
-
-.oldlrscrollable {
-    margin-left: 1em;
-    overflow: scroll;
-    overflow-y: hidden;
-    overflow-x: hidden;
-    min-width: 1920px;
-}
-
-.scoot {
-    margin-left: 2em;
-}
-
-.scootmore {
-    margin-left: 3em;
-}
-
-.scootcrazy {
-    margin-left: 4em;
-}
-
-li {
-  font-family: "Alegreya Sans SC";
-  list-style-type: none;
-}
-
-span.golden {
-  color: #AB82FF;
-}
-
-span.neutraltimes, button.neutraltimes, td.neutraltimes, li.neutraltimes {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: lightsteelblue;
-  list-style-type: none;
-  
-  background-color: inherit;
-  border: none;
-}
-
-span.funtimes, button.funtimes, td.funtimes, li.funtimes {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: sandybrown;
-  list-style-type: none;
-  
-  background-color: inherit;
-  border: none;
-}
-
-span.siltimes, button.siltimes, td.siltimes, li.siltimes {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: #66AACD;
-  list-style-type: none;
-  
-  background-color: inherit;
-  border: none;
-}
-
-button.disastertimes {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: aqua;
-  list-style-type: none;
-  
-  background-color: inherit;
-  border: none;
-}
-
-span.giver, button.giver, td.giver, li.giver {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: lightgreen;
-  list-style-type: none;
-  
-  background-color: inherit;
-  border: none;
-}
-
-td.doom, li.doom, p.doom {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: tomato;
-  list-style-type: none;
-  margin: 0;
-  padding: 0em 1em 0em 0em;
-}
-
-td.great, li.great, p.great {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: mediumaquamarine;
-  list-style-type: none;
-  margin: 0;
-  padding: 0em 1em 0em 0em;
-}
-
-td.caution, li.caution, p.caution {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: orange;
-  list-style-type: none;
-  margin: 0;
-  padding: 0em 1em 0em 0em;
-}
-
-p.ambiguous {
-  font-family: "Alegreya Sans SC";
-  font-size: 1.2em;
-  color: #66AACD;;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-td.selfline, li.selfline {
-  /*font-family: "Alegreya Sans SC";*/
-  font-size: 1.2em;
-  /*color: aqua;
-  list-style-type: none;*/
-}
-
-.funnertimes {
-  font-size: 1.2em;
-  color: linen;
-}
-
-.sillytimes {
-  font-size: 1.2em;
-  color: wheat;
-}
-
-.logpanel {
-    position: relative;
-    float: right;
-    margin-right: 1em;
-    margin-top: 1em;
-}
-
-.leftlogpanel {
-    display: inline-block;
-    vertical-align: bottom;
-    /*position: relative;
-    float: left;*/
-}
-
-.log {
-    /*background-image: url('glamis-dunes-7-1529726.jpg');*/
-    background-size:cover;*/
-    position: absolute;
-    /*clear: right;*/
-    float: left;
-    margin-left: 2em;
-}
-
-.silly {
-    width: 3em;
-    height: 3em;
-}
-
-.clonebutton {
-    word-wrap: break-word;
-    font-family: 'Alegreya Sans SC';
-    font-size: 1em;
-    width: 6em;
-    margin-top: .25em;
-    margin-left: .25em;
-    background-color: gainsboro;
-    border: solid thick gainsboro;
-    border-radius: .25em;
-    height: 1.75em;
+  padding-right: 2em;
+  height: 100%;
 }
 
 button {
-    /*width: 10vw;*/
-    word-wrap: break-word;
-    font-family: 'Alegreya Sans SC';
-    font-size: 1em;
-    padding: 0;
-    margin: 0;
-    /*color: blue;*/
-
- /*   width: 4em;
-    height: 4em;
-    margin: .2em;
-    padding: none;
-    border: none;
-    border-radius: .25em;*/
+  word-wrap: break-word;
+  font-family: 'Alegreya Sans SC';
 }
 
-button.picked {
-    width: 6em;
-    margin-top: .25em;
-    margin-left: .25em;
-    color: black;
-    background-color: aqua;
-    border: solid thick aqua;
-    border-radius: .25em;
-}
-
-button.utility {
-    font-size: 1em;
-    font-weight: bold;
-    width: 2em;
-    margin-top: .25em;
-    margin-left: .25em;
-    color: black;
-    background-color: gainsboro;
-    border: solid thin gainsboro;
-    border-radius: .25em;
-}
-
-button.disutility {
-    font-size: 1em;
-    font-weight: bold;
-    width: 2em;
-    margin-top: .25em;
-    margin-left: .25em;
-    color: black;
-    background-color: darkgray;
-    border: solid thin darkgray;
-    border-radius: .25em;
+/*just the main title so far*/
+button.main {
+  font-family: "IM Fell DW Pica SC";
+  border: none;
+  background-color: inherit;
+  color: lightsteelblue;
+  font-size: 1.3em;
 }
 
 button.real {
-    width: 6em;
-    margin-top: .25em;
-    margin-left: .25em;
-    
-    background-color: gainsboro;
-    border: solid thick gainsboro;
-    border-radius: .25em;
-     
-    /*font-weight: bold;*/
-    /*background-image: url('k13726987.jpg');
-    color: gray;
-    border: solid thin black;
-    border-radius: .25em;*/
+  width: 6em;
+  border-radius: .25em;
+  font-size: 1em;
+  color: black;
 }
 
-button.guessed {
-    border: none;
-    background-color: inherit;
-    /*color: palegoldenrod;*/
-    color: aqua;
-    font-size: 1.3em;
-    /*color: wheat;
-    /*color: sandybrown;*/
-    /*background-color: sandybrown;*/
+button.unpicked {
+  background-color: gainsboro;
+  border: solid thick gainsboro;
 }
 
-button.unguessed {
-    font-size: 1.3em;
-    border: none;
-    background-color: inherit;
-    color: lightsteelblue;
-    /*background-color: teal;*/
+button.picked {
+  background-color: aqua;
+  border: solid thick aqua;
 }
 
-button.smallunguessed {
-    /*font-size: 1.5em;*/
-    border: none;
-    background-color: inherit;
-    color: lightsteelblue;
-    /*background-color: teal;*/
-}
-
-button.doomunguessed {
-    /*font-size: 1.5em;*/
-    border: none;
-    background-color: inherit;
-    color: tomato;
-    /*background-color: teal;*/
-}
-
-button.greatunguessed {
-    /*font-size: 1.5em;*/
-    border: none;
-    background-color: inherit;
-    color: mediumaquamarine;
-    /*background-color: teal;*/
-}
-
-button.cautionunguessed {
-    /*font-size: 1.5em;*/
-    border: none;
-    background-color: inherit;
-    color: orange;
-    /*background-color: teal;*/
-}
-
-button.worthy {
-    font-size: 1.3em;
-    border: none;
-    background-color: inherit;
-    /*color: lemonchiffon;*/
-    color: lemonchiffon;
-    /*background-color: teal;*/
-}
-
-button.other {
-    font-family: "IM Fell DW Pica SC";
-    //font-size: 1.5em;
-    border: none;
-    background-color: inherit;
-    color: lightsteelblue;
-    /*background-color: teal;*/
-    
-    /*font-family: "IM Fell DW Pica SC";
-    color: lightsteelblue;
-    margin: 0em;
-    padding: 0em;
-    border: none;
-    margin-left: 2em;
-    float: left;*/
-}
-
-button.tight {
-  font-size: 0.75em;
-  width: 4.5em;
-}
-
-button.list {
-    font-size: 1em;
-    border: none;
-    background-color: inherit;
-    color: lightsteelblue;
-    margin: 0em;
-    padding: 0em;
-}
-
-button.picked:hover {
-    background-color: aliceblue;
-    border: solid thick aliceblue;
-}
-
-button.real:hover {
-    background-color: azure;
-    border: solid thick azure;
-}
-
-button.utility:hover {
-    background-color: azure;
-    border: solid thin azure;
-}
-
-.clonebutton:hover {
-    background-color: azure;
-    border: solid thick azure;
-}
-
-button.unguessed:hover {
-    color: sandybrown;
-    /*border: solid;*/
-}
-
-button.smallunguessed:hover {
-    color: sandybrown;
-    /*border: solid;*/
-}
-
-button.greatunguessed:hover, button.cautionunguessed:hover, button.doomunguessed:hover {
-    color: aqua;
-    /*border: solid;*/
-}
-
-button.guessed:hover {
-    color: sandybrown;
-    /*border: solid;*/
-}
-
-button.worthy:hover {
-    color: sandybrown;
-    /*border: solid;*/
-}
-
-button.other:hover {
-    color: sandybrown;
-    /*border: solid;*/
-}
-
-button.list:hover {
-    color: sandybrown;
-    /*border: solid;*/
-}
-
-button.neutraltimes:hover {
-    color: sandybrown;
-    /*border: solid;*/
-}
-
-button.funtimes:hover {
-    color: aqua;
-    /*border: solid;*/
-}
-
-button.siltimes:hover {
-    color: aqua;
-    /*border: solid;*/
-}
-
-button.giver:hover {
-    color: aqua;
-    /*border: solid;*/
-}
-
-
-p.talk {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1em;
-    background: rgba(204, 204, 204, 0.0);
-}
-
-.name {
-    position: relative;
-    margin-top: -7em;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /*background-color: black;*/
-    background: rgba(204, 204, 204, 0.0);
-    color: white;
-    /*border: solid white 1em;*/
-
-}
-
-button.next {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 15em;
-    height: 4em;
-    margin: .2em;
-    padding: none;
-    border: none;
-    border-radius: 1em;
-    color: black;
-    background-color: gray;
-    margin-top: -3em;
-}
-
-td {
-    padding-left: 1em;
-    padding-bottom: none;
-    padding-top: none;
-    border: none;
-    margin: none;
-}
-
-tr.spiffy {
-    color: aqua;
-}
-
-tr.gridded {
-    outline: dotted thin gray;
-    margin-top: 50em;
-}
-
-p.centerheader {
-    font-size: 2em;
-    margin: 0em;
-    margin-left: 2em;
-    padding: 0em;
-    border: none;
-}
-
-.blue {
-    margin: 0em;
-    padding: 0em;
-    border: none;
-    color: wheat;
-}
-
-p.tiny {
-    position: absolute;
-    top: .3em;;
-    right: .5em;
-    font-size: .6em;
-}
-
-.error {
-    position: absolute;
-    bottom: 1em;
-    left: 1em;
-}
-
-p.errormessage {
-    font-family: 'Alegreya Sans SC';
-    font-weight: 800;
-    color: lime;
-    margin: 0em;
-    margin-left: 2em;
-    border: none;
-    padding: 0.25em;
-    font-size: 1.2em;
-}
-
-.shift {
-    margin-left: 3em;
+/* for main search bar */
+.thickprompt {
+  font-family: "Patua One";
+  font-size: 1em;
+  width: 8em;
+  padding: 0em 0em 0em 0.5em;
 }
 
 input {
   height: 2em;
+  border: thin solid white;
+  border-radius: 0.125em;
 }
 
-ul {
-  margin-top: 0em;
+input:focus {
+  border: thin solid lightskyblue;
+  border-radius: 0.125em;
 }
 
-p {
-    /*margin: 0em;
-    padding: 0em;
-    border: none;*/
-    /*margin-left: 2em;*/
-    margin-right: 2em;
-    margin-bottom: 0em;
-    /*font-family: "Cinzel Decorative", Arial, sans-serif;
-    position: relative;*/
-    color: lightsteelblue;
-    font-size: 1.25em;
-    /*border: solid white 1em;*/
+/*ALL GENERIC SPACING STUFF GOES HERE*/
+.space {
+  margin-right: .25em;
 }
 
-p.tight {
-  font-size: 1em;
+.scoot {
+  margin-left: 2.0em;
 }
 
-p.lineup {
-  margin-left: 0.25em;
+/* parent has to be position relative */
+.smashdownright {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin-right: 2em;
 }
 
-.phonescroll {
-  display: none;
+.smashleft {
+  float: left;
 }
 
-  .phonehide {
-    display: inline-block;
-  }
-  
-.phonestick {
-  display: inline;
+.smashright {
+  float: right;
+  margin-right: 2em;
 }
 
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-/**************************************************************************************/
-
-@media only screen and (max-device-width:640px){
-
-.phonestick {
-  display: inline-block;
+.tiny {
+  font-size: 0.6em;
 }
-  
-  hr {
-    display: none;
-  }
-  
-  .phonehide {
-    display: none;
-  }
-    
-  .phonescroll {
-    display: block;
-  }
-  
-  h1 {
-      font-family: "IM Fell DW Pica SC";
-      color: lightsteelblue;
-      margin: 0em;
-      padding: 0em;
-      border: none;
-      margin-left: 0em;
-      width: 15em;
-  }
 
-  /*body {
-      font-family: "Patua One";
-      background-color: #101010;
-      background-size:     cover;
-      background-repeat:   no-repeat;
-      background-position: center center;
-      color: lightsteelblue;
-  }*/
-
-  /*.fakecenter {
-    margin-left: 7em; 
-  }
-
-  .lesscenter {
-    margin-left: 3em; 
-  }*/
-
-  .thickprompt {
-      display: inline-block;
-      font-family: "Patua One";
-      font-size: 5em;
-      width: 15.5em;
-      height: 2em;
-  }
-  
-  .subprompt {
-      display: inline-block;
-      font-family: "Patua One";
-      font-size: 5em;
-      width: 16em;
-      height: 2em;
-      margin-bottom: .25em;
-      color: white;
-      background-color: inherit;
-      border: none;
-  }
-
-  /*.box {
-      border: dotted, thin, white;
-  }*/
-
-  .centerheader{
-    font-size: 4em;
-    color: cornflowerblue;
-  }
-
-  .bar{
-      display: inline-block;
-      margin-left: 0em;
-      margin-bottom: 1em;
-  }
-
-  /*.download{
-      margin: 1em;
-  }
-
-  .offstate {
-      opacity: 0.1;
-  }*/
-
-  /*this is the one that allowed horizontal tiling*/
-  /*.shortscroll {
-      height: 50vh;
-      padding: 1em;
-      margin-left: 2em;
-      float: left;
-      overflow: scroll;
-      overflow-x: hidden;
-  }*/
-
-  /*.info {
-    display: inline-block;
-    height: 70vh;
-    padding: 1em;
-    vertical-align: top;
-    margin-top: 1em;
-    white-space: normal;
-  }
-
-
-  .scrollable2 {
-    display: inline-block;
-    height: 70vh;
-    padding: 1em;
-    overflow: scroll;
-    overflow-x: hidden;
-    vertical-align: top;
-    margin-top: 1em;
-    width: 60em;
-    white-space: normal;
-  }
-
-  .scrollable3 {
-    display: inline-block;
-    height: 70vh;
-    padding: 1em;
-    overflow-x: hidden;
-    vertical-align: top;
-    margin-top: 2em;
-    width: 20em;
-    white-space: normal;
-  }
-
-  .scrollable {
-    display: inline-block;
-    height: 70vh;
-    padding: 1em;
-    overflow: scroll;
-    overflow-x: hidden;
-    vertical-align: top;
-    margin-top: 1em;
-  }
-
-  .oldscrollable {
-    height: 70vh;
-    padding: 1em;
-    float: left;
-    overflow: scroll;
-    overflow-x: hidden;
-  }
-
-  .stick {
-    display: inline-block;
-  }*/
-
-  .lrscrollable {
-    display: none;
-  }
-
-  .oldlrscrollable {
-      margin-left: 1em;
-      overflow: scroll;
-      overflow-y: hidden;
-      overflow-x: hidden;
-      min-width: 1920px;
-  }
-
-  .scoot {
-      margin-left: 2em;
-  }
-
-  .scootmore {
-      margin-left: 3em;
-  }
-
-  .scootcrazy {
-      margin-left: 4em;
-  }
-
-  ul {
-    margin-left: 0;
-    padding: 0;
-    list-style: none;
-  }
-  
-  li {
-    margin: 0;
-    padding: 0;
-    font-family: "Alegreya Sans SC";
-    list-style-type: none;
-  }
-
-  span.golden {
-    color: #AB82FF;
-  }*/
-
-  span.neutraltimes, button.neutraltimes, td.neutraltimes, li.neutraltimes {
-    font-family: "Alegreya Sans SC";
-    font-size: 4.8em;
-    color: lightsteelblue;
-    list-style-type: none;
-    
-    background-color: inherit;
-    border: none;
-  }
-
-  span.funtimes, button.funtimes, td.funtimes, li.funtimes {
-    font-family: "Alegreya Sans SC";
-    font-size: 4.8em;
-    color: sandybrown;
-    list-style-type: none;
-    
-    background-color: inherit;
-    border: none;
-  }
-
-  span.siltimes, button.siltimes, td.siltimes, li.siltimes {
-    font-family: "Alegreya Sans SC";
-    font-size: 4.8em;
-    color: #66AACD;
-    list-style-type: none;
-    
-    background-color: inherit;
-    border: none;
-  }
-
-  span.giver, button.giver, td.giver, li.giver {
-    font-family: "Alegreya Sans SC";
-    font-size: 4.8em;
-    color: lightgreen;
-    list-style-type: none;
-    
-    background-color: inherit;
-    border: none;
-  }
-
-  td.doom, li.doom {
-    width: 9.75em;
-    word-wrap: break-word;
-    font-family: "Alegreya Sans SC";
-    font-size: 8em;
-    color: tomato;
-    list-style-type: none;
-    outline: solid thick gray;
-  }
-
-  td.great, li.great {
-    width: 9.75em;
-    word-wrap: break-word;
-    font-family: "Alegreya Sans SC";
-    font-size: 8em;
-    color: mediumaquamarine;
-    list-style-type: none;
-    outline: solid thick gray;
-  }
-
-  td.caution, li.caution {
-    width: 9.75em;
-    word-wrap: break-word;
-    font-family: "Alegreya Sans SC";
-    font-size: 8em;
-    color: orange;
-    list-style-type: none;
-    outline: solid thick gray;
-  }
-  
-  td.none, li.none {
-    width: 9.75em;
-    border-left: none;
-    word-wrap: break-word;
-    font-family: "Alegreya Sans SC";
-    font-size: 8em;
-    color: lightsteelblue;
-    list-style-type: none;
-    outline: solid thick gray;
-  }
-
-  td.selfline, li.selfline {
-    font-family: "Alegreya Sans SC";
-    font-size: 4.8em;
-    color: aqua;
-    list-style-type: none;
-  }
-
-  .funnertimes {
-    font-size: 4.8em;
-    color: linen;
-  }
-
-  .sillytimes {
-    font-size: 4.8em;
-    color: wheat;
-  }
-
-  .logpanel {
-    display: none;
-  }
-
-  /*.leftlogpanel {
-      display: inline-block;
-      vertical-align: bottom;
-  }
-
-  .log {
-      background-size:cover;
-      position: absolute;
-      float: left;
-      margin-left: 2em;
-  }
-
-  .silly {
-      width: 3em;
-      height: 3em;
-  }*/
-
-  .clonebutton {
-      word-wrap: break-word;
-      font-family: 'Alegreya Sans SC';
-      font-size: 4em;
-      width: 6em;
-      margin-top: .25em;
-      margin-left: .25em;
-      background-color: gainsboro;
-      border: solid thick gainsboro;
-      border-radius: .25em;
-      height: 1.75em;
-  }
-
-  button {
-      word-wrap: break-word;
-      font-family: 'Alegreya Sans SC';
-      font-size: 4em;
-      padding: 0;
-      margin: 0;
-  }
-
-  button.picked {
-      width: 6em;
-      height: 2em;
-      margin-top: .25em;
-      margin-left: .25em;
-      color: black;
-      background-color: aqua;
-      border: solid thick aqua;
-      border-radius: .25em;
-  }
-
-  button.real {
-      width: 6em;
-      height: 2em;
-      margin-top: .25em;
-      margin-left: .25em;
-      
-      background-color: gainsboro;
-      border: solid thick gainsboro;
-      border-radius: .25em;
-  }
-
-  button.guessed {
-      border: none;
-      background-color: inherit;
-      color: aqua;
-      font-size: 6em;
-  }
-
-  button.unguessed {
-      font-size: 6em;
-      border: none;
-      background-color: inherit;
-      color: lightsteelblue;
-      /*background-color: teal;*/
-  }
-
-  button.worthy {
-      font-size: 6em;
-      border: none;
-      background-color: inherit;
-      /*color: lemonchiffon;*/
-      color: lemonchiffon;
-      /*background-color: teal;*/
-  }
-
-  /*button.other {
-      font-family: "IM Fell DW Pica SC";
-      border: none;
-      background-color: inherit;
-      color: lightsteelblue;
-  }*/
-
-  button.list {
-      font-size: 4em;
-      border: none;
-      background-color: inherit;
-      color: lightsteelblue;
-      margin: 0em;
-      padding: 0em;
-  }
-
-  /*button.picked:hover {
-      background-color: aliceblue;
-      border: solid thick aliceblue;
-  }
-
-  button.real:hover {
-      background-color: azure;
-      border: solid thick azure;
-  }
-
-  .clonebutton:hover {
-      background-color: azure;
-      border: solid thick azure;
-  }
-
-  button.unguessed:hover {
-      color: sandybrown;
-  }
-
-  button.guessed:hover {
-      color: sandybrown;
-  }
-
-  button.worthy:hover {
-      color: sandybrown;
-  }
-
-  button.other:hover {
-      color: sandybrown;
-  }
-
-  button.list:hover {
-      color: sandybrown;
-  }
-
-  button.neutraltimes:hover {
-      color: sandybrown;
-  }
-
-  button.funtimes:hover {
-      color: aqua;
-  }
-
-  button.siltimes:hover {
-      color: aqua;
-  }
-
-  button.giver:hover {
-      color: aqua;
-  }*/
-
-
-  p.talk {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 4em;
-      background: rgba(204, 204, 204, 0.0);
-  }
-
-  /*.name {
-      position: relative;
-      margin-top: -7em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(204, 204, 204, 0.0);
-      color: white;
-  }*/
-
-  /*button.next {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 15em;
-      height: 4em;
-      margin: .2em;
-      padding: none;
-      border: none;
-      border-radius: 1em;
-      color: black;
-      background-color: gray;
-      margin-top: -3em;
-  }
-
-  td {
-      padding-left: 1em;
-      padding-bottom: none;
-      padding-top: none;
-      border: none;
-      margin: none;
-  }*/
-
-  /*tr.spiffy {
-      color: aqua;
-  }
-
-  tr.gridded {
-      outline: dotted thin gray;
-      margin-top: 50em;
-  }*/
-
-  p.centerheader {
-      font-size: 4em;
-      margin: 0em;
-      margin-left: 0em;
-      padding: 0em;
-      border: none;
-  }
-  
-  p.guessed {
-      color: aqua;
-      font-size: 4em;
-      margin: 0em;
-      margin-left: 0em;
-      padding: 0em;
-      border: none;
-  }
-
-  /*.blue {
-      margin: 0em;
-      padding: 0em;
-      border: none;
-      color: wheat;
-  }*/
-
-  p.tiny {
-    display: none;
-  }
-
-  .error {
-    display: none;
-  }
-
-  /*p.errormessage {
-      font-family: 'Alegreya Sans SC';
-      font-weight: 800;
-      color: lime;
-      margin: 0em;
-      margin-left: 2em;
-      border: none;
-      padding: 0.25em;
-      font-size: 4.8em;
-  }*/
-
-  /*.shift {
-      margin-left: 3em;
-  }
-
-  input {
-    height: 2em;
-  }
-
-  ul {
-    margin-top: 0em;
-  }*/
-
-  p {
-      margin-right: 2em;
-      margin-bottom: 0em;
-      color: lightsteelblue;
-      font-size: 4em;
-  }
-
-  /*p.lineup {
-    margin-left: 0.25em;
-  }*/
+.center {
+  text-align: center;
 }

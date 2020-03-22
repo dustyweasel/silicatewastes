@@ -13,106 +13,76 @@
     <title>{{title}}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='hangslab.css') }}" />
   </head>
-  <body>
-    <form action="/" method='GET'>
-        <h1><button class="other" name="home" value="home" >www.silicatewastes.com</button></h1>
-    </form>
-    <div class="logpanel">
-      {% if username %}
-        <a href="/logout">logout {{username}}</a>
-      {% else %} 
-        <a href="/register">register</a>&nbsp<a href="/login">login</a>
-      {% endif %}
-    </div>
-    
-    <p class="tiny">The shadiest source of sink DXF files on the internet.<br/>
-    Also a questionable source of ARD'S, ASD'S, DWG's, EST's, &amp; TAG'S.<br/>
-    by: dustyweasel</p>
-    <form class="bar" action="/" method='GET'>
-      <input class="thickprompt" type="text" name='searchval' value="{{staticsearchval}}"
-      maxlength="10" >
-      <div class="phonestick">
-      {% if staticsearchval and not blanco %}
-        <button class="picked" name="home" value="search" >FILTER</button>
-      {% else %}
-        <button class="real" name="home" value="search" >FILTER</button>
-      {% endif %}
-      {% if blanco %}
-        <button class="picked" name="home" value="blanco" >BLANCO</button>
-      {% else %}
-        <button class="real" name="home" value="blanco" >BLANCO</button>
-      {% endif %}
+  <section>
+  <body>  {#body and section are the same to me.  not indenting #}
+    <header>
+      <h1>
+        <form action="/" method='GET'>  
+          <button class="main" name="home" value="home" >www.silicatewastes.com</button>
+        </form>
+      </h1>
+      
+      <div class="smashdownright">
+        {% if username %}
+          <a href="/logout">logout {{username}}</a>
+        {% else %} 
+          <a href="/register">register</a>&nbsp<a href="/login">login</a>
+        {% endif %}
       </div>
-      <div class="phonehide">
-      {% if babble %}
-        <button class="picked" name="home" value="chat" >NEWS</button>
-      {% else %}
-        <button class="real" name="home" value="chat" >NEWS</button>
-      {% endif %}
-      {% if stalk %}
-        <button class="picked" name="home" value="stalk" >STALK</button>
-      {% else %}
-        <button class="real" name="home" value="stalk" >STALK</button>
-      {% endif %}
-      {% if stats %}
-        <button class="picked" name="home" value="stats" >STATS</button>
-      {% else %}
-        <button class="real" name="home" value="stats" >STATS</button>
-      {% endif %}
-      </div>
-      {# <button class="real" name="more" >MORE</button> #}
-        
-      <div class="error">
-        {% with messages = get_flashed_messages() %}
-          <p class="errormessage">
-          {% for message in messages %}
-            {{message}}
-            <br/>
-          {% endfor %}
-          </p>
-        {% endwith %}
-      </div>
-        
-        
-    </form>
-   
-    <hr />
-    {% if stats %}
-      <div class="scoot">
-        <form action="/stats" method='GET'>
-          {% if screen == "topdownloads" %}
-            <button class="utility" name="cycle" value="previous" >&larr;</button>
-            <button class="utility" name="cycle" value="next" >&rarr;</button>
+      <div> {# pointless div #}
+        <form action="/" method='GET'> 
+          <input class="thickprompt space" type="text" name='searchval' value="{{staticsearchval}}" 
+          maxlength="10">
+          
+          {% if staticsearchval and not blanco %}
+            <button class="real picked space center" name="home" value="search" >FILTER</button>
           {% else %}
-            <button class="disutility" name="cycle" value="previous" disabled>&larr;</button>
-            <button class="disutility" name="cycle" value="next" disabled>&rarr;</button>
+            <button class="real unpicked space center" name="home" value="search" >FILTER</button>
           {% endif %}
-          {% if screen == "topdownloads" %}
-            <button class="picked tight" name="screen" value="topdownloads" >SINKS</button>
+          {% if blanco %}
+            <button class="real picked space center" name="home" value="blanco" >BLANCO</button>
           {% else %}
-            <button class="real tight" name="screen" value="topdownloads" >SINKS</button>
+            <button class="real unpicked space center" name="home" value="blanco" >BLANCO</button>
           {% endif %}
-          {% if screen == "raters" %}
-            <button class="picked tight" name="screen" value="raters" >RATERS</button>
+          {% if babble %}
+            <button class="real picked space center" name="home" value="chat" >NEWS</button>
           {% else %}
-            <button class="real tight" name="screen" value="raters" >RATERS</button>
+            <button class="real unpicked space center" name="home" value="chat" >NEWS</button>
           {% endif %}
-          {% if screen == "dust" %}
-            <button class="picked tight" name="screen" value="dust" >DUST</button>
+          {% if stalk %}
+            <button class="real picked space center" name="home" value="stalk" >STALK</button>
           {% else %}
-            <button class="real tight" name="screen" value="dust" >DUST</button>
+            <button class="real unpicked space center" name="home" value="stalk" >STALK</button>
           {% endif %}
-          {% if screen == "recent" %}
-            <button class="picked tight" name="screen" value="recent" >RECENT</button>
+          {% if stats %}
+            <button class="real picked space center" name="home" value="stats" >STATS</button>
           {% else %}
-            <button class="real tight" name="screen" value="recent" >RECENT</button>
+            <button class="real unpicked space center" name="home" value="stats" >STATS</button>
           {% endif %}
-          <input type="hidden" name="page" value="{{page}}" />
         </form>
       </div>
-    {% endif %}
+      
+    </header>
+    
+    <hr/>
+  
+  
+  
     {% block content %}
     {% endblock %}
+    <footer>
+      <div>
+        <p class="smashleft">
+        holy crap!
+        </p>
+        <p class="smashright tiny">
+        The shadiest source of sink DXF files on the internet.<br/>
+        Also a questionable source of ARD'S, ASD'S, DWG's, EST's, &amp; TAG'S.<br/>
+        by: dustyweasel
+        </p>
+      </div>
+    </footer>
 
   </body>
+  </section>
 </html>
