@@ -1,88 +1,101 @@
 <!doctype html>
 
-{# VARIABLES:
-  title - tab title
-  username - logged on username
-  staticsearchval - search value
-  blanco - copy of staticsearchval if it exists
-  babble - trash variable, on if chat menu
-#}
-
 <html>
   <head>
     <title>{{title}}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='hangslab.css') }}" />
   </head>
-  <section>
-  <body>  {#body and section are the same to me.  not indenting #}
-    <header>
-      <h1>
-        <form action="/" method='GET'>  
-          <button class="main" name="home" value="home" >www.silicatewastes.com</button>
-        </form>
-      </h1>
-      
-      <div class="smashdownright">
-        {% if username %}
-          <a href="/logout">logout {{username}}</a>
-        {% else %} 
-          <a href="/register">register</a>&nbsp<a href="/login">login</a>
-        {% endif %}
-      </div>
-      <div> {# pointless div #}
-        <form action="/" method='GET'> 
-          <input class="thickprompt space" type="text" name='searchval' value="{{staticsearchval}}" 
-          maxlength="10">
+  
+  <body>
+    <section class="standard">
+      <header>
+        <section class="splay">
+          <div>
+            <form action="/" method='GET'>  
+              <button class="main lessscoot" name="home" value="home" >www.silicatewastes.com</button>
+            </form>
+          </div>
           
-          {% if staticsearchval and not blanco %}
-            <button class="real picked space center" name="home" value="search" >FILTER</button>
-          {% else %}
-            <button class="real unpicked space center" name="home" value="search" >FILTER</button>
-          {% endif %}
-          {% if blanco %}
-            <button class="real picked space center" name="home" value="blanco" >BLANCO</button>
-          {% else %}
-            <button class="real unpicked space center" name="home" value="blanco" >BLANCO</button>
-          {% endif %}
-          {% if babble %}
-            <button class="real picked space center" name="home" value="chat" >NEWS</button>
-          {% else %}
-            <button class="real unpicked space center" name="home" value="chat" >NEWS</button>
-          {% endif %}
-          {% if stalk %}
-            <button class="real picked space center" name="home" value="stalk" >STALK</button>
-          {% else %}
-            <button class="real unpicked space center" name="home" value="stalk" >STALK</button>
-          {% endif %}
-          {% if stats %}
-            <button class="real picked space center" name="home" value="stats" >STATS</button>
-          {% else %}
-            <button class="real unpicked space center" name="home" value="stats" >STATS</button>
-          {% endif %}
-        </form>
-      </div>
+          <div class="splayspace">
+          </div>
+          
+          <div class="edge">
+            {% if username %}
+              <a href="/logout">logout {{username}}</a>
+            {% else %} 
+              <a href="/register">register</a>&nbsp<a href="/login">login</a>
+            {% endif %}
+          </div>
+        </section>
+        
+        <div> {# pointless div #}
+          <form action="/" method='GET'> 
+            <input class="thickprompt space" type="text" name='searchval' value="{{searchval}}" 
+            maxlength="10">
+            
+            {% if state == "search" %}
+              <button class="real picked space vspace center" name="home" value="search" >FILTER</button>
+            {% else %}
+              <button class="real unpicked space vspace center" name="home" value="search" >FILTER</button>
+            {% endif %}
+            {% if state == "blanco" %}
+              <button class="real blancopicked space vspace center" name="home" value="blanco" >BLANCO</button>
+            {% else %}
+              <button class="real unpicked space vspace center" name="home" value="blanco" >BLANCO</button>
+            {% endif %}
+            {% if babble %}
+              <button class="real picked space vspace center" name="home" value="chat" >NEWS</button>
+            {% else %}
+              <button class="real unpicked space vspace center" name="home" value="chat" >NEWS</button>
+            {% endif %}
+            {% if stalk %}
+              <button class="real picked space vspace center" name="home" value="stalk" >STALK</button>
+            {% else %}
+              <button class="real unpicked space vspace center" name="home" value="stalk" >STALK</button>
+            {% endif %}
+            {% if stats %}
+              <button class="real picked space vspace center" name="home" value="stats" >STATS</button>
+            {% else %}
+              <button class="real unpicked space vspace center" name="home" value="stats" >STATS</button>
+            {% endif %}
+          </form>
+        </div>
+        
+      </header>
       
-    </header>
+      <hr/>
     
-    <hr/>
-  
-  
-  
-    {% block content %}
-    {% endblock %}
-    <footer>
-      <div>
-        <p class="smashleft">
-        holy crap!
-        </p>
-        <p class="smashright tiny">
-        The shadiest source of sink DXF files on the internet.<br/>
-        Also a questionable source of ARD'S, ASD'S, DWG's, EST's, &amp; TAG'S.<br/>
-        by: dustyweasel
-        </p>
-      </div>
-    </footer>
-
+    
+    
+      {% block content %}
+      {% endblock %}
+      <footer>
+        <section class="splay">
+          <div>
+            {% with messages = get_flashed_messages() %}
+              <p class="errormessage">
+              {% for message in messages %}
+                {{message}}
+                <br/>
+              {% endfor %}
+              </p>
+            {% endwith %}
+          </div>
+          
+          <div class="splayspace">
+          </div>
+          
+          <div class="edge">
+            <p class="tiny">
+              The shadiest source of sink DXF files on the internet.<br/>
+              Also a questionable source of ARD'S, ASD'S, DWG's, EST's, &amp; TAG'S.<br/>
+              by: dustyweasel
+            </p>
+          </div>
+        </section>
+      </footer>
+    </section>
   </body>
-  </section>
+  
+  
 </html>

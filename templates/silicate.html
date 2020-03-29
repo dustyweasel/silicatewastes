@@ -16,55 +16,39 @@
 
 {% block content %}
 
-  <div class="fill scoot">
-      <ul class="scrollable">
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsffffffffffffffffffffffff</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>adsfadsf</li>
-      <li>laast</li></ul>
-      
-  </div>
-
+<div class="standardspace">
+  <section class="splay">
+    <table class="scoot">
+      <thead>
+        <th class="superwide">
+          <form action="/" method='GET'>
+            <select style="background-color: {{selectcolor}}" class="pushdown" name="guy"
+            onchange='if(this.value != 0) { this.form.submit(); }'>
+            {% for guy in guys %}
+              <option value="{{guy}}">{{guy}}</option>
+            {% endfor %}
+            </select> /
+         
+            <select style="background-color: {{selectcolor}}" class="pushdown" name="folder"
+            onchange='if(this.value != 0) { this.form.submit(); }'>
+            {% for folder in folders %}
+              <option value="{{folder}}">{{folder}}</option>
+            {% endfor %}
+            </select> /
+          </form>
+        </th>
+        <th class="narrow">avg. rating</th>
+      </thead>
+      <tbody>
+        {% for cad in cads %}
+        <tr>
+          <td class="superwide">{{cad[0]}}</td>
+          <td style="color: {{cad[3]}}" class="narrow"><span class="rating">{{cad[2]}}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+  
 {% endblock %}

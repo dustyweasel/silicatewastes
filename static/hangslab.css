@@ -1,6 +1,3 @@
-/*this file is trash.  i understood css even less than i do now when i started and i
- * have no intention of refactoring this.  hopefully i'll understand it better on my
- * next project*/
 
 /* latin */
 @font-face {
@@ -48,25 +45,39 @@ a:focus, a:hover, a:active     {color: #cf0021}
   border: 0;
 }
 
-/*not sure why i can't just stick this in body*/
-section {
+section.standard {
   display: flex;
-  flex-flow: column;
+  flex-direction: column;
   height: 100vh;
+  /*overflow: hidden;*/
 }
 
-/*might move this out of div and into other stuff later, haven't thought it through*/
-div.fill {
+div.standardspace {
+  display: flex;
+  flex-direction: column;
   flex: 1;
   overflow: hidden;
 }
 
+section.splay {
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+div.splayspace {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
 header {
+  /*flex: 0 1 auto;*/
   margin: 0.5em 0em 0em 2em;
-  position: relative;
 }
 
 footer {
+  /*flex: 0 1 auto;*/
   margin: 1em 0em 1em 2em;
 }
 
@@ -83,8 +94,28 @@ body {
   background-size: cover;
 }
 
-h1 {
-  margin-left: 1.5em;
+select {
+  color: #101010;
+  font-family: 'Alegreya Sans SC';
+  font-size: 1.2em;
+ 
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+select {
+  color: #101010;
+  font-family: 'Alegreya Sans SC';
+  font-size: 1.2em;
+ 
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+select:hover {
+  border: solid thin azure;
 }
 
 hr {
@@ -93,12 +124,49 @@ hr {
   height: 2px;
 }
 
-.scrollable {
+table {
+  display: flex;
+  flex-direction: column;
+  font-family: 'Alegreya Sans SC';
+  overflow: hidden;
+}
+
+table thead {
+  color: white;
+}
+
+table tbody {
   display: inline-block;
-  overflow-y: auto;
+  /*display: inline-flex;*/
+  /*flex-direction: column;*/
+  overflow-y: scroll;
   overflow-x: hidden;
-  padding-right: 2em;
-  height: 100%;
+}
+
+tbody tr {
+  outline: dotted thin gray;
+}
+
+thead th.narrow, tbody td.narrow {
+  width: 4em;
+}
+
+thead th.medium, tbody td.medium {
+  width: 8em;
+}
+
+thead th.wide, tbody td.wide {
+  width: 13em;
+}
+
+thead th.superwide, tbody td.superwide {
+  width: 25em;
+}
+
+td, th {
+  padding: 0em 1em 0em 1em;
+  text-align: left;
+  word-wrap: anywhere;
 }
 
 button {
@@ -112,7 +180,7 @@ button.main {
   border: none;
   background-color: inherit;
   color: lightsteelblue;
-  font-size: 1.3em;
+  font-size: 2em;
 }
 
 button.real {
@@ -130,6 +198,16 @@ button.unpicked {
 button.picked {
   background-color: aqua;
   border: solid thick aqua;
+}
+
+button.blancopicked {
+  background-color: lime;
+  border: solid thick lime;
+}
+
+button.real:hover {
+  background-color: azure;
+  border: solid thick azure;
 }
 
 /* for main search bar */
@@ -151,36 +229,65 @@ input:focus {
   border-radius: 0.125em;
 }
 
-/*ALL GENERIC SPACING STUFF GOES HERE*/
+p.errormessage {
+  font-family: 'Alegreya Sans SC';
+  color: lime;
+  font-size: 1.3em;
+}
+
+/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
+/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
+/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
+/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
+/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
+/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
+/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
+/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
+
+/*titles and stuff*/
+/*.stick2 {
+  display: block;
+  font-family: "Alegreya Sans SC";
+  color: aqua;
+}*/
+
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
 .space {
   margin-right: .25em;
+}
+
+.edge {
+  margin-right: 2em;
+}
+
+.vspace {
+  margin-top: .25em;
+}
+
+.lessscoot {
+  margin-left: 1.0em;
 }
 
 .scoot {
   margin-left: 2.0em;
 }
 
-/* parent has to be position relative */
-.smashdownright {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  margin-right: 2em;
-}
-
-.smashleft {
-  float: left;
-}
-
-.smashright {
-  float: right;
-  margin-right: 2em;
+.pushdown {
+  margin-bottom: 0.25em;
 }
 
 .tiny {
   font-size: 0.6em;
 }
 
-.center {
-  text-align: center;
+.rating {
+  font-size: 1.2em;
 }
+
