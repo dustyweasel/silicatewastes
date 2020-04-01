@@ -1,244 +1,113 @@
 {% extends "base.html" %}
 
-{# VARIABLES IN:
-  donor - just .location of current guy this time
-  folder - selected folder
-  sink - selected sink
-  user_rating - class Rating
-  username - logged on guy's name
-  ratings - list of class Ratings
-  previous_sink - previous sink
-  
-  VARIABLES OUT:
-  later.
-  plus maybe i can kill some of them
-#}
-
 {% block content %}
 
-  {% if previous_sink %}
-    <form class="lesscenter" action="/sink" method='POST'>
-      <input type="hidden" name="cad" value="{{cad}}" />
-      <input type="hidden" name="donor" value="{{donor}}" />
-      {% if folder %}
-        <input type="hidden" name="current_folder" value="{{folder}}" />
-      {% else %}
-        <input type="hidden" name="current_folder" value="" />
-      {% endif %}
-      <input type="hidden" name="sink" value="{{sink}}" />
-      <p class="blue">Wait! Rate the last sink you downloaded:</p>
-      <p class="blue">{{previous_sink.location}}</p>
-      <table class="download">
-        <tr class="centerheader" >
-          <td>user</td><td>Rating</td><td>Comment</td>
-        </tr>
-        <tr class="spiffy">
-          <td class="selfline">{{username}}</td>
-          <td class="selfline">
-            <label for="1">1</label>
-            <input id="1" type="radio" name="starsB" value="1">
-            <label for="2">2</label>
-            <input id="2" type="radio" name="starsB" value="2">
-            <label for="3">3</label>
-            <input id="3" type="radio" name="starsB" value="3">
-          </td>
-          <td class="selfline"><input type="text" name="commentB" value="" maxlength="60"></td>
-          <td>
-            <button class="real" name="rate_previous" >RATE</button>
-            <button class="real" name="forgot" >LATER</button>
-          </td>
-        </tr>
-      </table>
-      <hr/>
-      <h1 class="blue" >rating system:</h1>
-      <p class="blue" >1-REMAKE&nbsp&nbspThis cutout was so bad that it caused a remake.<br/><br/>
-        2-GOOD ENOUGH&nbsp&nbspYou cut this sink and all you know is the job got installed
-        and you never heard anything about it.<br/><br/>
-        3-PERFECT&nbsp&nbspYou examined the CAD file and verified that the transitions between
-        arcs and lines are smooth (tangent lines parallel at transitions).  After
-        it was cut you checked the cutout to the sink with a tape measure and verified the
-        overhang was the same across the entire countour.<br/><br/>
-        If you haven't cut it yet then click the LATER button but please write down the sink info and
-        come back and rate it later.
-      </p>
-    </form>
-    <hr/>
-    <p class="lesscenter" >
-      please rate the sink above to load your selected sink:<br/>
-      {% if folder %}
-        {{donor}}/{{folder}}/{{sink}}
-      {% else %}
-        {{donor}}/{{sink}}
-      {% endif %}
-      <br/><br/>
-      Tip: Not every bad rating is valid.  If you know how to protect yourself
-      from remakes then check out a poorly rated sink and rate it yourself.
-      
-    </p>
+<div class="scoot">
+  <p style="color: {{ratecolor}}" class="pushdown">{{sink.location}}</p>
+  <form action="/downloadfile" method='POST'>
+    <input type="hidden" name="cad" value="{{sink.id}}"/>
+    <button class="real unpicked pushdown" name='download'>DOWNLOAD</button>
+    <button class="real unpicked" name='cancel'>CANCEL</button>
+  </form>
+  <p>Total Downloads = {{sink.downloads}}</p>
+  {% if not sink.avg_rating or sink.avg_rating <=0 %}
+    <p class="errormessage">Warning!  No one has rated this sink!</p>
   {% else %}
-    <div class="fakecenter">
-      {% if folder %}
-      
-        {% if average >= 2.0 %}
-          <p class="lineup great">{{donor}}/{{folder}}/{{sink}}</p>
-        {% elif average>= 1.5 %}
-          <p class="lineup caution">{{donor}}/{{folder}}/{{sink}}</p>
-        {% elif average>0 %}
-          <p class="lineup doom">{{donor}}/{{folder}}/{{sink}}</p>
-        {% else %}
-          <p class="lineup ambiguous">{{donor}}/{{folder}}/{{sink}}</p>
-        {% endif %}
-        
-      {% else %}
-        {% if average >= 2.0 %}
-          <p class="lineup great">{{donor}}/{{sink}}</p>
-        {% elif average>= 1.5 %}
-          <p class="lineup caution">{{donor}}/{{sink}}</p>
-        {% elif average>0 %}
-          <p class="lineup doom">{{donor}}/{{sink}}</p>
-        {% else %}
-          <p class="lineup ambiguous">{{donor}}/{{sink}}</p>
-        {% endif %}
-      {% endif %}
-            
-        <div class="stick">
-          <form class="stick"action="/downloadfile" method='POST'>
-            <input type="hidden" name="donor" value="{{donor}}" />
-            {% if folder %}
-              <input type="hidden" name="current_folder" value="{{folder}}" />
-            {% else %}
-              <input type="hidden" name="current_folder" value="" />
-            {% endif %}
-            <input type="hidden" name="sink" value="{{sink}}" />
-        
-            <button class="real" name='download'>DOWNLOAD</button>
-          </form>
-          <form class="stick" action="/downloadfile" method='GET'>
-            <input type="hidden" name="donor" value="{{donor}}" />
-            {% if folder %}
-              <input type="hidden" name="current_folder" value="{{folder}}" />
-            {% else %}
-              <input type="hidden" name="current_folder" value="" />
-            {% endif %}
-            <button class="real" name="cancel" >HOME</button>
-            
-          </form>
-          <p class="tight">Total Downloads = {{downloads}} </p>
-        </div>
-        
-    </div>
-    <p class="scootcrazy tight" >Compress all your sink drawings to a zipfile and send them to me
-    at:
-    <a href="mailto:dustyweasel@protonmail.com">dustyweasel@protonmail.com</a>.<br/>
-    I don't care if we already have 10 versions of a sink.  Just send everything you have.
-    <br/><br/>
-          The team here at silicatewastes.com would like to remind everyone that
-          washing your hands in sinks gets rid of viruses, unlike when you
-          download sinks above and get viruses.  It's the ultimate
-          irony.</p>
-        
-  {#  <form action="/sink" method='POST'>
-      <input type="hidden" name="donor" value="{{donor}}" />
-      {%  if folder %}
-        <input type="hidden" name="current_folder" value="{{folder}}" />
-      {% else %}
-        <input type="hidden" name="current_folder" value="{{folder}}" />
-      {% endif %}
-      <input type="hidden" name="sink" value="{{sink}}" />
-      <input type="hidden" name="username" value="{{username}}" /> #}
-      
-      
-      <hr/>
-      {# <div class=shortscroll> #}
-        <p class="scoot" >
-          1-REMAKE&nbsp&nbsp&nbsp2-GOOD ENOUGH&nbsp&nbsp&nbsp3-PERFECT<br/>
-          Don't guess.  Cut before you rate unless you're sure it's
-          a remake.<br/><br/>
-          If it's not a dxf and you can't use it then don't rate it.  It's here for the people who use that format.
-        </p>
-        <table class="download">
-        
-          <form action="/sink" method='POST'>
-            <input type="hidden" name="cad" value="{{cad}}" />
-            <input type="hidden" name="donor" value="{{donor}}" />
-            {%  if folder %}
-              <input type="hidden" name="current_folder" value="{{folder}}" />
-            {% else %}
-              <input type="hidden" name="current_folder" value="{{folder}}" />
-            {% endif %}
-            <input type="hidden" name="sink" value="{{sink}}" />
-            <input type="hidden" name="username" value="{{username}}" />
-          <thead>
-          <tr class="centerheader" >
-            <th class="stick3 wide">user</td><th class="stick3 wide">Rating</td><th class="stick3 wide">Comment</td>
-          </tr>
-          </thead>
-          <tbody class="tscrollshorter">
-          {% if user_rating %}
-            <tr class="gridded">
-              {# <td class="wide">{{user_rating.rater.username}}</td> #}
-              <td class="wide"><button class="disastertimes" disabled>
-              {{user_rating.rater.username}}</button></td>
-              <td class="wide">{{user_rating.stars}}</td>
-              <input type="hidden" name="stars"
-              value="{{user_rating.stars}}" />
-              <td class="wide">{{user_rating.comment}}</td>
-              <input class="clonebutton" type="hidden" name="comment"
-              value="{{user_rating.comment}}">
-              <td><button class="real" name="change" >CLEAR</button></td>
-            </tr>
-          {% elif username %}
-            <tr class="gridded">
-              {# <td class="wide">{{username}}</td> #}
-              <td class="wide"><button class="disastertimes" disabled>
-              {{username}}</button></td>
-              <td class="wide">
-                <label for="1">1</label>
-                <input id="1" type="radio" name="stars" value="1">
-                <label for="2">2</label>
-                <input id="2" type="radio" name="stars" value="2">
-                <label for="3">3</label>
-                <input id="3" type="radio" name="stars" value="3">
-              </td>
-              <td class="wide"><input type="text" name="comment" value="" maxlength="60"></td>
-              <td><button class="real" name="add">RATE</button></td>
-            </tr>
-             {% endif %}
-          </form>
-          
-      <form action="/sink" method='GET'>
-        <input type="hidden" name="cad" value="{{cad}}" />
-        
-            
-            
-            
-         
-          {% for rating in ratings %}
-            <tr class="gridded">
-              {% if not username or username!=rating.rater.username %}
-                {% if rating.rater.memberlevel==1 %}
-                  <td class="wide"><button class="funtimes" name="member"
-                  value="{{rating.rater.id}}" >{{rating.rater.username}}</button></td>
-                {% elif rating.rater.memberlevel==0 %}
-                  <td class="wide"><button class="siltimes" name="member"
-                  value="{{rating.rater.id}}" >{{rating.rater.username}}</button></td>
-                {% elif rating.rater.memberlevel==2 %}
-                  <td class="wide"><button class="giver" name="member"
-                  value="{{rating.rater.id}}" >{{rating.rater.username}}</button></td>
-                {% endif %}
-                <td class="wide">{{rating.stars}}</td>
-                <td class="wide">{{rating.comment}}</td>
-              {% endif %}
-            </tr>
-          {% endfor %}
-          
-        </form>
-          </tbody>          
-        </table>
-        {% if ratings|length == 0 %}
-          <p class="errormessage scoot">Warning!  No one has rated this sink!</p>
-        {% endif %}
-      {# </div> #}
+    <p>Average Rating = <span style="color: {{ratecolor}}">{{sink.avg_rating}}</span></p>
   {% endif %}
+  </br>
+  <p>Compress all your sink drawings to a zipfile and send them to me at:
+  <a href="mailto:dustyweasel@protonmail.com">dustyweasel@protonmail.com</a>. 
+  I don't care if we already have 10 versions of a sink.  Just send everything you have.
+  <br/><br/>
+  The team here at silicatewastes.com would like to remind everyone that
+  washing your hands in sinks gets rid of viruses, unlike when you
+  download sinks above and get viruses.  It's the ultimate
+  irony.
+  </p>
+</div>
+
+<hr/>
+<div class="scoot standardspace">
+  
+  <h1>1-<span style="color: {{ratecolors[0]}}">remake&nbsp&nbsp&nbsp</span>
+    2-<span style="color: {{ratecolors[1]}}">good enough</span>&nbsp&nbsp&nbsp3-
+    <span style="color: {{ratecolors[1]}}">perfect</span></h1>
+  <p class="pushdown">
+    Don't guess.  Cut before you rate unless you're sure it's
+    a remake.<br/><br/>
+    If it's not a dxf and you can't use it then don't rate it.  It's here for the people who
+    use that format.
+  </p>
+        
+  <section class="splay">      
+  <table>
+    <thead>
+      <tr>
+        <th class="wide">User</th>
+        <th class="medium">Rating</th>
+        <th class="wide">Comment</th>
+      </tr>
+    </thead>
+    
+    {% if user_rating %}
+      <tr>
+        <form action="/stalk" method='GET'>
+        <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+        onMouseOut="this.style.color='{{colors[user_rating.rater.memberlevel]}}'"
+        style="color: {{colors[user_rating.rater.memberlevel]}};" name="member"
+        value="{{user_rating.rater.id}}" >{{user_rating.rater.username}}</button></td>
+        </form>
+        <td class="medium">{{user_rating.stars}}</td>
+        <input type="hidden" name="stars" value="{{user_rating.stars}}" />
+        <td class="wide">{{user_rating.comment}}</td>
+        <input type="hidden" name="comment" value="{{user_rating.comment}}">
+        <form action="/sink" method='POST'>
+        <input type="hidden" name="cad" value="{{sink.id}}" />
+        <td><button class="real unpicked" name="rate" value="clear" >CLEAR</button></td>
+        </form>
+      </tr>
+    {% else %}
+      <tr>
+        <form action="/stalk" method='GET'>
+        <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+        onMouseOut="this.style.color='{{colors[user.memberlevel]}}'"
+        style="color: {{colors[user.memberlevel]}};" name="member"
+        value="{{user.id}}">{{username}}</button></td>
+        </form>
+        <form action="/sink" method='POST'>
+        <input type="hidden" name="cad" value="{{sink.id}}" />
+        <td class="medium">
+          <label style="color: {{ratecolors[0]}}" for="1">1</label>
+          <input class="radio" id="1" type="radio" name="stars" value="1">
+          <label style="color: {{ratecolors[1]}}" for="2">&nbsp2</label>
+          <input class="radio" id="2" type="radio" name="stars" value="2">
+          <label style="color: {{ratecolors[1]}}" for="3">&nbsp3</label>
+          <input class="radio" id="3" type="radio" name="stars" value="3">
+        </td>
+        <td class="superwide"><input type="text" name="comment" value="" maxlength="60">
+        &nbsp&nbsp<button class="real unpicked" name="rate" value="rate" >RATE</button></td>
+        </form>
+      </tr>
+    {% endif %} 
+    <tbody class="gridded">
+    <form action="/stalk" method='GET'>
+    {# <input type="hidden" name="cad" value="{{sink.id}}" /> #}
+    {% for rating in ratings %}
+      <tr>
+        <td class="wide"><button class="funtimes"
+        onMouseOver="this.style.color='{{colors[0]}}'"
+        onMouseOut="this.style.color='{{colors[rating.rater.memberlevel]}}'"
+        style="color: {{colors[rating.rater.memberlevel]}};" name="member"
+        value="{{rating.rater.id}}" >{{rating.rater.username}}</button></td>
+        <td class="medium">{{rating.stars}}</td>
+        <td class="superwide">{{rating.comment}}</td>
+      </tr>
+    {% endfor %}
+    </form>
+    </tbody>      
+  </table>
+  </section>
+</div>
 
 {% endblock %}

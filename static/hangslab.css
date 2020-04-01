@@ -45,6 +45,16 @@ a:focus, a:hover, a:active     {color: #cf0021}
   border: 0;
 }
 
+h1 {
+  font-family: "IM Fell DW Pica SC";
+  /*color: white;*/
+  font-size: 2em;
+}
+
+p {
+  margin: 0em 2em 0em 0em;
+}
+
 section.standard {
   display: flex;
   flex-direction: column;
@@ -94,7 +104,7 @@ body {
   background-size: cover;
 }
 
-select {
+/*select {
   color: #101010;
   font-family: 'Alegreya Sans SC';
   font-size: 1.2em;
@@ -102,7 +112,7 @@ select {
   border: 1px solid #ccc;
   border-radius: 3px;
   overflow: hidden;
-}
+}*/
 
 select {
   color: #101010;
@@ -124,6 +134,18 @@ hr {
   height: 2px;
 }
 
+div.scrollable {
+  display: inline-block;
+  /*display: inline-flex;*/
+  /*flex-direction: column;*/
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+label {
+  font-family: "Patua One";
+}
+
 table {
   display: flex;
   flex-direction: column;
@@ -131,7 +153,7 @@ table {
   overflow: hidden;
 }
 
-table thead {
+table th {
   color: white;
 }
 
@@ -139,11 +161,23 @@ table tbody {
   display: inline-block;
   /*display: inline-flex;*/
   /*flex-direction: column;*/
+}
+
+/*table tbody.freeze {
+  overflow-y: hidden;
+}*/
+
+tbody.gridded {
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
-tbody tr {
+tbody.static td {
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
+}
+
+tbody.gridded tr {
   outline: dotted thin gray;
 }
 
@@ -190,6 +224,11 @@ button.real {
   color: black;
 }
 
+button.real:hover {
+  background-color: azure;
+  border: solid thick azure;
+}
+
 button.unpicked {
   background-color: gainsboro;
   border: solid thick gainsboro;
@@ -201,13 +240,45 @@ button.picked {
 }
 
 button.blancopicked {
-  background-color: lime;
-  border: solid thick lime;
+  background-color: aquamarine;
+  border: solid thick aquamarine;
 }
 
-button.real:hover {
-  background-color: azure;
-  border: solid thick azure;
+button.utility {
+  font-size: 1em;
+  font-weight: bold;
+  width: 2em;
+  color: black;
+  background-color: gainsboro;
+  border: solid thin gainsboro;
+  border-radius: .25em;
+}
+
+button.disutility {
+  font-size: 1em;
+  font-weight: bold;
+  width: 2em;
+  color: black;
+  background-color: darkgray;
+  border: solid thin darkgray;
+  border-radius: .25em;
+}
+
+button.tight {
+  font-size: 0.75em;
+  width: 4.5em;
+}
+
+button.smallunguessed {
+  word-wrap: anywhere;
+  font-size: 1.2em;
+  border: none;
+  background-color: inherit;
+  color: lightsteelblue;
+}
+
+button.smallunguessed:hover, button.main:hover{
+  color: sandybrown;
 }
 
 /* for main search bar */
@@ -224,15 +295,47 @@ input {
   border-radius: 0.125em;
 }
 
+input.standard {
+  width: 15em;
+}
+
+input.radio {
+  height: 0;
+}
+
 input:focus {
   border: thin solid lightskyblue;
   border-radius: 0.125em;
+}
+
+span.funtimes, button.funtimes, td.funtimes, li.funtimes {
+  font-family: "Alegreya Sans SC";
+  font-size: 1.2em;
+  /*color: sandybrown;*/
+  list-style-type: none;
+  background-color: inherit;
+  border: none;
 }
 
 p.errormessage {
   font-family: 'Alegreya Sans SC';
   color: lime;
   font-size: 1.3em;
+}
+
+p.blancomessage {
+  font-family: 'Alegreya Sans SC';
+  color: mediumaquamarine;
+  font-size: 1.3em;
+}
+
+.art {
+  width: 3em;
+  height: 3em;
+}
+
+span.shrunk {
+  font-size: 0.75em;
 }
 
 /***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
@@ -271,12 +374,20 @@ p.errormessage {
   margin-top: .25em;
 }
 
+.vmorespace {
+  margin-top: 2em;
+}
+
 .lessscoot {
   margin-left: 1.0em;
 }
 
 .scoot {
   margin-left: 2.0em;
+}
+
+.scootmore {
+  margin-left: 4.0em;
 }
 
 .pushdown {

@@ -1,38 +1,32 @@
 {% extends "base.html" %}
 
-{# VARIABLES IN:
-  none
-  
-  VARIABLES OUT:
-  later.
-  plus maybe i can kill some of them
-#}
-
 {% block content %}
 
-  <div class=log>
-    <h1>Wander the silicate wastes.</h1>
-    <form action="/login" method="POST">
-      <table>
-        <tr>
-          <td><label for="username">username</label></td>
-          <td>
-            <input name="username" type="text" maxlength="20" value="">
-          </td>
-        </tr>
-        <tr>
-          <td><label for="password">password</label></td>
-          <td>
-            <input name="password" type="password" maxlength="30" value="">
-          </td>
-        </tr>
-      </table>
-      <input class="clonebutton" type="submit" value="LOGIN">
-    </form>
-    <form action="/" method="POST">
-      <button class="real" name="cancel" value="cancel">CANCEL</button>
-    </form>
-    <p>You'll be coughing up blood before you know it.</p>
-  </div>
+<div class="scoot standardspace">
+  <h1>Wander the silicate wastes.</h1>
+  <form action="/login" method="POST">
+    <table>
+    <tbody class="static">
+      <tr>
+        <td><label for="username">username</label></td>
+        <td>
+          <input name="username" type="text" maxlength="20" value="">
+        </td>
+      </tr>
+      <tr>
+        <td><label for="password">password</label></td>
+        <td>
+          <input name="password" type="password" maxlength="30" value="">
+        </td>
+      </tr>
+    </tbody>
+    </table>
+    <button class="real unpicked pushdown" name="LOGIN" value="LOGIN">LOGIN</button>
+  </form>
+  <form action="/" method="GET">
+    <button class="real unpicked pushdown" >CANCEL</button>
+  </form>
+  <p>You'll be coughing up blood before you know it.</p>
+</div>
 
 {% endblock %}

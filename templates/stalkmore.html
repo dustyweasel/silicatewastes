@@ -1,99 +1,76 @@
 {% extends "base.html" %}
 
-{# VARIABLES IN:
-  members - all registered users
-  
-  VARIABLES OUT:
-#}
-
 {% block content %}
 
-      <div>
-        <table class="download">
-          <tr class="centerheader" >
-            <td>ID</id>
-            <td>NAME</td>
-            <td>DOWNLOADS</td>
-            <td>CATCHPHRASE</td>
-            <td>COMPANY</td>
-            <td>STATE</td>
-          </tr>
-          <tr>
-            <td>{{memberdata.id}}</td>
-            {% if memberdata.memberlevel==1 %}
-              <td class="funtimes">{{memberdata.username}}</td>
-            {% elif memberdata.memberlevel==0 %}
-              <td class="siltimes">{{memberdata.username}}</td>
-            {% elif memberdata.memberlevel==2 %}
-              <td class="giver">{{memberdata.username}}</td>
-            {% endif %}
-            <td>{{memberdata.benefactor}}</td>
-            <td>{{memberdata.catchphrase}}</td>
-            <td>{{memberdata.company}}</td>
-            <td>{{memberdata.state}}</td>
-          </tr>
+<div> {# pointless div #}
+  <table class="scoot vspace">
+    <tr>
+      <th>ID</th>
+      <th>NAME</th>
+      <th>DOWNLOADS</th>
+      <th>CATCHPHRASE</th>
+      <th>COMPANY</th>
+      <th>STATE</th>
+    </tr>
+    <tr>
+      <td>{{memberdata.id}}</td>
+      <td style="color: {{colors[memberdata.memberlevel]}};" class="funtimes">
+      {{memberdata.username}}</td>
+      <td>{{memberdata.benefactor}}</td>
+      <td>{{memberdata.catchphrase}}</td>
+      <td>{{memberdata.company}}</td>
+      <td>{{memberdata.state}}</td>
+    </tr>
+  </table>
         
-        </table>
-        
-        {% if memberdata.id != 1 %}
-        
-          <p class="scoot">Send
-          a 20 character message to {{memberdata.username}} through silicatewastes@gmail.com.
-          Your email
-          address will
-          be included.</p>
+  {% if memberdata.id != 1 %}
+    <p class="scoot pushdown">Send
+      a 20 character message to {{memberdata.username}} through silicatewastes@gmail.com.
+      Your email address will be included.</p>
           
-          <form action="/stalk" method='POST'>
-            <input type="hidden" name="victim" value="{{memberdata.id}}" >
-            <input class="scootmore" type="text" name="harassment" maxlength="20">
-            <input class="clonebutton" type="submit" value="SEND">
-          </form>
-        {% else %}
-          <p class="scoot">Email addresses will remain hidden on this website.  Except for
-          mine.  Here it is:<br/>
-          <a href="mailto:dustyweasel@protonmail.com">dustyweasel@protonmail.com</a></p>
-        
-        {% endif %}
+    <form action="/stalk" method='POST'>
+      <input type="hidden" name="victim" value="{{memberdata.id}}" >
+      <input class="scootmore" type="text" name="harassment" maxlength="20">
+      <button class="real unpicked pushdown" >SEND</button>
+    </form>
+  {% else %}
+    <p class="scoot">Email addresses will remain hidden on this website.  Except for
+    mine.  Here it is:<br/>
+    <a href="mailto:dustyweasel@protonmail.com">dustyweasel@protonmail.com</a></p>
+  {% endif %}
           
-        <form action="/sink" method='GET'>
-        
-          {% if memberdata.memberlevel==1 %}
-            <p class="scoot"><span class="funtimes">{{memberdata.username}}'s sink ratings:</span></p>
-          {% elif memberdata.memberlevel==0 %}
-            <p class="scoot"><span class="siltimes">{{memberdata.username}}'s sink ratings:</span></p>
-          {% elif memberdata.memberlevel==2 %}
-            <p class="scoot"><span class="giver">{{memberdata.username}}'s sink ratings:</span></p>
-          {% endif %}
-        
-          {% if memberratings %}
-            <table class="download">
-              <thead>
-              <tr class="centerheader">
-                <th class="stick3 superwide">SINK</th>
-                <th class="stick3 narrow">RATING</th>
-                <th class="stick3 wide">COMMENT</th>
-              </tr>
-              </thead>
-              <tbody class="tscrollshort">
-              {% for memberrating in memberratings %}
-                <tr class="gridded">
-                  <td class="superwide"><button class="neutraltimes" name="cad" value="{{memberrating.sink_id}}">
-                  {{memberrating.location}}</button></td>
-                  <td class="narrow">{{memberrating.stars}}</td>
-                  <td class="wide">{{memberrating.comment}}</td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          {% else %}
-            <p class="errormessage scoot">{{memberdata.username}} hasn't rated any sinks.</p>
-          {% endif %}
-        
-        </form>
-        
-        
-      </div>
-      
-      
+  <p class="scoot"><span style="color: {{colors[memberdata.memberlevel]}};" class="funtimes">
+  {{memberdata.username}}'s sink ratings:</span></p>
+</div>
 
+<div class="standardspace">
+  {% if memberratings %}
+  <section class="splay">
+    <table class="scoot">
+      <thead>
+        <tr>
+          <th class="superwide">SINK</th>
+          <th class="narrow">RATING</th>
+          <th class="wide">COMMENT</th>
+        </tr>
+      </thead>
+      <tbody class="gridded">
+        <form action="/sink" method='GET'>
+        {% for memberrating in memberratings %}
+          <tr>
+            <td class="superwide"><button class="smallunguessed" name="cad" value="{{memberrating.sink_id}}">
+            {{memberrating.location}}</button></td>
+            <td class="narrow">{{memberrating.stars}}</td>
+            <td class="wide">{{memberrating.comment}}</td>
+          </tr>
+        {% endfor %}
+        </form>
+      </tbody>
+    </table>
+  </section>
+  {% else %}
+    <p class="errormessage scoot">{{memberdata.username}} hasn't rated any sinks.</p>
+  {% endif %}
+</div>
+      
 {% endblock %}

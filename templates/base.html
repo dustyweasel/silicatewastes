@@ -43,32 +43,65 @@
             {% else %}
               <button class="real unpicked space vspace center" name="home" value="blanco" >BLANCO</button>
             {% endif %}
-            {% if babble %}
+            {% if state == "babble" %}
               <button class="real picked space vspace center" name="home" value="chat" >NEWS</button>
             {% else %}
               <button class="real unpicked space vspace center" name="home" value="chat" >NEWS</button>
             {% endif %}
-            {% if stalk %}
+            {# {% if state == "stalk" %}
               <button class="real picked space vspace center" name="home" value="stalk" >STALK</button>
             {% else %}
               <button class="real unpicked space vspace center" name="home" value="stalk" >STALK</button>
-            {% endif %}
-            {% if stats %}
+            {% endif %} #}
+            {% if state == "stats" %}
               <button class="real picked space vspace center" name="home" value="stats" >STATS</button>
             {% else %}
               <button class="real unpicked space vspace center" name="home" value="stats" >STATS</button>
             {% endif %}
           </form>
         </div>
+        </header>
+        <hr />
+        {% if state== "stats" %}
+        <div class="scoot">
+          <form action="/stats" method='GET'>
+            {% if screen == "topdownloads" %}
+              <button class="scoot utility space" name="cycle" value="previous" >&larr;</button>
+              <button class="utility space" name="cycle" value="next" >&rarr;</button>
+            {% else %}
+              <button class="scoot disutility space" name="cycle" value="previous" disabled>&larr;</button>
+              <button class="disutility space" name="cycle" value="next" disabled>&rarr;</button>
+            {% endif %}
+            {% if screen == "topdownloads" %}
+              <button class="real picked tight space" name="screen" value="topdownloads" >SINKS</button>
+            {% else %}
+              <button class="real unpicked tight space" name="screen" value="topdownloads" >SINKS</button>
+            {% endif %}
+            {% if screen == "raters" %}
+              <button class="real picked tight space" name="screen" value="raters" >RATERS</button>
+            {% else %}
+              <button class="real unpicked tight space" name="screen" value="raters" >RATERS</button>
+            {% endif %}
+            {% if screen == "stalk" %}
+              <button class="real picked tight space" name="screen" value="stalk" >STALK</button>
+            {% else %}
+              <button class="real unpicked tight space" name="screen" value="stalk" >STALK</button>
+            {% endif %}
+            {% if screen == "recent" %}
+              <button class="real picked tight space" name="screen" value="recent" >RECENT</button>
+            {% else %}
+              <button class="real unpicked tight space" name="screen" value="recent" >RECENT</button>
+            {% endif %}
+            <input type="hidden" name="page" value="{{page}}" />
+          </form>
+        </div>
+        {% endif %}
         
-      </header>
-      
-      <hr/>
-    
-    
+      {# </header> #}
     
       {% block content %}
       {% endblock %}
+      
       <footer>
         <section class="splay">
           <div>

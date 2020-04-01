@@ -1,56 +1,46 @@
 {% extends "base.html" %}
 
-{# VARIABLES IN:
-  members - all registered users
-  
-  VARIABLES OUT:
-#}
-
 {% block content %}
 
-<div>
-        <p class="scoot">
-            <span class="funtimes">DICTATOR FOR LIFE</span>
-            <span class="siltimes">STANDARD USER</span>
-            <span class="giver">CAD FILE DONATOR</span>
-        </p>
-        {# <div class="scrollable2"> #}
-        <form action="/stalk" method='GET'>
-          <table class="download">
-            <thead>
-            <tr class="centerheader" >
-              <th class="stick3 narrow">ID</th>
-              <th class="stick3 wide">NAME</th>
-              <th class="stick3 medium">DOWNLOADS</th>
-              <th class="stick3 wide">CATCHPHRASE</th>
-              <th class="stick3 wide">COMPANY</th>
-              <th class="stick3 narrow">STATE</th>
-            </tr>
-            </thead>
-            <tbody class="tscroll">
-            {% for member in members %}
-            <tr class="gridded">
-              <td class="narrow">{{member.id}}</td>
-              {% if member.memberlevel==1 %}
-                <td class="wide"><button class="funtimes" name="member"
-                value="{{member.id}}">{{member.username}}</button></td>
-              {% elif member.memberlevel==0 %}
-                <td class="wide"><button class="siltimes" name="member"
-                value="{{member.id}}">{{member.username}}</button></td>
-              {% elif member.memberlevel==2 %}
-                <td class="wide"><button class="giver" name="member"
-                value="{{member.id}}">{{member.username}}</button></td>
-              {% endif %}
-              <td class="medium">{{member.benefactor}}</td>
-              <td class="wide">{{member.catchphrase}}</td>
-              <td class="wide">{{member.company}}</td>
-              <td class="narrow">{{member.state}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </form>
-      {# </div> #}
+<div class="standardspace">
+  <p class="scoot vspace">
+    <span style="color: {{colors[1]}}" class="funtimes">DICTATOR FOR LIFE</span>
+    <span style="color: {{colors[3]}}" class="funtimes">STANDARD USER</span>
+    <span style="color: {{colors[2]}}" class="funtimes">CAD FILE DONATOR</span>
+  </p>
+  <section class="splay">
+    <table class="scoot">
+      <thead>
+        <tr class="centerheader" >
+          <th class="narrow">ID</th>
+          <th class="medium">Name</th>
+          <th class="narrow"><span class="shrunk">Downloads</span></th>
+          <th class="medium">Catchphrase</th>
+          <th class="medium">Company</th>
+          <th class="narrow">State</th>
+        </tr>
+      </thead>
+      <tbody class="gridded">
+      <form action="/stalk" method='GET'>
+      {% for member in members %}
+        <tr class="gridded">
+          <td class="narrow">{{member.id}}</td>
+          
+            <td class="medium"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+            onMouseOut="this.style.color='{{colors[member.memberlevel]}}'"
+            style="color: {{colors[member.memberlevel]}};"
+            name="member" value="{{member.id}}">{{member.username}}</button></td>
+          
+          <td class="narrow">{{member.benefactor}}</td>
+          <td class="medium">{{member.catchphrase}}</td>
+          <td class="medium">{{member.company}}</td>
+          <td class="narrow">{{member.state}}</td>
+        </tr>
+      {% endfor %}
+      </form>
+      </tbody>
+    </table>
+  </section>
 </div>
 
 {% endblock %}

@@ -9,6 +9,7 @@ import yagmail
 import string
 import random
 from hashutils import make_pw_hash, check_pw_hash
+from sqlalchemy.sql import func
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -52,7 +53,7 @@ class Sink(db.Model):
     self.location=location
     self.downloads=0
     self.donor = donor
-    self.avg_rating = 0.0
+    self.avg_rating = None
 
 class Donator(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -92,7 +93,7 @@ class User(db.Model):
     self.dustmask=dustmask
     self.benefactor=0
     self.lastsink=0
-    self.memberlevel=0
+    self.memberlevel=3 #standard user
     
 class Rating(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -140,7 +141,7 @@ def cadchecker(cadfile):
 
 #global variables
 #session['searchval']
-#session['blanco']
+#session['state']
 #session['donor']
 #session['current_folder']
 #session['username']
@@ -149,6 +150,7 @@ def cadchecker(cadfile):
 
 #set donorval to "" to set back to silicatewastes
 #set cloneguys to "" to clear it.  silly but whatever
+#i think i can delete this riculousness now
 def initialize(donorval, cloneguys):
   loadguys=Donator.query.all()
   
@@ -179,6 +181,8 @@ def initialize(donorval, cloneguys):
 #this just grabs a sink location and chops off the donor and folder
 #returns truncated location and the sink row
 #sets donor and current_folder
+#haven't used this, this time, maybe delete it
+#maybe i'll need it again when i get the sink page running again
 def sinksplit(sinkid):
   entry = Sink.query.filter_by(id=sinkid).first()
   #try:
@@ -215,11 +219,14 @@ def sinksplit(sinkid):
   
   return (sink, entry)
 
-#expects a tuple with [2] set to avg rating
-def getratecolor(val):
-  if val < 1:
-    color = "transparent"
-  elif val >= 2:
+GLOBALRATEVAL=5
+def getratecolor(val, seethrough):
+  if val == None or val < 1.0:
+    if seethrough=="yes":
+      color = "transparent"
+    else:
+      color = "lightsteelblue"
+  elif val >= 2.0:
     color = "mediumaquamarine"
   elif val >= 1.5:
     color = "orange"
@@ -234,8 +241,23 @@ def getselectcolor(val):
   elif val=="search":
     color="lightblue"
   elif val=="blanco":
-    color="lightgreen"
+    color="mediumaquamarine"
   else:
+    color="red"
+    
+  return color
+
+GLOBALSTATUSVAL=4
+def getstatuscolor(val):
+  if val==1:  #dictator
+    color="sandybrown"
+  elif val==0:  #hover
+    color="aqua"
+  elif val==2:  #donator
+    color="lightgreen"
+  elif val==3: #standard
+    color="#66AACD"
+  else: #oops
     color="red"
     
   return color
@@ -249,6 +271,13 @@ def require_login():
     
     flash("log in")
     
+    #if 'username' in session:
+    #  del session['username']
+    if 'secret_pass' in session:
+      del session['secret_pass']
+    if 'password' in session:
+      del session['password']
+    
     return redirect('/')
   
 ##############################///////////////////////////########################################
@@ -260,24 +289,6 @@ def require_login():
 ##############################///////////////////////////########################################
 ##############################///////////////////////////########################################
 
-#1st column list of all donors
-#guys=[]
-#session['donor']=""
-#cloneguys=[]
-
-#2nd column all the folders in the donor's root directory
-#folders=[]
-#session['current_folder']=""
-
-#3rd column
-#initial_files=[]
-
-#session['searchval']=""
-#session['blanco']=""
-#blancopackage=""
-
-#session['secret_pass']=""
-
 #setting this up so any donor folder either has all files in main folder or in subfolders.  if
 #any subfolders are detected that all files in donor folder are ignored
 
@@ -285,8 +296,10 @@ def require_login():
 #i'm not checking for it yet.  who cares.
 @app.route('/', methods=['GET'])
 def index():
+  #well if i ever need POST it's indented already
   if request.method == 'GET':
     cads=[]
+    blancopackage=""
     if 'searchval' not in session:
       session['searchval']=""
     if 'state' not in session:
@@ -303,7 +316,11 @@ def index():
     #be a gatekeeper to certain statements
     
     #set "mode"
-    if request.args.get('home') != None and request.args.get('home') == 'search':
+    if ((request.args.get('home') == None and session['state']=='stats') or
+        (request.args.get('home') != None and request.args.get('home') == 'stats')):
+      session['state']="stats"
+      return redirect("/stats")
+    elif request.args.get('home') != None and request.args.get('home') == 'search':
       mode="search"
       #need to make sure if 'home' == 'search' then form sends back 'searchval' too
       #not checking for session['searchval'] != None
@@ -327,7 +344,6 @@ def index():
         session['searchval']=""
         session['state']=""
       else:
-        flash("holy shit, blanco mode")
         session['state']="blanco"
     #'guy' and 'folder' in same form, have to make sure we really want to change donor
     elif ((request.args.get('guy') != None and request.args.get('guy') != session['donor'])
@@ -364,6 +380,58 @@ def index():
               break
           if match == True:
             break
+    elif session['state']=="blanco":
+      guys=[]
+      pull=Donator.query.with_entities(Donator.location)
+      try:
+        savesplit=""
+        blancofile=open(os.path.join("static","blanco.txt"),'r')
+        blancotemp=blancofile.read()
+        blancosplit=blancotemp.split("break")
+        for ix in range(len(blancosplit)):
+          #check for blanco in any of those groups of 8
+          if session['searchval'] in blancosplit[ix]:
+            #found one
+            savesplit=blancosplit[ix]
+            break
+          #if we found one
+        if savesplit:
+          if request.args.get('home') == 'blanco':
+            flash("identical cutouts: "+savesplit)
+          #global, create list of 16 including hyphens
+          blancopackage=savesplit.strip('\n').split('\n')
+          for ix in range(len(blancopackage)):
+            blancopackage.append(blancopackage[ix][:3]+'-'+
+                                            blancopackage[ix][3:])
+        #no matches, just make a list of two, one with hyphen
+        else:
+          blancopackage=[]
+          blancopackage.append(session['searchval'])
+          blancopackage.append(session['searchval'][:3]+'-'+session['searchval'][3:])
+          
+          flash("No identical cutouts.  Searching only for "+blancopackage[0]+
+                " and "+blancopackage[1])
+      except Exception as e:
+        flash(e)
+        flash("something went wrong, email me if you want")
+        session['searchval']=""
+        session['state']=""
+        
+      for eachpull in pull:
+        match=False
+        for root, dirs, files in os.walk(os.path.join(
+          "static","sinks",eachpull.location), topdown=True):
+          for val in files:
+            for ix in range(len(blancopackage)):
+              if cadchecker(val) and blancopackage[ix] in val:
+                guys.append(eachpull.location)
+                match=True
+                break
+            if match == True:
+              break
+          if match == True:
+            break
+      
     #not search state, load everything
     else:
       #set all main folders
@@ -407,6 +475,25 @@ def index():
                 break;
           break
         folders=sorted(folders, key=str.casefold)
+      elif session['state']=="blanco":
+        for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
+                                         topdown=True):
+          for val in dirs:
+            match=False
+            for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"],val),
+                                         topdown=True):
+              for val2 in files:
+                for ix in range(len(blancopackage)):
+                  if cadchecker(val2) and blancopackage[ix] in val2:
+                    folders.append(val)
+                    match=True
+                    break
+                if match==True:
+                  break
+              if match==True:
+                break;
+          break
+        folders=sorted(folders, key=str.casefold)
       else:
         for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
                                          topdown=True):
@@ -433,8 +520,16 @@ def index():
       for root, dirs, files in os.walk(newpath, topdown=True):
         for val in files:
           if cadchecker(val):
-            if (not session['searchval'] or
-                (session['state']=="search" and session['searchval'].lower() in val.lower())):
+            blancomatch=False
+            if session['state']=="blanco":
+              for ix in range(len(blancopackage)):
+                if blancopackage[ix] in val:
+                  blancomatch=True
+                  break
+            
+            if (session['state']=="" or
+                (session['state']=="search" and session['searchval'].lower() in val.lower()) or
+                (session['state']=="blanco" and blancomatch==True)):
               newval=os.path.join(root,val)
               rated_sink = Sink.query.filter_by(location=newval[len("static/sinks/"):]).first()
               
@@ -447,29 +542,279 @@ def index():
                 newval=newval[len(os.path.join("static/sinks",session['donor']))+1:]
               
               newcad=(newval, rated_sink.id, rated_sink.avg_rating,
-                      getratecolor(rated_sink.avg_rating))
+                      getratecolor(rated_sink.avg_rating, "yes"))
               
               cads.append(newcad)
 
       #i only half understand this
       cads = sorted(cads, key=lambda tup: tup[0].lower())
     selectcolor=getselectcolor(session['state'])
+    username=""
+    if 'username' in session:
+      username=session['username']
     
     return render_template('silicate.html',title="silicatewastes", cads=cads, guys=guys,
                            folders=folders, searchval=session['searchval'], selectcolor=selectcolor,
-                           state=session['state'])
+                           state=session['state'], blancopackage=blancopackage, username=username)
 
-######################################login#########################################################
-######################################login#########################################################
-######################################login#########################################################
-######################################login#########################################################
-######################################login#########################################################
-######################################login#########################################################
-######################################login#########################################################
-######################################login#########################################################
+######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
+######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
+######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
+######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
+######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
+######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
+######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
+######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
+
+@app.route('/sink', methods=['GET','POST'])
+def sink():
+  #this is protected by /require_login
+  #let it crash if they got here somehow
+  #username=""
+  #if 'username' in session:
+  
+  username=session['username']
+  user = User.query.filter_by(username=username).first()
+  colors=[]
+  for ix in range(GLOBALSTATUSVAL):
+    colors.append(getstatuscolor(ix))
+  ratecolors=[]
+  ratecolors.append(getratecolor(1.0,"no"))
+  ratecolors.append(getratecolor(3.0,"no"))
+  
+  if request.method=='GET':
+    #why bother checking if it's there, let it crash
+    cad=request.args.get('cad')
+    sink=Sink.query.filter_by(id=cad).first()
+    ratecolor=getratecolor(sink.avg_rating,"no")
+    user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
+    ratings = Rating.query.filter(Rating.user_id != user.id, Rating.sink_id==sink.id).all()
+  elif request.method=='POST':
+    cad=request.form['cad']
+    sink=Sink.query.filter_by(id=cad).first()
+    rate=request.form['rate']
+    if rate == "clear":
+      #just delete it
+      user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
+      #if they're hitting the back button need to skip 2 statements
+      if user_rating:
+        db.session.delete(user_rating)
+        db.session.commit()
+      sink.avg_rating=(Rating.query.with_entities(func.avg(Rating.stars).label('average')).filter(
+          Rating.sink_id==sink.id))
+      #reload sink after commit()???
+      db.session.commit()
+      sink=Sink.query.filter_by(id=cad).first()
+    else: #rate == "rate"
+      legit=True
+      #stars = request.form['stars']
+      comment = request.form['comment']
+      if len(comment)>60:
+        flash("comment must be less than 60 chars")
+        legit=False
+      
+      user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
+      if user_rating:
+        db.session.delete(user_rating)
+        db.session.commit()
+        sink.avg_rating=(Rating.query.with_entities(func.avg(Rating.stars).label('average')).filter(
+          Rating.sink_id==sink.id))
+        db.session.commit()
+        flash("You people and your god damn back buttons.")
+        flash("I hope you get a virus.")
+        #flash("something has gone terribly wrong.  email me.")
+        #legit=False
+        
+      if 'stars' not in request.form:
+        flash("You have to pick a rating.")
+        legit=False
+        
+      if legit == True:
+        stars = request.form['stars']
+        new_rating=Rating(stars,comment,user,sink)
+        db.session.add(new_rating)
+        db.session.commit()
+        #i have no idea what .label is for or what it doesn't work without it.
+        #what if i put something besides 'average'?
+        sink.avg_rating=(Rating.query.with_entities(func.avg(Rating.stars).label('average')).filter(
+          Rating.sink_id==sink.id))
+        db.session.commit()
+        
+        sink=Sink.query.filter_by(id=cad).first()
+    
+    ratings = Rating.query.filter(Rating.user_id != user.id, Rating.sink_id==sink.id).all()
+    ratecolor=getratecolor(sink.avg_rating,"no")
+    user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
+    
+  return render_template("sink.html", sink=sink, username=username, ratecolor=ratecolor,
+                         ratings=ratings, user_rating=user_rating, colors=colors, user=user,
+                         ratecolors=ratecolors)
+
+#######################/downloadfile/downloadfile/downloadfile###############################
+#######################/downloadfile/downloadfile/downloadfile###############################
+#######################/downloadfile/downloadfile/downloadfile###############################
+#######################/downloadfile/downloadfile/downloadfile###############################
+#######################/downloadfile/downloadfile/downloadfile###############################
+#######################/downloadfile/downloadfile/downloadfile###############################
+#######################/downloadfile/downloadfile/downloadfile###############################
+#######################/downloadfile/downloadfile/downloadfile###############################
+
+#apparently i shouldn't be doing this, supposed to use a proper web server
+#instead of the flask server.  don't care for now plus maybe i don't get
+#enough traffic for it to matter
+@app.route("/downloadfile", methods=['POST'])
+def downloadfile():
+  if 'cancel' in request.form:
+    return redirect("/")
+  
+  #this is protected by allowed_routes
+  #if 'username' in session:
+  username = session['username']
+  user = User.query.filter_by(username=username).first()
+    
+  #let it crash
+  cad = int(request.form['cad'])
+  sink=Sink.query.filter_by(id=cad).first()
+      
+  try:
+    sink.downloads+=1
+    user.lastsink=sink.id
+    #user downloads.  made that variabe for something else.  whatever.
+    user.benefactor+=1
+    db.session.commit()
+    
+    cadsplit = sink.location.split(os.path.sep)
+    #should be same as donor / folder
+    sinkdir=os.path.join(cadsplit[0],cadsplit[1])
+    for ix in range(2,len(cadsplit)-1):
+      sinkdir=os.path.join(sinkdir,cadsplit[ix])
+    sinkname=cadsplit[len(cadsplit)-1]
+    
+    return send_from_directory(os.path.join("static","sinks",sinkdir),
+                               sinkname, as_attachment=True)
+  except Exception as e:
+    flash("Something went terribly wrong.  Email me all this if you want:")
+    flash(sink.location)
+    flash(str(e))
+    return redirect('/')
+
+##########################/stats##################################################################
+##########################/stats##################################################################
+##########################/stats##################################################################
+##########################/stats##################################################################
+##########################/stats##################################################################
+##########################/stats##################################################################
+@app.route("/stats", methods=['GET'])
+def stats():
+  username=""
+  if 'username' in session:
+    username=session['username']
+  
+  if request.method=='GET':
+    if request.args.get('screen') == None or request.args.get('screen') == 'stalk':
+      return redirect('/stalk')
+  else:
+    return "whoops"
+
+##########################stalk##################################################################
+##########################stalk##################################################################
+##########################stalk##################################################################
+##########################stalk##################################################################
+##########################stalk##################################################################
+##########################stalk##################################################################
+##########################stalk##################################################################
+##########################stalk##################################################################
+@app.route('/stalk', methods=['GET','POST'])
+def stalk():
+  username=""
+  if 'username' in session:
+    username=session['username']
+    
+  colors=[]
+  for ix in range(GLOBALSTATUSVAL):
+    colors.append(getstatuscolor(ix))
+
+  if request.method == 'GET':
+    if request.args.get('member') != None and 'username' in session:
+      #if it's not an int, let it crash
+      member = int(request.args.get('member'))
+      memberdata=User.query.filter_by(id=member).first()
+      #i have almost no memory of writing this beast
+      # think it loads memberratings with Sink.location, id's?, Rating.stars, Rating.comment
+      memberratings=(Sink.query.with_entities(Sink.location).join
+                      (Rating, Rating.sink_id==Sink.id).filter_by
+                      (user_id=memberdata.id).add_columns
+                      (Rating.sink_id, Rating.stars, Rating.comment))
+      #why doesn't the query set it to none if it finds no ratings?
+      #oh well time for a hacky workaround
+      try:
+        print(memberratings[0].location)
+      except Exception as e:
+        memberratings=None
+      return render_template("stalkmore.html", state=session['state'], screen="stalk",
+                             memberdata=memberdata, memberratings=memberratings, username=username,
+                             colors=colors)
+    else:
+      if request.args.get('member') != None:
+        flash("log in")
+      #gonna have to make this grab 100 at a time like sink if i ever get 1000's of users
+      members=User.query.with_entities(User.id, User.username, User.catchphrase, User.memberlevel,
+                                   User.benefactor, User.state, User.company).all()
+   
+  #this is just for messaging on the stalkmore page.  no one uses it
+  elif request.method == 'POST':
+    if 'username' not in session:
+      #shouldn't be able to get here
+      flash("log in.  not sure how you pulled this off.")
+      return redirect('/')
+    elif 'victim' in request.form:
+      victim=int(request.form['victim'])
+      victimemail=User.query.filter_by(id=victim).first()
+      email=User.query.with_entities(User.email).filter_by(username=session['username']).first()
+      harassment=session['username']
+      harassment+="'s message: "
+      if 'harassment' in request.form:
+        harassment+=request.form['harassment']
+      harassment+="\n\n"+session['username']+"'s email address: "+email.email
+      harassment+=("\n\n Reply to "+session['username']+" at the email address above to establish "
+      "contact.  If you don't want "+session['username']+" to know your email address then just "
+      "delete this message.  If they're harassing you then email me at dustyweasel@protonmail.com "
+      "and I'll silence them forever.")
+      try:
+        yag = yagmail.SMTP(os.getenv("EMAIL_USER"),os.getenv("EMAIL_PASS"))
+        yag.send(victimemail.email, "message from "+session['username'], harassment)
+        flash("Message sent to "+victimemail.username)
+        return redirect('/stalk?member='+str(victimemail.id))
+      except Exception as e:
+        flash("Something went wrong.  Email me if you want:  dustyweasel@protonmail.com")
+        return redirect('/')
+    else:
+      flash("Not sure what went wrong.  Email me if you want.")
+      return redirect('/stalk')
+  
+  #should only be able to reach this on get request
+  return render_template("stalk.html", state=session['state'], screen="stalk", members=members,
+                         username=username, colors=colors)
+
+######################################login / logout##############################################
+######################################login / logout##############################################
+######################################login / logout##############################################
+######################################login / logout##############################################
+######################################login / logout##############################################
+######################################login / logout##############################################
+######################################login / logout##############################################
+######################################login / logout##############################################
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+  if 'username' in session:
+    del session['username']
+  if 'secret_pass' in session:
+    del session['secret_pass']
+  if 'password' in session:
+    del session['password']
+  username=""
+    
   if request.method == 'POST':
     username = request.form['username']
     password = request.form['password']
@@ -481,8 +826,221 @@ def login():
       return redirect('/')
     else:
       flash("login failed!")
+      
+  #just pass username in places like this to make sure you logged them out
+  return render_template("login.html", username=username)
+
+@app.route('/logout')
+def logout():
+  if 'username' in session:
+    del session['username']
+  if 'secret_pass' in session:
+    del session['secret_pass']
+  if 'password' in session:
+    del session['password']
+  return redirect('/')
+
+###############################################register########################################
+###############################################register########################################
+###############################################register########################################
+###############################################register########################################
+###############################################register########################################
+###############################################register########################################
+###############################################register########################################
+###############################################register########################################
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+  #for hackers only (or back button?)
+  if 'username' in session:
+    del session['username']
+  if 'password' in session:
+    del session['password']
+  if 'secret_pass' in session:
+    del session['secret_pass']
+    #flash("Don't hit refresh on that screen.  Start over.")
+    return redirect('/')
+      
+  if request.method == 'GET':
+    username=""
+    newusername=""
+    password=""
+    verify=""
+    email=""
+    company=""
+    catchphrase=""
+  
+  elif request.method == 'POST':
+    username = request.form['username']
+    password = request.form['password']
+    verify = request.form['verify']
+    email = request.form['email']
+    company = request.form['companyname']
+    catchphrase = request.form['catchphrase']
+    usstate = request.form['state']
+    if 'dust' not in request.form:
+      crybaby=3
+    else:
+      crybaby = request.form['dust']
+      if crybaby=="True":
+        crybaby=1
+      elif crybaby=="False":
+        crybaby=0
+      
+    allset=True
+    #validate
+    if len(username)<1 or len(username)>20:
+      flash("username must be 1-20 characters")
+      allset=False
     
-  return render_template("login.html")
+    user_exists = User.query.filter_by(username=username).first()
+    if user_exists:
+      flash("username already taken!")
+      allset=False
+      
+    if len(password)<1 or len(password)>30:
+      flash("password must be 1-30 characters")
+      allset=False
+      
+    if password!=verify:
+      flash("passwords don't match!")
+      allset=False
+      
+    user_exists = User.query.filter_by(email=email).first()
+    if user_exists:
+      flash("email already taken!")
+      allset=False
+      
+    if len(email)>60:
+      flash("no emails longer than 60 characters")
+      allset=False
+    elif len(email)<1:
+      flash("enter an email address")
+      allset=False
+      
+    if len(company)>60:
+      flash("no company names longer than 60 characters")
+      allset=False
+      
+    if len(catchphrase)>60:
+      flash("no catchphrases longer than 60 characters")
+      allset=False
+      
+    if len(usstate)>2:
+      flash("no states longer than 2 characters.  not sure how you pulled that off.")
+      allset=False
+      
+    if allset:
+      new_user = User(username,"",email,company,catchphrase,usstate,crybaby)
+      session['secret_pass']=id_generator()
+      
+      try:
+        yag = yagmail.SMTP(os.getenv("EMAIL_USER"),os.getenv("EMAIL_PASS"))
+        yag.send(email, "verify thyself", session['secret_pass'])
+      except Exception as e:
+        #why won't this work here?
+        #flash(e)
+        flash("Maybe something's wrong with the email address you entered?  Start over.")
+        flash("You entered: "+email)
+        #session['secret_pass']=""
+        return redirect('/')
+        
+      session['tempname']=username
+      session['password']=password
+      session['email']=email
+      session['company']=company
+      session['catchphrase']=catchphrase
+      session['usstate']=usstate
+      session['crybaby']=str(crybaby)
+      
+      flash("YOU ENTERED: "+email)
+      return render_template("verify.html", user=new_user)
+    else:
+      newusername=username
+      username=""
+      if 'username' in session:
+        del session['username']
+      if 'secret_pass' in session:
+        del session['secret_pass']
+      if 'password' in session:
+        del session['password']
+  
+  return render_template("register.html", newusername=newusername, username=username,
+                         email=email, company=company, catchphrase=catchphrase)
+
+####################################verify######################################################
+####################################verify######################################################
+####################################verify######################################################
+####################################verify######################################################
+####################################verify######################################################
+####################################verify######################################################
+####################################verify######################################################
+####################################verify######################################################
+
+@app.route('/verify', methods=['POST'])
+def verify():
+  if 'secret_pass' not in session:
+    if 'username' in session:
+      del session['username']
+    #if 'secret_pass' in session:
+    #del session['secret_pass']
+    if 'password' in session:
+      del session['password']
+    flash("No, seriously.  Start over.  Go back to the register page.")
+    
+    return redirect('/')
+    
+  #probably should verify again here, hackers don't need my form
+  #...wait this is a huge hole, isn't it?  store a copy in the session and compare?
+  username = request.form['username']
+  #password = request.form['password']
+  email = request.form['email']
+  company = request.form['company']
+  catchphrase = request.form['catchphrase']
+  usstate = request.form['state']
+  secretpass = request.form['secretpass']
+  #if 'dust' not in request.form:
+  #  dust=3
+  #else:
+  dust = request.form['dust']
+    
+  #new_user = User(username, session['password'], email, company, catchphrase, usstate, dust)
+  #del session['password']
+  
+  if secretpass == session['secret_pass']:
+    if (username==session['tempname'] and email==session['email'] and company==session['company']
+        and catchphrase==session['catchphrase'] and usstate==session['usstate'] and
+        dust==session['crybaby']):
+      new_user = User(username, session['password'], email, company, catchphrase, usstate, dust)
+      flash("Welcome to the silicate wastes, "+username+".")
+      db.session.add(new_user)
+      db.session.commit()
+      session['username'] = new_user.username
+    else:
+      flash("Not sure how you did that haxOr")
+  else:
+    flash("Wrong secret key.  Start over.")
+    
+  #if 'username' in session:
+  #  del session['username']
+  if 'secret_pass' in session:
+    del session['secret_pass']
+  if 'password' in session:
+    del session['password']
+  if 'tempname' in session:
+    del session['tempname']
+  if 'email' in session:
+    del session['email']
+  if 'companyname' in session:
+    del session['companyname']
+  if 'catchphrase' in session:
+    del session['catchphrase']
+  if 'usstate' in session:
+    del session['usstate']
+  if 'crybaby' in session:
+    del session['crybaby']
+    
+  return redirect('/')
 
 #########################################weaselwork###############################################
 #########################################weaselwork###############################################
@@ -552,7 +1110,10 @@ def weaselwork():
           average=totalsum/totalval
         print("average="+str(average))
         altersink = Sink.query.filter_by(id=ix).first()
-        altersink.avg_rating=average
+        if average != None:
+          altersink.avg_rating=average
+        else:
+          altersink.avg_rating= None
         db.session.add(altersink)
         print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
       db.session.commit()

@@ -1,23 +1,10 @@
 {% extends "base.html" %}
 
-{# VARIABLES IN:
-  donor - which guy
-  guys - list of class Donator
-  cloneguys - list of relevant guys
-  current_folder - selected folder
-  staticsearchval - search value
-  folders - all the relevant folders in donor's root directory
-  cads - all the relevant cads in current_folder
-  
-  VARIABLES OUT:
-  later.
-  plus maybe i can kill some of them
-#}
-
 {% block content %}
 
 <div class="standardspace">
   <section class="splay">
+ 
     <table class="scoot">
       <thead>
         <th class="superwide">
@@ -28,7 +15,7 @@
               <option value="{{guy}}">{{guy}}</option>
             {% endfor %}
             </select> /
-         
+          
             <select style="background-color: {{selectcolor}}" class="pushdown" name="folder"
             onchange='if(this.value != 0) { this.form.submit(); }'>
             {% for folder in folders %}
@@ -37,17 +24,31 @@
             </select> /
           </form>
         </th>
-        <th class="narrow">avg. rating</th>
+        <th class="narrow">Average Rating</th>
       </thead>
-      <tbody>
+      <tbody class="gridded">
+        <form action="/sink" method='GET'>
         {% for cad in cads %}
         <tr>
-          <td class="superwide">{{cad[0]}}</td>
+          <td class="superwide"><button class="smallunguessed" name="cad" value="{{cad[1]}}">
+          {{cad[0]}}</button></td>
           <td style="color: {{cad[3]}}" class="narrow"><span class="rating">{{cad[2]}}</span></td>
         </tr>
         {% endfor %}
+        </form>
       </tbody>
     </table>
+  
+    <div class="scrollable scoot vmorespace">
+      {% if state == "blanco" and blancopackage %}
+        <p class="blancomessage edge">
+          blanco filter:</br>
+          {% for blanco in blancopackage %}
+            {{blanco}}<br/>
+          {% endfor %}
+        </p>
+      {% endif %}
+    </div>
   </section>
 </div>
   
