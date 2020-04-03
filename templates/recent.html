@@ -2,63 +2,42 @@
 
 {% block content %}
 
-<div>
-<p class="scoot tight">100 most recent ratings.</p>
-        
-          <table class="download">
-            <thead>
-            <tr class="centerheader" >
-              <th class="stick3 wide">username</th>
-              <th class="stick3 superwide">sink</th>
-              <th class="stick3 narrow">rating</th>
-              <th class="stick3 wide">comment</th>
-            </tr>
-            </thead>
-            <tbody class="tscroll">
-            {% for rating in ratings %}
-          
-            <tr class="gridded">
-              <form action="/stalk" method='GET'>
-              {% if rating[4]==1 %}
-              <td class="wide"><button class="funtimes" name="member"
-              value="{{rating[5]}}">{{rating[1]}}</button></td>
-              {% elif rating[4]==0 %}
-              <td class="wide"><button class="siltimes" name="member"
-              value="{{rating[5]}}">{{rating[1]}}</button></td>
-              {% elif rating[4]==2 %}
-              <td class="wide"><button class="giver" name="member"
-              value="{{rating[5]}}">{{rating[1]}}</button></td>
-              {% endif %}
-              </form>
-              <form action="/sink" method='GET'>
-              
-              {% if rating[7] >= 2.0 %}
-                <td class="superwide"><button class="greatunguessed" name="cad" value="{{rating[6]}}" >
-              {{rating[0]}}</button></td>
-              {% elif rating[7] >= 1.5 %}
-                <td class="superwide"><button class="cautionunguessed" name="cad" value="{{rating[6]}}" >
-                {{rating[0]}}</button></td>
-                {# <p class="lineup caution">{{donor}}/{{sink}}</p> #}
-              {% elif rating [7] > 0 %}
-                <td class="superwide"><button class="doomunguessed" name="cad" value="{{rating[6]}}" >
-                {{rating[0]}}</button></td>
-                {# <p class="lineup doom">{{donor}}/{{sink}}</p> #}
-              {% else %}
-                {# this shouldn't ever happen.  it's rated at least once to get here #}
-                <td class="superwide"><button class="smallunguessed" name="cad" value="{{rating[6]}}" >
-                {{rating[0]}}</button></td>
-                {# <p class="lineup ambiguous">{{donor}}/{{sink}}</p> #}
-              {% endif %}
-              
-              {# <td class="superwide"><button class="smallunguessed" name="cad" value="{{rating[6]}}" >
-              {{rating[0]}}</button></td> #}
-              <td class="narrow">{{rating[2]}}</td>
-              <td class="wide">{{rating[3]}}</td>
-              </form>
-            </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+<div class="scoot standardspace">
+<p>100 most recent ratings.</p>
+  <section class="splay">
+  <table>
+    <thead>
+      <tr>
+        <th class="wide">Username</th>
+        <th class="wide">Sink</th>
+        <th class="narrow">Rating</th>
+        <th class="medium">Comment</th>
+      </tr>
+    </thead>
+    <tbody class="gridded">
+    {% for rating in ratings %}
+      <tr>
+      <form action="/stalk" method='GET'>
+        <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+            onMouseOut="this.style.color='{{colors[rating[4]]}}'"
+            style="color: {{colors[rating[4]]}};"
+            name="member" value="{{rating[5]}}">{{rating[1]}}</button>
+        </td>
+      </form>
+      <form action="/sink" method='GET'>
+        <td class="wide"><button class="smallunguessed" onMouseOver="this.style.color='{{colors[0]}}'"
+            onMouseOut="this.style.color='{{rating[8]}}'"
+            style="color: {{rating[8]}};"
+            name="cad" value="{{rating[6]}}">{{rating[0]}}</button>
+        </td>
+        <td class="narrow"><span class="rating">{{rating[2]}}</span></td>
+        <td class="medium">{{rating[3]}}</td>
+      </form>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </section>
 </div>
 
 {% endblock %}

@@ -24,14 +24,14 @@
       <form action="/stalk" method='GET'>
       {% for member in members %}
         <tr class="gridded">
-          <td class="narrow">{{member.id}}</td>
+          <td class="narrow"><span class="rating">{{member.id}}</span></td>
           
             <td class="medium"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
             onMouseOut="this.style.color='{{colors[member.memberlevel]}}'"
             style="color: {{colors[member.memberlevel]}};"
             name="member" value="{{member.id}}">{{member.username}}</button></td>
           
-          <td class="narrow">{{member.benefactor}}</td>
+          <td class="narrow"><span class="rating">{{member.benefactor}}</span></td>
           <td class="medium">{{member.catchphrase}}</td>
           <td class="medium">{{member.company}}</td>
           <td class="narrow">{{member.state}}</td>

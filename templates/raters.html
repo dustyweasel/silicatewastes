@@ -2,44 +2,42 @@
 
 {% block content %}
 
-<div>
-<p class="scoot tight">Please don't compete to be at the top of this list.  A few accurate ratings
-are better than a mess of random ratings.<br/>
-Total ratings = {{totalrates}}</p>
-        <form action="/stalk" method='GET'>
-          <table class="download">
-            <thead>
-            <tr class="centerheader" >
-              <th class="stick3 narrow">ID</th>
-              <th class="stick3 wide">username</th>
-              <th class="stick3 narrow">ratings</th>
-              <th class="stick3 narrow">downloads</th>
-            </tr>
-            </thead>
-            <tbody class="tscroll">
-            {% for rater in superraters %}
-            <tr class="gridded">
-              <td class="narrow">{{rater[0]}}</td>
-              
-              {% if rater[3]==1 %}
-              <td class="wide"><button class="funtimes" name="member" value="{{rater[0]}}" >
-              {{rater[1]}}</button></td>
-              {% elif rater[3]==0 %}
-              <td class="wide"><button class="siltimes" name="member" value="{{rater[0]}}" >
-              {{rater[1]}}</button></td>
-              {% elif rater[3]==2 %}
-              <td class="wide"><button class="giver" name="member" value="{{rater[0]}}" >
-              {{rater[1]}}</button></td>
-              {% endif %}
-              
-              {# <td class="medium">{{rater[1]}}</td> #}
-              <td class="narrow">{{rater[2]}}</td>
-              <td class="narrow">{{rater[4]}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-          </table>
-        </form>
+<div class="scoot standardspace">
+  <p>Please don't compete to be at the top of this list.  A few accurate ratings
+  are better than a mess of random ratings.<br/>
+  Total ratings = {{totalrates}}
+  </p>
+  <section class="splay">
+    <table>
+      <thead>
+        <tr>
+          <th class="narrow">ID</th>
+          <th class="wide">Username</th>
+          <th class="narrow">Ratings</th>
+          <th class="narrow">Avg. Rating</th>
+          <th class="narrow"><span class="shrunk">Downloads</span></th>
+        </tr>
+      </thead>
+      <tbody class="gridded">
+      <form action="/stalk" method='GET'>
+      {% for rater in superraters %}
+        <tr>
+          <td class="narrow"><span class="rating">{{rater[0]}}</span></td>
+          
+          <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+            onMouseOut="this.style.color='{{colors[rater[2]]}}'"
+            style="color: {{colors[rater[2]]}};"
+            name="member" value="{{rater[0]}}" >{{rater[1]}}</button></td>
+          
+          <td class="narrow"><span class="rating">{{rater[5]}}</span></td>
+          <td class="narrow"><span class="rating">{{rater[4]}}</span></td>
+          <td class="narrow"><span class="rating">{{rater[3]}}</span></td>
+        </tr>
+      {% endfor %}
+      </form>
+      </tbody>
+    </table>
+  </section>
 </div>
 
 {% endblock %}

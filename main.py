@@ -1,7 +1,9 @@
 #ALTER TABLE sink
 #ADD avg_rating float; 
+#also user avg_rating
+#also user sum_ruting? nah, not yet
 
-from flask import Flask, request, redirect, render_template, session, flash
+from flask import Flask, request, redirect, url_for, render_template, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask import send_from_directory
 import os
@@ -79,6 +81,7 @@ class User(db.Model):
   #again could use the mod trick.  would need to fix all the color coding.
   #could probably move all that to a function somewhere
   memberlevel = db.Column(db.Integer)
+  avg_rating = db.Column(db.Float)
   #double backref.  sigh.
   elephant = db.relationship('Rating', backref="rater")
   tiger = db.relationship('Babblings', backref="babbler")
@@ -94,6 +97,7 @@ class User(db.Model):
     self.benefactor=0
     self.lastsink=0
     self.memberlevel=3 #standard user
+    self.avg_rating = None
     
 class Rating(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -219,7 +223,7 @@ def sinksplit(sinkid):
   
   return (sink, entry)
 
-GLOBALRATEVAL=5
+GLOBALRATEVAL=4
 def getratecolor(val, seethrough):
   if val == None or val < 1.0:
     if seethrough=="yes":
@@ -566,89 +570,129 @@ def index():
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
 
-@app.route('/sink', methods=['GET','POST'])
+@app.route('/sink', methods=['GET'])
 def sink():
   #this is protected by /require_login
   #let it crash if they got here somehow
-  #username=""
-  #if 'username' in session:
   
   username=session['username']
   user = User.query.filter_by(username=username).first()
+  #why bother checking if it's there, let it crash
+  cad=int(request.args.get('cad'))
+  if user.lastsink!=0 and user.lastsink != cad:
+    previous_rating = Rating.query.filter_by(user_id=user.id, sink_id=user.lastsink).first()
+    if previous_rating==None:
+      return redirect(url_for('previous_sink', cad=cad, pre_cad=user.lastsink))
+  
+  #colors, ratecolors, and ratecolor, oh my
   colors=[]
   for ix in range(GLOBALSTATUSVAL):
     colors.append(getstatuscolor(ix))
   ratecolors=[]
-  ratecolors.append(getratecolor(1.0,"no"))
-  ratecolors.append(getratecolor(3.0,"no"))
+  for ix in range(1,GLOBALRATEVAL):
+    ratecolors.append(getratecolor(float(ix),"no"))
+    
+  sink=Sink.query.filter_by(id=cad).first()
+  ratecolor=getratecolor(sink.avg_rating,"no")
+  user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
+  ratings = Rating.query.filter(Rating.user_id != user.id, Rating.sink_id==sink.id).all()
   
-  if request.method=='GET':
-    #why bother checking if it's there, let it crash
-    cad=request.args.get('cad')
-    sink=Sink.query.filter_by(id=cad).first()
-    ratecolor=getratecolor(sink.avg_rating,"no")
-    user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
-    ratings = Rating.query.filter(Rating.user_id != user.id, Rating.sink_id==sink.id).all()
-  elif request.method=='POST':
-    cad=request.form['cad']
-    sink=Sink.query.filter_by(id=cad).first()
-    rate=request.form['rate']
-    if rate == "clear":
-      #just delete it
-      user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
-      #if they're hitting the back button need to skip 2 statements
-      if user_rating:
-        db.session.delete(user_rating)
-        db.session.commit()
-      sink.avg_rating=(Rating.query.with_entities(func.avg(Rating.stars).label('average')).filter(
-          Rating.sink_id==sink.id))
-      #reload sink after commit()???
-      db.session.commit()
-      sink=Sink.query.filter_by(id=cad).first()
-    else: #rate == "rate"
-      legit=True
-      #stars = request.form['stars']
-      comment = request.form['comment']
-      if len(comment)>60:
-        flash("comment must be less than 60 chars")
-        legit=False
-      
-      user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
-      if user_rating:
-        db.session.delete(user_rating)
-        db.session.commit()
-        sink.avg_rating=(Rating.query.with_entities(func.avg(Rating.stars).label('average')).filter(
-          Rating.sink_id==sink.id))
-        db.session.commit()
-        flash("You people and your god damn back buttons.")
-        flash("I hope you get a virus.")
-        #flash("something has gone terribly wrong.  email me.")
-        #legit=False
-        
-      if 'stars' not in request.form:
-        flash("You have to pick a rating.")
-        legit=False
-        
-      if legit == True:
-        stars = request.form['stars']
-        new_rating=Rating(stars,comment,user,sink)
-        db.session.add(new_rating)
-        db.session.commit()
-        #i have no idea what .label is for or what it doesn't work without it.
-        #what if i put something besides 'average'?
-        sink.avg_rating=(Rating.query.with_entities(func.avg(Rating.stars).label('average')).filter(
-          Rating.sink_id==sink.id))
-        db.session.commit()
-        
-        sink=Sink.query.filter_by(id=cad).first()
-    
-    ratings = Rating.query.filter(Rating.user_id != user.id, Rating.sink_id==sink.id).all()
-    ratecolor=getratecolor(sink.avg_rating,"no")
-    user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
-    
   return render_template("sink.html", sink=sink, username=username, ratecolor=ratecolor,
                          ratings=ratings, user_rating=user_rating, colors=colors, user=user,
                          ratecolors=ratecolors)
+
+######################/previous_sink########################################################
+######################/previous_sink########################################################
+######################/previous_sink########################################################
+######################/previous_sink########################################################
+######################/previous_sink########################################################
+######################/previous_sink########################################################
+######################/previous_sink########################################################
+######################/previous_sink########################################################
+@app.route('/previous_sink', methods=['GET'])
+def previous_sink():
+  #if this stuff isn't here let it crash
+  username=session['username']
+  user = User.query.filter_by(username=username).first()
+  cad=request.args.get('cad')
+  pre_cad=request.args.get('pre_cad')
+  
+  sink=Sink.query.filter_by(id=cad).first()
+  previous_sink=Sink.query.filter_by(id=pre_cad).first()
+  
+  ratecolors=[]
+  for ix in range(1,GLOBALRATEVAL):
+    ratecolors.append(getratecolor(float(ix),"no"))
+  
+  return render_template("previous_sink.html", sink=sink, previous_sink=previous_sink,
+                         ratecolors=ratecolors, username=username)
+
+#send it 2 sink id's.  one to rate and one to send to after rate.  could be the same.
+@app.route('/rate_sink', methods=['POST'])
+def rate_sink():
+  username=session['username']
+  user = User.query.filter_by(username=username).first()
+  
+  cad=request.form['cad']
+  sink=Sink.query.filter_by(id=cad).first()
+  goal=request.form['goal']
+  rate=request.form['rate']
+  if rate == "clear":
+    #just delete it
+    user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
+    #if they're hitting the back button need to skip 2 statements
+    if user_rating:
+      db.session.delete(user_rating)
+      db.session.commit()
+      user.avg_rating=func.round((Rating.query.with_entities(
+        func.avg(Rating.stars).label('average')).filter(Rating.user_id==user.id)),2)
+      sink.avg_rating=func.round((Rating.query.with_entities(
+        func.avg(Rating.stars).label('average')).filter(Rating.sink_id==sink.id)),2)
+      db.session.commit()
+  elif rate == "later":
+    user.lastsink=0
+    db.session.commit()
+  else: #rate == "rate"
+    legit=True
+    
+    #probably should setup database to have unique sink.id/user.id in Ratings
+    #(can you do that?)
+    #instead of relying on python to take care of it.  keep an eye out for double ratings
+    user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
+    if user_rating:
+      db.session.delete(user_rating)
+      db.session.commit()
+      sink.avg_rating=func.round((Rating.query.with_entities(
+        func.avg(Rating.stars).label('average')).filter(Rating.sink_id==sink.id)),2)
+      db.session.commit()
+      flash("You people and your god damn back buttons.")
+      flash("I hope you get a virus.")
+      
+    comment = request.form['comment']
+    if len(comment)>60:
+      flash("comment must be less than 60 chars")
+      legit=False
+        
+    if 'stars' not in request.form:
+      flash("You have to pick a rating.")
+      legit=False
+        
+    if legit == True:
+      stars = request.form['stars']
+      new_rating=Rating(stars,comment,user,sink)
+      db.session.add(new_rating)
+      db.session.commit()
+      user.avg_rating=func.round((Rating.query.with_entities(
+        func.avg(Rating.stars).label('average')).filter(Rating.user_id==user.id)),2)
+      #i have no idea what .label is for or what it doesn't work without it.
+      #what if i put something besides 'average'?
+      sink.avg_rating=func.round((Rating.query.with_entities(
+        func.avg(Rating.stars).label('average')).filter(Rating.sink_id==sink.id)),2)
+      db.session.commit()
+        
+      #sink=Sink.query.filter_by(id=cad).first()
+  
+  return redirect(url_for('sink', cad=goal))
 
 #######################/downloadfile/downloadfile/downloadfile###############################
 #######################/downloadfile/downloadfile/downloadfile###############################
@@ -704,17 +748,31 @@ def downloadfile():
 ##########################/stats##################################################################
 ##########################/stats##################################################################
 ##########################/stats##################################################################
+
 @app.route("/stats", methods=['GET'])
 def stats():
   username=""
   if 'username' in session:
     username=session['username']
   
-  if request.method=='GET':
-    if request.args.get('screen') == None or request.args.get('screen') == 'stalk':
-      return redirect('/stalk')
+  #if request.method=='GET':
+  if request.args.get('screen') == None or request.args.get('screen') == 'stalk':
+    return redirect('/stalk')
+  elif request.args.get('screen') == 'statsinks':
+    page=""
+    cycle=""
+    if request.args.get('page') != None:
+      page = request.args.get('page')
+    if request.args.get('cycle') != None:
+      cycle = request.args.get('cycle')
+     #return redirect(url_for('previous_sink', cad=cad, pre_cad=user.lastsink)) 
+    return redirect(url_for('statsinks', page=page, cycle=cycle))
+  elif request.args.get('screen') == 'raters':
+    return redirect('/raters')
+  elif request.args.get('screen') == 'recent':
+    return redirect('/recent')
   else:
-    return "whoops"
+    return "i don't know what just happened.  email me and we'll talk about it"
 
 ##########################stalk##################################################################
 ##########################stalk##################################################################
@@ -724,6 +782,7 @@ def stats():
 ##########################stalk##################################################################
 ##########################stalk##################################################################
 ##########################stalk##################################################################
+
 @app.route('/stalk', methods=['GET','POST'])
 def stalk():
   username=""
@@ -795,6 +854,116 @@ def stalk():
   #should only be able to reach this on get request
   return render_template("stalk.html", state=session['state'], screen="stalk", members=members,
                          username=username, colors=colors)
+
+
+####################################statsinks###################################################
+####################################statsinks###################################################
+####################################statsinks###################################################
+####################################statsinks###################################################
+####################################statsinks###################################################
+####################################statsinks###################################################
+####################################statsinks###################################################
+####################################statsinks###################################################
+
+@app.route('/statsinks', methods=['GET'])
+def statsinks():
+  username=session['username']
+  if request.args.get('page') == None or request.args.get('page') == "":
+    page=0
+  else:
+    page=int(request.args.get('page'))
+    if request.args.get('cycle') != None:
+      cycle=request.args.get('cycle')
+      if cycle == "previous" and page > 0:
+        page-=1
+      elif cycle == "next":
+        page+=1
+  
+  topdownloads=(Sink.query.with_entities(Sink.downloads, Sink.location, Sink.id,Sink.avg_rating)
+                .order_by(Sink.downloads.desc()).order_by(Sink.id).limit(100).offset(100*page))
+
+  totaldownloads=User.query.with_entities(func.sum(User.benefactor).label('total')).all()[0][0]
+  
+  supertopdownloads=[]
+  ix=1+(100*page)
+  for download in topdownloads:
+    supertopdownloads.append((ix,download.location, download.downloads,download.avg_rating,
+                             download.id,getratecolor(download.avg_rating,"yes")))
+    ix+=1
+  
+  return render_template("stats.html", state=session['state'], screen="statsinks",
+                         topdownloads=supertopdownloads, totaldownloads=totaldownloads,
+                         arrows="yes", page=page, username=username)
+
+#######################################raters###############################################
+#######################################raters###############################################
+#######################################raters###############################################
+#######################################raters###############################################
+#######################################raters###############################################
+#######################################raters###############################################
+#######################################raters###############################################
+#######################################raters###############################################
+
+@app.route('/raters', methods=['GET'])
+def raters():
+  username=session['username']
+  colors=[]
+  for ix in range(GLOBALSTATUSVAL):
+    colors.append(getstatuscolor(ix))
+  
+  #i could do all this with one line of sqlalchemy if i knew what i was doing, a lot of places
+  #like that in /stats.  don't need all these damn tuples and for loops and sorts
+  raters=User.query.with_entities(User.id, User.username, User.memberlevel, User.benefactor,
+                                  User.avg_rating)
+  
+  #still probably a faster way to do this
+  totalrates=Rating.query.with_entities(func.count(Rating.id)).first()[0]
+  
+  superraters=[]
+  for rater in raters:
+    superraters.append((rater.id, rater.username, rater.memberlevel, rater.benefactor,
+                       rater.avg_rating, Rating.query.with_entities(
+                         func.count(Rating.user_id)).filter_by(user_id=rater.id).first()[0]))
+                       
+  superraters = sorted(superraters, key=lambda tup: (tup[0]))
+  superraters = sorted(superraters, key=lambda tup: (tup[5]), reverse = True)
+  
+  
+  return render_template("raters.html", state=session['state'], screen="raters",
+                         superraters=superraters, colors=colors, username=username,
+                         totalrates=totalrates)
+
+##########################################recent#############################################
+##########################################recent#############################################
+##########################################recent#############################################
+##########################################recent#############################################
+##########################################recent#############################################
+##########################################recent#############################################
+##########################################recent#############################################
+##########################################recent#############################################
+
+@app.route('/recent', methods=['GET'])
+def recent():
+  colors=[]
+  for ix in range(GLOBALSTATUSVAL):
+    colors.append(getstatuscolor(ix))
+  
+  ratings=Rating.query.with_entities(Rating.user_id, Rating.sink_id, Rating.stars,
+                                           Rating.comment).order_by(Rating.id.desc()).limit(100)
+  
+  #again i bet i could do all this with sqlalchemy
+  superratings=[]
+  for rating in ratings:
+    location=Sink.query.with_entities(Sink.location).filter_by(id=rating.sink_id).first()[0]
+    name=User.query.with_entities(User.username).filter_by(id=rating.user_id).first()[0]
+    memberlevel=User.query.with_entities(User.memberlevel).filter_by(id=rating.user_id).first()[0]
+    average=Sink.query.with_entities(Sink.avg_rating).filter_by(id=rating.sink_id).first()[0]
+    
+    superratings.append((location,name,rating.stars,rating.comment,memberlevel,
+                               rating.user_id,rating.sink_id,average,getratecolor(average,"no")))
+    
+  return render_template("recent.html", state=session['state'], screen="recent",
+                         ratings=superratings, colors=colors)
 
 ######################################login / logout##############################################
 ######################################login / logout##############################################
@@ -1083,40 +1252,28 @@ def weaselwork():
       db.create_all()
       message="Holy CRap!  You deleted f---ing everything!"
     elif(orders=="average"):
-      #doing this the hacky way.  only hitting this button once.  who cares.
-      #adding a average column to Sink a year after the fact
-      #trash it or figure out sqlalchemy avg later.  probably click it once and trash it
-      
-      #from sqlalchemy.sql import func
-      #      qry = session.query(func.max(Score.score).label("max_score"), 
-      #              func.sum(Score.score).label("total_score"),
-      #              )
+      #finding total number of sinks.  ...probably a smarter way to do this.  why did i grab location
       total = Sink.query.with_entities(Sink.id,Sink.location).order_by(Sink.id.desc()).first()[0]
-      #return str(total)
-      #average = Rating.query.filter_by(sink_id=1).all()
-      #for ix in range(1,total+1):
+      
       for ix in range(1,total+1):
-        ratings = Rating.query.with_entities(Rating.stars, Rating.comment).filter_by(sink_id=ix)
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        sink=Sink.query.filter_by(id=ix).first()
+        sink.avg_rating=func.round((Rating.query.with_entities(
+          func.avg(Rating.stars).label('average')).filter(Rating.sink_id==sink.id)),2)
+        db.session.commit()
+    elif(orders=="useraverage"):
+      total = User.query.with_entities(User.id).order_by(User.id.desc()).first()[0]
+      
+      for ix in range(1,total+1):
+        user=User.query.filter_by(id=ix).first()
         print(ix)
-        totalval=0.0
-        totalsum=0.0
-        average=0.0
-        for rating in ratings:
-          print(rating.stars)
-          totalval+=1
-          totalsum+=rating.stars
-        if(totalval!=0):
-          average=totalsum/totalval
-        print("average="+str(average))
-        altersink = Sink.query.filter_by(id=ix).first()
-        if average != None:
-          altersink.avg_rating=average
-        else:
-          altersink.avg_rating= None
-        db.session.add(altersink)
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-      db.session.commit()
+        if user != None:
+          print(ix)
+          user.avg_rating=func.round((Rating.query.with_entities(
+            func.avg(Rating.stars).label('average')).filter(Rating.user_id==user.id)),2)
+          db.session.commit()
+          #print("user.avg_rating="+str(user.avg_rating))
+        
+        
     else:
       new_donor=Donator(orders)
       check = Donator.query.filter_by(location=orders).scalar()

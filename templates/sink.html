@@ -9,7 +9,8 @@
     <button class="real unpicked pushdown" name='download'>DOWNLOAD</button>
     <button class="real unpicked" name='cancel'>CANCEL</button>
   </form>
-  <p>Total Downloads = {{sink.downloads}}</p>
+  <p>Total Downloads = {{sink.downloads}}  (hit refresh
+  <span class="rating">&#8635;</span>)</p>
   {% if not sink.avg_rating or sink.avg_rating <=0 %}
     <p class="errormessage">Warning!  No one has rated this sink!</p>
   {% else %}
@@ -58,12 +59,14 @@
         style="color: {{colors[user_rating.rater.memberlevel]}};" name="member"
         value="{{user_rating.rater.id}}" >{{user_rating.rater.username}}</button></td>
         </form>
-        <td class="medium">{{user_rating.stars}}</td>
+        <td style="color: {{ratecolors[user_rating.stars-1]}}" class="medium pat">
+        {{user_rating.stars}}</td>
         <input type="hidden" name="stars" value="{{user_rating.stars}}" />
         <td class="wide">{{user_rating.comment}}</td>
         <input type="hidden" name="comment" value="{{user_rating.comment}}">
-        <form action="/sink" method='POST'>
+        <form action="/rate_sink" method='POST'>
         <input type="hidden" name="cad" value="{{sink.id}}" />
+        <input type="hidden" name="goal" value="{{sink.id}}" />
         <td><button class="real unpicked" name="rate" value="clear" >CLEAR</button></td>
         </form>
       </tr>
@@ -75,8 +78,9 @@
         style="color: {{colors[user.memberlevel]}};" name="member"
         value="{{user.id}}">{{username}}</button></td>
         </form>
-        <form action="/sink" method='POST'>
+        <form action="/rate_sink" method='POST'>
         <input type="hidden" name="cad" value="{{sink.id}}" />
+        <input type="hidden" name="goal" value="{{sink.id}}" />
         <td class="medium">
           <label style="color: {{ratecolors[0]}}" for="1">1</label>
           <input class="radio" id="1" type="radio" name="stars" value="1">
@@ -92,7 +96,6 @@
     {% endif %} 
     <tbody class="gridded">
     <form action="/stalk" method='GET'>
-    {# <input type="hidden" name="cad" value="{{sink.id}}" /> #}
     {% for rating in ratings %}
       <tr>
         <td class="wide"><button class="funtimes"
@@ -100,7 +103,7 @@
         onMouseOut="this.style.color='{{colors[rating.rater.memberlevel]}}'"
         style="color: {{colors[rating.rater.memberlevel]}};" name="member"
         value="{{rating.rater.id}}" >{{rating.rater.username}}</button></td>
-        <td class="medium">{{rating.stars}}</td>
+        <td style="color: {{ratecolors[rating.stars-1]}}" class="medium pat">{{rating.stars}}</td>
         <td class="superwide">{{rating.comment}}</td>
       </tr>
     {% endfor %}

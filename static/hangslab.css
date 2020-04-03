@@ -203,6 +203,10 @@ td, th {
   word-wrap: anywhere;
 }
 
+td.pat, th.pat {
+ font-family: "Patua One";
+}
+
 button {
   word-wrap: break-word;
   font-family: 'Alegreya Sans SC';
@@ -271,7 +275,7 @@ button.tight {
 
 button.smallunguessed {
   word-wrap: anywhere;
-  font-size: 1.2em;
+  font-size: 1em;
   border: none;
   background-color: inherit;
   color: lightsteelblue;
@@ -323,6 +327,12 @@ p.errormessage {
   font-size: 1.3em;
 }
 
+p.attention, span.attention {
+  font-family: 'Alegreya Sans SC';
+  color: pink;
+  font-size: 1.3em;
+}
+
 p.blancomessage {
   font-family: 'Alegreya Sans SC';
   color: mediumaquamarine;
@@ -337,6 +347,15 @@ p.blancomessage {
 span.shrunk {
   font-size: 0.75em;
 }
+
+.tiny {
+  font-size: 0.6em;
+}
+
+.rating {
+  font-size: 1.2em;
+}
+
 
 /***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
 /***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
@@ -393,12 +412,3 @@ span.shrunk {
 .pushdown {
   margin-bottom: 0.25em;
 }
-
-.tiny {
-  font-size: 0.6em;
-}
-
-.rating {
-  font-size: 1.2em;
-}
-

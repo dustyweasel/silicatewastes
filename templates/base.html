@@ -63,19 +63,19 @@
         </header>
         <hr />
         {% if state== "stats" %}
-        <div class="scoot">
+        <div class="scoot pushdown">
           <form action="/stats" method='GET'>
-            {% if screen == "topdownloads" %}
+            {% if arrows == "yes" %}
               <button class="scoot utility space" name="cycle" value="previous" >&larr;</button>
               <button class="utility space" name="cycle" value="next" >&rarr;</button>
             {% else %}
               <button class="scoot disutility space" name="cycle" value="previous" disabled>&larr;</button>
               <button class="disutility space" name="cycle" value="next" disabled>&rarr;</button>
             {% endif %}
-            {% if screen == "topdownloads" %}
-              <button class="real picked tight space" name="screen" value="topdownloads" >SINKS</button>
+            {% if screen == "statsinks" %}
+              <button class="real picked tight space" name="screen" value="statsinks" >SINKS</button>
             {% else %}
-              <button class="real unpicked tight space" name="screen" value="topdownloads" >SINKS</button>
+              <button class="real unpicked tight space" name="screen" value="statsinks" >SINKS</button>
             {% endif %}
             {% if screen == "raters" %}
               <button class="real picked tight space" name="screen" value="raters" >RATERS</button>
@@ -93,6 +93,7 @@
               <button class="real unpicked tight space" name="screen" value="recent" >RECENT</button>
             {% endif %}
             <input type="hidden" name="page" value="{{page}}" />
+            <input type="hidden" name="screen" value="{{screen}}" />
           </form>
         </div>
         {% endif %}

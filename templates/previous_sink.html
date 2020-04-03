@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="scoot standardspace">
+  <p class="attention">Wait! Rate the last sink you downloaded:</p>
+  <p class="pushdown">{{previous_sink.location}}</p>
+  <table>
+    <thead>
+    <tr>
+      <th class="medium">User</th><th class="medium">Rating</th><th class="medium">Comment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <form action="/rate_sink" method='POST'>
+    <tr>
+      <input type="hidden" name="goal" value="{{sink.id}}" />
+      <input type="hidden" name="cad" value="{{previous_sink.id}}" />
+      <td class="medium">{{username}}</td>
+      <td class="medium">
+        <label style="color: {{ratecolors[0]}}" for="1">1</label>
+        <input class="radio" id="1" type="radio"
+        name="stars" value="1">
+        <label style="color: {{ratecolors[1]}}" for="2">&nbsp2</label>
+        <input class="radio" id="2" type="radio"
+        name="stars" value="2">
+        <label style="color: {{ratecolors[2]}}" for="3">&nbsp3</label>
+        <input class="radio" id="3" type="radio"
+        name="stars" value="3">
+      </td>
+      <td class="medium"><input type="text" name="comment" value="" maxlength="60"></td>
+      <td>
+        <button class="real unpicked space" name="rate" value="rate">RATE</button>
+        <button class="real unpicked" name="rate" value="later">LATER</button>
+      </td>
+    </tr>
+    </form>
+    </tbody>
+  </table>
+  <hr/>
+  <h1>rating system:</h1>
+  <p>1-<span style="color: {{ratecolors[0]}}">REMAKE</span>&nbsp&nbspThis cutout was so bad that
+  it caused a remake.<br/><br/>
+    2-<span style="color: {{ratecolors[1]}}">GOOD ENOUGH</span>&nbsp&nbspYou cut this sink and
+    all you
+    know is the job got installed
+    and you never heard anything about it.<br/><br/>
+    3-<span style="color: {{ratecolors[2]}}">PERFECT</span>&nbsp&nbspYou examined the CAD file
+    and verified that the transitions between
+    arcs and lines are smooth (tangent lines parallel at transitions).  After
+    it was cut you checked the cutout to the sink with a tape measure and verified the
+    overhang was the same across the entire countour.<br/><br/>
+    <span class="attention">If you haven't cut it yet then click the LATER button but please
+    write down the sink info and
+    come back and rate it later.</span>
+  </p>
+    
+  <hr/>
+  <p><span class="attention">please rate the sink above to load your selected sink:<br/>
+  {{sink.location}}</span>
+  <br/><br/>
+  Tip: Not every bad rating is valid.  If you know how to protect yourself
+  from remakes then check out a poorly rated sink and rate it yourself.
+  </p>
+ </div>
+
+{% endblock %}
