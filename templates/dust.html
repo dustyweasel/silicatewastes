@@ -5,7 +5,7 @@
 <!-- i just copied and pasted and altered it from w3schools, i don't really know anything
 about javascript or google charts -->
 
-<div class="scoot" id="piechart"></div>
+<div class="scoot standardspace" id="piechart"></div>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
@@ -23,9 +23,6 @@ function drawChart() {
   ['Abstain', {{abstain}}]
 ]);
 
-  // Optional; add a title and set the width and height of the chart
-  //var options = {'title':'Are dust masks for crybabies?', 'width':550, 'height':400, 'backgroundColor': 'transparent'};
-
   // Display the chart inside the <div> element with id="piechart"
   var chart = new google.visualization.PieChart(document.getElementById('piechart'));
   //chart.draw(data, options);
@@ -35,11 +32,11 @@ function drawChart() {
   title: 'Are dust masks for crybabies?',
   backgroundColor: 'transparent',
   titleTextStyle: {
-        color: 'lightsteelblue'
+        color: 'white'
     },
   legend: {
         textStyle: {
-            color: 'lightsteelblue'
+            color: 'white'
         }
     },
   colors: ['mediumaquamarine', 'tomato', '#66AACD'],

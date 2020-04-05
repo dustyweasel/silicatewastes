@@ -6,20 +6,20 @@
   <table class="scoot vspace">
     <tr>
       <th>ID</th>
-      <th>Name</th>
+      {# <th>Name</th> #}
       <th>Downloads</th>
-      <th>catchphrase</th>
-      <th>Company</th>
+      <th class="wide">Catchphrase</th>
+      <th class="wide">Company</th>
       <th>State</th>
       <th>Avg. Rating</th>
     </tr>
     <tr>
       <td><span class="rating">{{memberdata.id}}</span></td>
-      <td style="color: {{colors[memberdata.memberlevel]}};" class="funtimes">
-      {{memberdata.username}}</td>
+      {# <td style="color: {{colors[memberdata.memberlevel]}};" class="funtimes">
+      {{memberdata.username}}</td> #}
       <td><span class="rating">{{memberdata.benefactor}}</span></td>
-      <td>{{memberdata.catchphrase}}</td>
-      <td>{{memberdata.company}}</td>
+      <td class="wide">{{memberdata.catchphrase}}</td>
+      <td class="wide">{{memberdata.company}}</td>
       <td>{{memberdata.state}}</td>
       <td><span class="rating">{{memberdata.avg_rating}}</span></td>
     </tr>
@@ -62,7 +62,7 @@
           <tr>
             <td class="superwide"><button class="smallunguessed" name="cad" value="{{memberrating.sink_id}}">
             {{memberrating.location}}</button></td>
-            <td class="narrow">{{memberrating.stars}}</td>
+            <td class="narrow"><span class="rating">{{memberrating.stars}}</span></td>
             <td class="wide">{{memberrating.comment}}</td>
           </tr>
         {% endfor %}

@@ -268,7 +268,7 @@ def getstatuscolor(val):
   
 @app.before_request
 def require_login():
-  allowed_routes = ['index', 'login', 'register', 'stats', 'verify', 'stalk', 'demos', 'dust']
+  allowed_routes = ['index', 'login', 'register', 'stats', 'verify', 'stalk', 'demos']
   #need that '/static/' part for css i think
   if (request.endpoint not in allowed_routes and 'username' not in session and
     '/static/' not in request.path):
@@ -459,6 +459,10 @@ def index():
         session['donor']=guys[0]
       elif 'donor' in session:
         del session['donor']
+    else:
+      #setup select box.  screw javascript
+      guys.remove(session['donor'])
+      guys.insert(0,session['donor'])
     
     folders=[]
     if 'donor' in session:
@@ -511,7 +515,10 @@ def index():
         if ('current_folder' not in session or session['current_folder'] not in folders or
             mode == "guy"):
           session['current_folder']=folders[0]
-          
+        else:
+          #setup select box
+          folders.remove(session['current_folder'])
+          folders.insert(0,session['current_folder'])
         newpath=os.path.join("static","sinks",session['donor'],session['current_folder'])
       else:
         if 'current_folder' in session:
@@ -555,16 +562,9 @@ def index():
     if 'username' in session:
       username=session['username']
     
-    selectdonor=""
-    selectfolder=""
-    if 'donor' in session:
-      selectdonor=session['donor']
-    if 'current_folder' in session:
-      selectfolder=session['current_folder']
     return render_template('silicate.html',title="silicatewastes", cads=cads, guys=guys,
                            folders=folders, searchval=session['searchval'], selectcolor=selectcolor,
-                           state=session['state'], blancopackage=blancopackage, username=username,
-                           selectdonor=selectdonor, selectfolder=selectfolder)
+                           state=session['state'], blancopackage=blancopackage, username=username)
 
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
@@ -820,8 +820,6 @@ def stats():
     return redirect('/raters')
   elif request.args.get('screen') == 'recent':
     return redirect('/recent')
-  elif request.args.get('screen') == 'dust':
-    return redirect('/dust')
   else:
     return "i don't know what just happened.  email me and we'll talk about it"
 
@@ -995,8 +993,6 @@ def raters():
 
 @app.route('/recent', methods=['GET'])
 def recent():
-  username=session['username']
-  
   colors=[]
   for ix in range(GLOBALSTATUSVAL):
     colors.append(getstatuscolor(ix))
@@ -1016,32 +1012,7 @@ def recent():
                                rating.user_id,rating.sink_id,average,getratecolor(average,"no")))
     
   return render_template("recent.html", state=session['state'], screen="recent",
-                         ratings=superratings, colors=colors, username=username)
-
-#######################################dust#################################################
-#######################################dust#################################################
-#######################################dust#################################################
-#######################################dust#################################################
-#######################################dust#################################################
-#######################################dust#################################################
-#######################################dust#################################################
-#######################################dust#################################################
-
-@app.route('/dust', methods=['GET'])
-def dust():
-  #dusters=User.query.with_entities(User.dustmask).all()
-  #total = Sink.query.with_entities(func.count(Sink.id)).first()[0]
-  yes = User.query.with_entities(func.count(User.dustmask)).filter_by(dustmask=1).first()[0]
-  no = User.query.with_entities(func.count(User.dustmask)).filter_by(dustmask=0).first()[0]
-  abstain = User.query.with_entities(func.count(User.dustmask)).filter_by(dustmask=3).first()[0]
-  
-  username=""
-  if 'username' in session:
-    username=session['username']
-  
-  # don't think we need page anymore
-  return render_template("dust.html", state=session['state'], username=username, screen="dust",
-                         page=0, yes=yes, no=no, abstain=abstain)
+                         ratings=superratings, colors=colors)
 
 ######################################login / logout##############################################
 ######################################login / logout##############################################
@@ -1335,13 +1306,11 @@ def weaselwork():
       #finding total number of sinks.  ...probably a smarter way to do this.  why did i grab location
       total = Sink.query.with_entities(func.count(Sink.id)).first()[0]
       #totalrates=Rating.query.with_entities(func.count(Rating.id)).first()[0]
-      #for ix in range(1,total+1):
-      for ix in range(10001,total+1):
+      for ix in range(1,total+1):
         sink=Sink.query.filter_by(id=ix).first()
         sink.avg_rating=func.round((Rating.query.with_entities(
           func.avg(Rating.stars).label('average')).filter(Rating.sink_id==sink.id)),2)
         db.session.commit() #hm this works unindented, all those detached sinks...
-      flash("10001,total+1")
     elif(orders=="useraverage"):
       total = User.query.with_entities(User.id).order_by(User.id.desc()).first()[0]
       

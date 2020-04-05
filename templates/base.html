@@ -87,6 +87,11 @@
             {% else %}
               <button class="real unpicked tight space" name="screen" value="stalk" >STALK</button>
             {% endif %}
+            {% if screen == "dust" %}
+              <button class="real picked tight space" name="screen" value="dust" >DUST</button>
+            {% else %}
+              <button class="real unpicked tight space" name="screen" value="dust" >DUST</button>
+            {% endif %}
             {% if screen == "recent" %}
               <button class="real picked tight space" name="screen" value="recent" >RECENT</button>
             {% else %}

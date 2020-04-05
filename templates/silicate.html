@@ -12,14 +12,22 @@
             <select style="background-color: {{selectcolor}}" class="pushdown" name="guy"
             onchange='if(this.value != 0) { this.form.submit(); }'>
             {% for guy in guys %}
-              <option value="{{guy}}">{{guy}}</option>
+              {% if selectdonor and selectdonor==guy %}
+                <option value="{{guy}}" selected>{{guy}}</option>
+              {% else %}
+                <option value="{{guy}}">{{guy}}</option>
+              {% endif %}
             {% endfor %}
             </select> /
           
             <select style="background-color: {{selectcolor}}" class="pushdown" name="folder"
             onchange='if(this.value != 0) { this.form.submit(); }'>
             {% for folder in folders %}
-              <option value="{{folder}}">{{folder}}</option>
+              {% if selectfolder and selectfolder==folder %}
+                <option value="{{folder}}" selected>{{folder}}</option>
+              {% else %}
+                <option value="{{folder}}">{{folder}}</option>
+              {% endif %}
             {% endfor %}
             </select> /
           </form>

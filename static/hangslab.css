@@ -146,7 +146,7 @@ label {
   font-family: "Patua One";
 }
 
-table {
+table, div.ul {
   display: flex;
   flex-direction: column;
   font-family: 'Alegreya Sans SC';
@@ -203,8 +203,20 @@ td, th {
   word-wrap: anywhere;
 }
 
+th.center {
+  text-align: center;
+}
+
 td.pat, th.pat {
  font-family: "Patua One";
+}
+
+ul {
+  display: inline-block;
+  font-family: 'Alegreya Sans SC';
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0em 1em 0em 0em;
 }
 
 button {
@@ -355,23 +367,6 @@ span.shrunk {
 .rating {
   font-size: 1.2em;
 }
-
-
-/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
-/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
-/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
-/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
-/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
-/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
-/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
-/***************************ALL GENERIC FORMAT STUFF GOES HERE**************************/
-
-/*titles and stuff*/
-/*.stick2 {
-  display: block;
-  font-family: "Alegreya Sans SC";
-  color: aqua;
-}*/
 
 /************************ALL GENERIC SPACING STUFF GOES HERE********************************/
 /************************ALL GENERIC SPACING STUFF GOES HERE********************************/
