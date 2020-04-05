@@ -20,6 +20,7 @@
       </thead>
       <tbody class="gridded">
       <form action="/stalk" method='GET'>
+        <input type="hidden" name="screen" value="{{screen}}" />
       {% for rater in superraters %}
         <tr>
           <td class="narrow"><span class="rating">{{rater[0]}}</span></td>

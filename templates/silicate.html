@@ -2,9 +2,13 @@
 
 {% block content %}
 
+<p class="normalhide attention">Phone users: I haven't made a separate layout for phones this
+  time, you're getting the desktop version.  I'm working on an android app version instead.  In
+  the mean time try zooming or rotating and refreshing.  If you absolutely have to have a phone
+  version right now then let me know.</p>
+
 <div class="standardspace">
   <section class="splay">
- 
     <table class="scoot">
       <thead>
         <th class="superwide">
@@ -18,7 +22,7 @@
                 <option value="{{guy}}">{{guy}}</option>
               {% endif %}
             {% endfor %}
-            </select> /
+            </select><span class="phonehide" >/</span>
           
             <select style="background-color: {{selectcolor}}" class="pushdown" name="folder"
             onchange='if(this.value != 0) { this.form.submit(); }'>
@@ -29,7 +33,7 @@
                 <option value="{{folder}}">{{folder}}</option>
               {% endif %}
             {% endfor %}
-            </select> /
+            </select><span class="phonehide" >/</span>
           </form>
         </th>
         <th class="narrow">Average Rating</th>

@@ -22,6 +22,7 @@
       </thead>
       <tbody class="gridded">
       <form action="/stalk" method='GET'>
+        <input type="hidden" name="screen" value="{{screen}}" />
       {% for member in members %}
         <tr class="gridded">
           <td class="narrow"><span class="rating">{{member.id}}</span></td>

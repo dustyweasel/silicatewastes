@@ -6,6 +6,8 @@
   <p style="color: {{ratecolor}}" class="pushdown">{{sink.location}}</p>
   <form action="/downloadfile" method='POST'>
     <input type="hidden" name="cad" value="{{sink.id}}"/>
+    <input type="hidden" name="screen" value="{{screen}}"/>
+    <input type="hidden" name="page" value="{{page}}"/>
     <button class="real unpicked pushdown" name='download'>DOWNLOAD</button>
     <button class="real unpicked" name='cancel'>CANCEL</button>
   </form>

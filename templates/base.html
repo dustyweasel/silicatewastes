@@ -1,5 +1,12 @@
 <!doctype html>
 
+<script type="text/javascript">
+// First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+let vh = window.innerHeight * 0.01;
+// Then we set the value in the --vh custom property to the root of the document
+document.documentElement.style.setProperty('--vh', `${vh}px`);
+</script>
+
 <html>
   <head>
     <title>{{title}}</title>
@@ -29,7 +36,8 @@
         </section>
         
         <div> {# pointless div #}
-          <form action="/" method='GET'> 
+          <form action="/" method='GET'>
+            <input type="hidden" name="screen" value="{{screen}}" />
             <input class="thickprompt space" type="text" name='searchval' value="{{searchval}}" 
             maxlength="10">
             

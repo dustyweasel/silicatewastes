@@ -16,6 +16,8 @@
     </thead>
     <tbody class="gridded">
     <form action="/sink" method='GET'>
+    <input type="hidden" name="screen" value="statsinks"/>
+    <input type="hidden" name="page" value="{{page}}"/>
     {% for download in topdownloads %}
       <tr>
         <td class="narrow"><span class="rating">{{download[0]}}</span></td>

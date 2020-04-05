@@ -18,6 +18,7 @@
     {% for rating in ratings %}
       <tr>
       <form action="/stalk" method='GET'>
+        <input type="hidden" name="screen" value="{{screen}}" />
         <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
             onMouseOut="this.style.color='{{colors[rating[4]]}}'"
             style="color: {{colors[rating[4]]}};"
@@ -25,6 +26,7 @@
         </td>
       </form>
       <form action="/sink" method='GET'>
+        <input type="hidden" name="screen" value="{{screen}}" />
         <td class="wide"><button class="smallunguessed" onMouseOver="this.style.color='{{colors[0]}}'"
             onMouseOut="this.style.color='{{rating[8]}}'"
             style="color: {{rating[8]}};"

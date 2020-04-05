@@ -268,7 +268,8 @@ def getstatuscolor(val):
   
 @app.before_request
 def require_login():
-  allowed_routes = ['index', 'login', 'register', 'stats', 'verify', 'stalk', 'demos', 'dust']
+  allowed_routes = ['index', 'login', 'register', 'stats', 'verify', 'stalk', 'demos', 'dust',
+                    'statsinks', 'raters', 'recent']
   #need that '/static/' part for css i think
   if (request.endpoint not in allowed_routes and 'username' not in session and
     '/static/' not in request.path):
@@ -281,10 +282,14 @@ def require_login():
       del session['secret_pass']
     if 'password' in session:
       del session['password']
-    if 'state' in session:
+    if 'state' in session and session['state']!="stats":
       del session['state']
     
-    return redirect('/')
+    screen=""
+    if request.args.get('screen') != None:
+      screen=request.args.get('screen')
+    
+    return redirect(url_for('index', screen=screen))
   
 ##############################///////////////////////////########################################
 ##############################///////////////////////////########################################
@@ -325,10 +330,20 @@ def index():
     if ((request.args.get('home') == None and session['state']=='stats') or
         (request.args.get('home') != None and request.args.get('home') == 'stats')):
       session['state']="stats"
-      return redirect("/stats")
+      screen=""
+      if request.args.get('screen') != None:
+        screen=request.args.get('screen')
+      page=0
+      if request.args.get('page') != None:
+        page=request.args.get('page')
+      return redirect(url_for("stats",screen=screen, page=page))
     elif request.args.get('home') != None and request.args.get('home') == 'chat':
-      session['state']="babble"
-      return redirect("/chat")
+      if 'username' in session:
+        session['state']="babble"
+      screen=""
+      if request.args.get('screen') != None:
+        screen=request.args.get('screen')
+      return redirect(url_for("chat",screen=screen))
     elif request.args.get('home') != None and request.args.get('home') == 'search':
       mode="search"
       #need to make sure if 'home' == 'search' then form sends back 'searchval' too
@@ -602,9 +617,16 @@ def sink():
   user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
   ratings = Rating.query.filter(Rating.user_id != user.id, Rating.sink_id==sink.id).all()
   
+  screen=""
+  if request.args.get('screen') != None:
+    screen=request.args.get('screen')
+  page=0
+  if request.args.get('page') != None:
+    page=request.args.get('page')
+  
   return render_template("sink.html", sink=sink, username=username, ratecolor=ratecolor,
                          ratings=ratings, user_rating=user_rating, colors=colors, user=user,
-                         ratecolors=ratecolors)
+                         ratecolors=ratecolors, screen=screen, page=page)
 
 ######################/previous_sink########################################################
 ######################/previous_sink########################################################
@@ -714,7 +736,14 @@ def rate_sink():
 @app.route("/downloadfile", methods=['POST'])
 def downloadfile():
   if 'cancel' in request.form:
-    return redirect("/")
+    screen=""
+    if 'screen' in request.form:
+      screen = request.form['screen']
+    page=0
+    if 'page' in request.form:
+      page = request.form['page']
+    return redirect(url_for('index', screen=screen, page=page))
+  #return redirect(url_for('previous_sink', cad=cad, pre_cad=user.lastsink)) 
   
   #this is protected by allowed_routes
   #if 'username' in session:
@@ -805,9 +834,8 @@ def stats():
     username=session['username']
   
   #if request.method=='GET':
-  if request.args.get('screen') == None or request.args.get('screen') == 'stalk':
-    return redirect('/stalk')
-  elif request.args.get('screen') == 'statsinks':
+  if (request.args.get('screen') == None or request.args.get('screen') == "" or
+      request.args.get('screen') == 'statsinks'):
     page=""
     cycle=""
     if request.args.get('page') != None:
@@ -816,6 +844,8 @@ def stats():
       cycle = request.args.get('cycle')
      #return redirect(url_for('previous_sink', cad=cad, pre_cad=user.lastsink)) 
     return redirect(url_for('statsinks', page=page, cycle=cycle))
+  elif request.args.get('screen') == 'stalk':
+    return redirect('/stalk')
   elif request.args.get('screen') == 'raters':
     return redirect('/raters')
   elif request.args.get('screen') == 'recent':
@@ -867,6 +897,10 @@ def stalk():
     else:
       if request.args.get('member') != None:
         flash("log in")
+        screen=""
+        if request.args.get('screen') != None:
+          screen = request.args.get('screen')
+        return redirect(url_for('index',screen=screen))
       #gonna have to make this grab 100 at a time like sink if i ever get 1000's of users
       members=User.query.with_entities(User.id, User.username, User.catchphrase, User.memberlevel,
                                    User.benefactor, User.state, User.company).all()
@@ -918,7 +952,9 @@ def stalk():
 
 @app.route('/statsinks', methods=['GET'])
 def statsinks():
-  username=session['username']
+  username=""
+  if 'username' in session:
+    username=session['username']
   if request.args.get('page') == None or request.args.get('page') == "":
     page=0
   else:
@@ -957,7 +993,9 @@ def statsinks():
 
 @app.route('/raters', methods=['GET'])
 def raters():
-  username=session['username']
+  username=""
+  if 'username' in session:
+    username=session['username']
   colors=[]
   for ix in range(GLOBALSTATUSVAL):
     colors.append(getstatuscolor(ix))
@@ -995,7 +1033,9 @@ def raters():
 
 @app.route('/recent', methods=['GET'])
 def recent():
-  username=session['username']
+  username=""
+  if 'username' in session:
+    username=session['username']
   
   colors=[]
   for ix in range(GLOBALSTATUSVAL):
