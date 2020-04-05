@@ -53,6 +53,7 @@ h1 {
 
 p {
   margin: 0em 2em 0em 0em;
+  word-break: break-word;
 }
 
 section.standard {
@@ -60,6 +61,7 @@ section.standard {
   flex-direction: column;
   height: 100vh;
   /*overflow: hidden;*/
+  position: relative;
 }
 
 div.standardspace {
@@ -81,13 +83,9 @@ div.splayspace {
   flex: 1;
 }
 
-header {
-  /*flex: 0 1 auto;*/
-  margin: 0.5em 0em 0em 2em;
-}
-
 footer {
   /*flex: 0 1 auto;*/
+  min-height: 2em;
   margin: 1em 0em 1em 2em;
 }
 
@@ -397,6 +395,19 @@ p.normalhide {
 /************************ALL GENERIC SPACING STUFF GOES HERE********************************/
 /************************ALL GENERIC SPACING STUFF GOES HERE********************************/
 /************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+
+div.topedge {
+  position: absolute;
+  right: 2em;
+  top: 1em;
+}
+
+div.bottomedge {
+  position: absolute;
+  right: 2em;
+  bottom: 1em;
+}
+
 .space {
   margin-right: .25em;
 }

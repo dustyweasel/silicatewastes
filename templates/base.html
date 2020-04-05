@@ -14,8 +14,13 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
   </head>
   
   <body>
-    <section class="standard">
-      <header>
+    <section class="splay"> {# START 3 columns #}
+    <div class="splayspace"></div>  {# 1st column EMPTY #}
+    <section class="standard">  {# column 2 START 3 rows #}
+    <section class="splay"> {# ok, center the header #}
+    <div class="splayspace"></div> {# center the header #}
+      <div> {# 1st row sil, buttons, buttons #}
+      
         <section class="splay">
           <div>
             <form action="/" method='GET'>  
@@ -26,13 +31,7 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
           <div class="splayspace">
           </div>
           
-          <div class="edge">
-            {% if username %}
-              <a href="/logout">logout {{username}}</a>
-            {% else %} 
-              <a href="/register">register</a>&nbsp<a href="/login">login</a>
-            {% endif %}
-          </div>
+          
         </section>
         
         <div> {# pointless div #}
@@ -68,7 +67,7 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
             {% endif %}
           </form>
         </div>
-        </header>
+        
         <hr />
         {% if state== "stats" %}
         <div class="scoot pushdown">
@@ -109,15 +108,20 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
             <input type="hidden" name="screen" value="{{screen}}" />
           </form>
         </div>
+        
         {% endif %}
         
       {# </header> #}
-    
+    </div> {# end 1st row #}
+    <div class="splayspace"></div> {# center the header #}
+    </section>
+    <div class="scoot standardspace"> {# center/center #}
       {% block content %}
       {% endblock %}
+      </div>
       
       <footer>
-        <section class="splay">
+        
           <div>
             {% with messages = get_flashed_messages() %}
               <p class="errormessage">
@@ -132,16 +136,30 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
           <div class="splayspace">
           </div>
           
-          <div class="edge">
+          
+      </footer>
+    </section>
+    <div class="splayspace">
+    
+    </div>  {# 3rd column EMPTY #}
+    </section> {# END 3 columns #}
+    
+          <div class="topedge">
+            {% if username %}
+              <a href="/logout">logout {{username}}</a>
+            {% else %} 
+              <a href="/register">register</a>&nbsp<a href="/login">login</a>
+            {% endif %}
+          </div>
+          
+          <div class="bottomedge">
             <p class="tiny">
               The shadiest source of sink DXF files on the internet.<br/>
               Also a questionable source of ARD'S, ASD'S, DWG's, EST's, &amp; TAG'S.<br/>
               by: dustyweasel
             </p>
           </div>
-        </section>
-      </footer>
-    </section>
+    
   </body>
   
   
