@@ -43,7 +43,6 @@ a:focus, a:hover, a:active     {color: #cf0021}
   margin: 0;
   padding: 0;
   border: 0;
-  box-sizing: border-box;
 }
 
 h1 {
@@ -52,61 +51,57 @@ h1 {
   font-size: 2em;
 }
 
-/*p {
+p {
   margin: 0em 2em 0em 0em;
-}*/
+}
 
-div.standard {
+section.standard {
   display: flex;
   flex-direction: column;
   height: 100vh;
   /*overflow: hidden;*/
 }
 
-div.substandard {
-  display: flex;
-  flex-direction: column;
-  /*height: 100vh;*/
-  /*overflow: hidden;*/
-}
-
 div.standardspace {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   flex: 1;
   overflow: hidden;
 }
 
-div.splay {
-  display: flex;
+section.splay {
+  display: inline-flex;
   flex-direction: row;
   overflow: hidden;
 }
 
 div.splayspace {
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   flex: 1;
 }
 
-/*header {
+header {
+  /*flex: 0 1 auto;*/
   margin: 0.5em 0em 0em 2em;
-}*/
+}
 
-/*footer {
+footer {
+  /*flex: 0 1 auto;*/
   margin: 1em 0em 1em 2em;
-}*/
+}
 
 body {
   font-family: "Patua One";
   background-color: #101010;
   color: lightsteelblue;
-  /*margin: 0em 0em 0em 0em;*/
+  margin: 0em 0em 0em 0em;
   
   background-size:     cover;
   background-repeat:   no-repeat;
   background-position: center center;
   background-image: url('scuffedstatic_dark1400x900_2.jpg');
+  background-size: cover;
 }
 
 /*select {
@@ -140,7 +135,9 @@ hr {
 }
 
 div.scrollable {
-  display: inline-block;
+  /*display: inline-block;*/
+  /*display: inline-flex;*/
+  /*flex-direction: column;*/
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -160,9 +157,11 @@ table th {
   color: white;
 }
 
-/*table tbody {
-  display: inline-block;
-}*/
+table tbody {
+  /*display: inline-flex;*/
+  /*display: inline-flex;*/
+  /*flex-direction: column;*/
+}
 
 /*table tbody.freeze {
   overflow-y: hidden;
@@ -173,17 +172,17 @@ tbody.gridded {
   overflow-x: hidden;
 }
 
-/*tbody.static td {
+tbody.static td {
   padding-top: 0.1em;
   padding-bottom: 0.1em;
-}*/
+}
 
 tbody.gridded tr {
   outline: dotted thin gray;
 }
 
 thead th.narrow, tbody td.narrow {
-  width: 3em;
+  width: 4em;
 }
 
 thead th.medium, tbody td.medium {
@@ -199,14 +198,10 @@ thead th.superwide, tbody td.superwide {
 }
 
 td, th {
-  padding: 0em 0em 0em 1em;
+  padding: 0em 1em 0em 1em;
   text-align: left;
   /*word-wrap: anywhere;*/
   word-break: break-word;
-}
-
-td.right, th.right {
-  padding-right: 1em;
 }
 
 th.center {
@@ -218,9 +213,9 @@ td.pat, th.pat {
 }
 
 ul {
-  display: inline-block;
+  /*display: inline-block;*/
   font-family: 'Alegreya Sans SC';
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
   padding: 0em 1em 0em 0em;
 }
@@ -231,9 +226,9 @@ could get rid of ul and use this class now*/
 div.fakeul {
   /*display: inline-block;*/
   font-family: 'Alegreya Sans SC';
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
-  /*padding: 0em 1em 0em 0em;*/
+  padding: 0em 1em 0em 0em;
 }
 
 button {
@@ -320,7 +315,7 @@ button.smallunguessed:hover, button.main:hover{
   font-family: "Patua One";
   font-size: 1em;
   width: 8em;
-  /*padding: 0em 0em 0em 0.5em;*/
+  padding: 0em 0em 0em 0.5em;
 }
 
 input {
@@ -346,7 +341,7 @@ span.funtimes, button.funtimes, td.funtimes, li.funtimes {
   font-family: "Alegreya Sans SC";
   font-size: 1.2em;
   /*color: sandybrown;*/
-  /*list-style-type: none;*/
+  list-style-type: none;
   background-color: inherit;
   border: none;
 }
@@ -363,10 +358,10 @@ p.attention, span.attention {
   font-size: 1.3em;
 }
 
-li.blancomessage {
+p.blancomessage {
   font-family: 'Alegreya Sans SC';
   color: mediumaquamarine;
-  font-size: 1.2em;
+  font-size: 1.3em;
 }
 
 .art {
@@ -410,14 +405,13 @@ p.normalhide {
   margin-right: 2em;
 }
 
-/*
 .vspace {
   margin-top: .25em;
 }
 
 .vmorespace {
   margin-top: 2em;
-}*/
+}
 
 .lessscoot {
   margin-left: 1.0em;
@@ -427,9 +421,9 @@ p.normalhide {
   margin-left: 2.0em;
 }
 
-/*.scootmore {
+.scootmore {
   margin-left: 4.0em;
-}*/
+}
 
 .pushdown {
   margin-bottom: 0.25em;
@@ -449,7 +443,7 @@ p.normalhide {
 
 @media only screen and (max-device-width:640px){
 
-div.standard {
+section.standard {
   display: flex;
   flex-direction: column;
   height: 100vh;

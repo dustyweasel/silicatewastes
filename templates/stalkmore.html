@@ -2,9 +2,12 @@
 
 {% block content %}
 
-<div> {# pointless div #}
+<div class="standardspace">
+<div class="splay">
+<div class="splayspace"></div>
+<div class="substandard">
   <table class="scoot vspace">
-    <tr>
+    <tr id="tablestalkmore">
       <th>ID</th>
       {# <th>Name</th> #}
       <th>Downloads</th>
@@ -24,31 +27,30 @@
       <td><span class="rating">{{memberdata.avg_rating}}</span></td>
     </tr>
   </table>
-        
+  <div id="pstalkmore">
   {% if memberdata.id != 1 %}
-    <p class="scoot pushdown">Send
+    <p class="pushdown">Send
       a 20 character message to {{memberdata.username}} through silicatewastes@gmail.com.
       Your email address will be included.</p>
           
     <form action="/stalk" method='POST'>
       <input type="hidden" name="victim" value="{{memberdata.id}}" >
-      <input class="scootmore" type="text" name="harassment" maxlength="20">
+      <input type="text" name="harassment" maxlength="20">
       <button class="real unpicked pushdown" >SEND</button>
     </form>
   {% else %}
-    <p class="scoot">Email addresses will remain hidden on this website.  Except for
+    <p>Email addresses will remain hidden on this website.  Except for
     mine.  Here it is:<br/>
     <a href="mailto:dustyweasel@protonmail.com">dustyweasel@protonmail.com</a></p>
   {% endif %}
+  </div>
           
-  <p class="scoot"><span style="color: {{colors[memberdata.memberlevel]}};" class="funtimes">
+  <p><span style="color: {{colors[memberdata.memberlevel]}};" class="funtimes">
   {{memberdata.username}}'s sink ratings:</span></p>
-</div>
 
-<div class="standardspace">
   {% if memberratings %}
-  <section class="splay">
-    <table class="scoot">
+  <div class="splay">
+    <table>
       <thead>
         <tr>
           <th class="superwide">Sink</th>
@@ -69,10 +71,19 @@
         </form>
       </tbody>
     </table>
-  </section>
+  </div>
   {% else %}
     <p class="errormessage scoot">{{memberdata.username}} hasn't rated any sinks.</p>
   {% endif %}
-</div>
+</div> {# END substandard #}
+
+<script type="text/javascript">
+var stalkmoresize=document.getElementById('tablestalkmore').offsetWidth;
+document.getElementById('pstalkmore').style.width=stalkmoresize;
+</script>
+
+<div class="splayspace"></div>
+</div> {# END splay #}
+</div> {# END standardspace #}
       
 {% endblock %}

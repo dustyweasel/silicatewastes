@@ -265,7 +265,10 @@ def getstatuscolor(val):
     color="red"
     
   return color
-  
+ 
+#wtf
+#127.0.0.1 - - [09/Apr/2020 05:11:06] "GET /favicon.ico HTTP/1.1" 302 -
+
 @app.before_request
 def require_login():
   allowed_routes = ['index', 'login', 'register', 'stats', 'verify', 'stalk', 'demos', 'dust',
@@ -421,7 +424,8 @@ def index():
           #if we found one
         if savesplit:
           if request.args.get('home') == 'blanco':
-            flash("identical cutouts: "+savesplit)
+            flash("Found matches.")
+            #flash("identical cutouts: "+savesplit)
           #global, create list of 16 including hyphens
           blancopackage=savesplit.strip('\n').split('\n')
           for ix in range(len(blancopackage)):
@@ -433,8 +437,9 @@ def index():
           blancopackage.append(session['searchval'])
           blancopackage.append(session['searchval'][:3]+'-'+session['searchval'][3:])
           
-          flash("No identical cutouts.  Searching only for "+blancopackage[0]+
-                " and "+blancopackage[1])
+          flash("No matches on record.")
+          #flash("No identical cutouts.  Searching only for "+blancopackage[0]+
+          #      " and "+blancopackage[1])
       except Exception as e:
         flash(e)
         flash("something went wrong, email me if you want")
@@ -576,6 +581,7 @@ def index():
       selectdonor=session['donor']
     if 'current_folder' in session:
       selectfolder=session['current_folder']
+      
     return render_template('silicate.html',title="silicatewastes", cads=cads, guys=guys,
                            folders=folders, searchval=session['searchval'], selectcolor=selectcolor,
                            state=session['state'], blancopackage=blancopackage, username=username,

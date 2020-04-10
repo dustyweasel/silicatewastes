@@ -2,9 +2,12 @@
 
 {% block content %}
 
-<div class="scoot standardspace">
-<p>100 most recent ratings.</p>
-  <section class="splay">
+<div class="standardspace">
+
+  <div class="splay">
+  <div class="splayspace"></div>
+  <div class="substandard">
+  <p>100 most recent ratings.</p>
   <table>
     <thead>
       <tr>
@@ -39,7 +42,9 @@
     {% endfor %}
     </tbody>
   </table>
-  </section>
+  </div>
+  <div class="splayspace"></div>
+  </div>
 </div>
 
 {% endblock %}

@@ -2,33 +2,42 @@
 
 {% block content %}
 
-  <div class="scoot standardspace">
-  <p class="pushdown">wail into the deafening silence of the silicate wastes</p>
-  <div class="pushdown">
-  <form action="/chat" method='POST'>
-    <input type="text" name="babble" value="" maxlength="60">
-    <button class="real unpicked" type="submit" value='SCREAM'>SCREAM</button>
-  </form>
+{# not sure why i didn't need a standardspace here.  the ul nerfs?
+whatever, it works, other stuff to do#}
+<div class="splay">
+  <div class="splayspace">
   </div>
-
-  <section class="splay">
-  <div class="ul">    
-    <ul>
-      <form action="/stalk" method='GET'> 
-      {% if babblings %}
-        {% for babble in babblings %}
-          <li><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
-            onMouseOut="this.style.color='{{colors[babble[1].babbler.memberlevel]}}'"
-            style="color: {{colors[babble[1].babbler.memberlevel]}};"
-            name="member" value="{{babble[1].babbler.id}}">{{babble[1].babbler.username}}: </button>
-            <span style="color: {{babble[0]}}" class="rating"> {{babble[1].babble}}</span>
-          </li>
-        {% endfor %}
-      {% endif %}
-      </form>
-    </ul>
+  <div class="standard">
+  
+    <p class="pushdown">wail into the deafening silence of the silicate wastes</p>
+    <div class="pushdown">
+    <form action="/chat" method='POST'>
+      <input type="text" name="babble" value="" maxlength="60">
+      <button class="real unpicked" type="submit" value='SCREAM'>SCREAM</button>
+    </form>
+    </div>
+    <div class="splay">
+      <div class="ul">    
+        <ul>
+          <form action="/stalk" method='GET'> 
+          {% if babblings %}
+            {% for babble in babblings %}
+              <li><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+                onMouseOut="this.style.color='{{colors[babble[1].babbler.memberlevel]}}'"
+                style="color: {{colors[babble[1].babbler.memberlevel]}};"
+                name="member" value="{{babble[1].babbler.id}}">
+                {{babble[1].babbler.username}}: </button>
+                <span style="color: {{babble[0]}}" class="rating"> {{babble[1].babble}}</span>
+              </li>
+            {% endfor %}
+          {% endif %}
+          </form>
+        </ul>
+      </div>
+    </div> {# END inner splay #}
+  </div> {# END standard #}
+  <div class="splayspace">
   </div>
-  </section>
-</div>
+</div> {# END splay #}
     
 {% endblock %}

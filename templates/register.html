@@ -1,7 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %} 
-<div class="standardspace scoot"> 
+<div class="standardspace"></div>
+  <div class="splay">
+  <div class="splayspace"></div>
+  <div class="substandard">
   <h1 class="scoot"><img class="art" src="./static/angle-grinder.png") />Join us.</h1>
   <form action="/register" method="POST">
     <table>
@@ -13,27 +16,27 @@
       <tr>
         <td><label for="username">USERNAME</label></td>
         <td>
-          <input class="standard" id="username" name="username" value="{{newusername}}"
+          <input class="standard pushdown" id="username" name="username" value="{{newusername}}"
           type="text" maxlength="20">
         </td>
       </tr>
       <tr>
         <td><label for="password">Password</label></td>
         <td>
-          <input class="standard" id="password" name="password" type="password" maxlength="30">
+          <input class="standard pushdown" id="password" name="password" type="password" maxlength="30">
         </td>
       </tr>
       <tr>
         <td><label for="verify">Verify Password</label></td>
         <td>
-          <input class="standard" id="verify" name="verify" type="password" maxlength="30">
+          <input class="standard pushdown" id="verify" name="verify" type="password" maxlength="30">
         </td>
       </tr>
       <tr></tr>
       <tr>
         <td><label for="email">Email</label></td>
         <td>
-          <input class="standard" id="email" name="email" type="email" value="{{email}}"
+          <input class="standard pushdown" id="email" name="email" type="email" value="{{email}}"
           maxlength="60">
         </td>
       </tr>
@@ -42,17 +45,17 @@
         <td>OPTIONAL:</td>
       </tr>
       <tr>
-        <td><label for="compmanyname">Company Name</label></td>
+        <td><label for="companyname">Company Name</label></td>
         <td>
           {# why do i have two values here... #}
-          <input class="standard" id="companyname" name="companyname" type="text"
+          <input class="standard pushdown" id="companyname" name="companyname" type="text"
           value="{{company}}" value="" maxlength="60">
         </td>
       </tr>
       <tr>
         <td><label for="catchphrase">Catchphrase</label></td>
         <td>
-          <input class="standard" id="catchphrase" name="catchphrase" type="text"
+          <input class="standard pushdown" id="catchphrase" name="catchphrase" type="text"
           value="{{catchphrase}}" maxlength="60">
         </td>
       </tr>
@@ -127,5 +130,8 @@
   <form action="/" method="GET">
     <button class="real unpicked scoot">CANCEL</button>
   </form>
-</div>
+  </div> {# END substandard #}
+  <div class="splayspace"></div>
+  </div> {# END splay #}
+<div class="standardspace"></div>
 {% endblock %}

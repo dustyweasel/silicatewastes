@@ -1,4 +1,4 @@
-<!doctype html>
+{# <!doctype html> this kept javascript style.width from working #}
 
 <script type="text/javascript">
 // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
@@ -11,138 +11,185 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
   <head>
     <title>{{title}}</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='hangslab.css') }}" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
   </head>
   
-  <body>
-    <section class="standard">
-      <header>
-        <section class="splay">
-          <div>
-            <form action="/" method='GET'>  
-              <button class="main lessscoot" name="home" value="home" >www.silicatewastes.com</button>
-            </form>
-          </div>
-          
-          <div class="splayspace">
-          </div>
-          
-          <div class="edge">
-            {% if username %}
-              <a href="/logout">logout {{username}}</a>
-            {% else %} 
-              <a href="/register">register</a>&nbsp<a href="/login">login</a>
-            {% endif %}
-          </div>
-        </section>
-        
-        <div> {# pointless div #}
-          <form action="/" method='GET'>
-            <input type="hidden" name="screen" value="{{screen}}" />
-            <input class="thickprompt space" type="text" name='searchval' value="{{searchval}}" 
-            maxlength="10">
-            
-            {% if state == "search" %}
-              <button class="real picked space vspace center" name="home" value="search" >FILTER</button>
-            {% else %}
-              <button class="real unpicked space vspace center" name="home" value="search" >FILTER</button>
-            {% endif %}
-            {% if state == "blanco" %}
-              <button class="real blancopicked space vspace center" name="home" value="blanco" >BLANCO</button>
-            {% else %}
-              <button class="real unpicked space vspace center" name="home" value="blanco" >BLANCO</button>
-            {% endif %}
-            {% if state == "babble" %}
-              <button class="real picked space vspace center" name="home" value="chat" >NEWS</button>
-            {% else %}
-              <button class="real unpicked space vspace center" name="home" value="chat" >NEWS</button>
-            {% endif %}
-            {# {% if state == "stalk" %}
-              <button class="real picked space vspace center" name="home" value="stalk" >STALK</button>
-            {% else %}
-              <button class="real unpicked space vspace center" name="home" value="stalk" >STALK</button>
-            {% endif %} #}
-            {% if state == "stats" %}
-              <button class="real picked space vspace center" name="home" value="stats" >STATS</button>
-            {% else %}
-              <button class="real unpicked space vspace center" name="home" value="stats" >STATS</button>
-            {% endif %}
-          </form>
-        </div>
-        </header>
-        <hr />
-        {% if state== "stats" %}
-        <div class="scoot pushdown">
-          <form action="/stats" method='GET'>
-            {% if arrows == "yes" %}
-              <button class="scoot utility space" name="cycle" value="previous" >&larr;</button>
-              <button class="utility space" name="cycle" value="next" >&rarr;</button>
-            {% else %}
-              <button class="scoot disutility space" name="cycle" value="previous" disabled>&larr;</button>
-              <button class="disutility space" name="cycle" value="next" disabled>&rarr;</button>
-            {% endif %}
-            {% if screen == "statsinks" %}
-              <button class="real picked tight space" name="screen" value="statsinks" >SINKS</button>
-            {% else %}
-              <button class="real unpicked tight space" name="screen" value="statsinks" >SINKS</button>
-            {% endif %}
-            {% if screen == "raters" %}
-              <button class="real picked tight space" name="screen" value="raters" >RATERS</button>
-            {% else %}
-              <button class="real unpicked tight space" name="screen" value="raters" >RATERS</button>
-            {% endif %}
-            {% if screen == "stalk" %}
-              <button class="real picked tight space" name="screen" value="stalk" >STALK</button>
-            {% else %}
-              <button class="real unpicked tight space" name="screen" value="stalk" >STALK</button>
-            {% endif %}
-            {% if screen == "dust" %}
-              <button class="real picked tight space" name="screen" value="dust" >DUST</button>
-            {% else %}
-              <button class="real unpicked tight space" name="screen" value="dust" >DUST</button>
-            {% endif %}
-            {% if screen == "recent" %}
-              <button class="real picked tight space" name="screen" value="recent" >RECENT</button>
-            {% else %}
-              <button class="real unpicked tight space" name="screen" value="recent" >RECENT</button>
-            {% endif %}
-            <input type="hidden" name="page" value="{{page}}" />
-            <input type="hidden" name="screen" value="{{screen}}" />
-          </form>
-        </div>
-        {% endif %}
-        
-      {# </header> #}
-    
-      {% block content %}
-      {% endblock %}
-      
-      <footer>
-        <section class="splay">
-          <div>
-            {% with messages = get_flashed_messages() %}
-              <p class="errormessage">
-              {% for message in messages %}
-                {{message}}
-                <br/>
-              {% endfor %}
-              </p>
-            {% endwith %}
-          </div>
-          
-          <div class="splayspace">
-          </div>
-          
-          <div class="edge">
-            <p class="tiny">
-              The shadiest source of sink DXF files on the internet.<br/>
-              Also a questionable source of ARD'S, ASD'S, DWG's, EST's, &amp; TAG'S.<br/>
-              by: dustyweasel
-            </p>
-          </div>
-        </section>
-      </footer>
-    </section>
-  </body>
+  {# 5 pancakes if ignore the hr's.  header (main button, login/out), sub-menu, main section, footer
+  all size to contents (vertically) except main which takes up all remaining space#}
   
+  <body>
+    <div class="standard">  {# START whole page like a stack of pancakes #}
+    
+    <div>  {# START header #}
+      <div class="splay"> {# START main button / login/out #}
+        <div class="splayspace">
+        </div>
+      
+        <div id="mainbar">
+          <form action="/" method='GET'>  
+            <button style="padding-left: 1em;" class="main" name="home" value="home">
+            www.silicatewastes.com</button>
+          </form>
+        </div>
+          
+        <div class="splayspace" style="justify-content: flex-end;">
+          <div class="edge">
+          {% if username %}
+            <a href="/logout">logout {{username}}</a>
+          {% else %} 
+            <a href="/register">register</a>&nbsp<a href="/login">login</a>
+          {% endif %}
+          </div>
+        </div>
+      </div>  {# END main button / login/out #}
+        
+      <div class="splay"> {# START menubar #}
+        <div id="leftfilterbar" class="splayspace">
+        </div>
+        <div id="filterbar">
+          <form action="/" method='GET'>
+          <input type="hidden" name="screen" value="{{screen}}" />
+          <input class="thickprompt space" type="text" name='searchval'
+          value="{{searchval}}" maxlength="10">
+            
+          {% if state == "search" %}
+            <button class="real picked space" name="home" value="search" >
+            FILTER</button>
+          {% else %}
+            <button class="real unpicked space" name="home" value="search" >
+            FILTER</button>
+          {% endif %}
+          {% if state == "blanco" %}
+            <button class="real blancopicked space" name="home"
+            value="blanco" >BLANCO</button>
+          {% else %}
+            <button class="real unpicked space" name="home"
+            value="blanco" >BLANCO</button>
+          {% endif %}
+          {% if state == "babble" %}
+            <button class="real picked space" name="home" value="chat" >
+            NEWS</button>
+          {% else %}
+            <button class="real unpicked space" name="home" value="chat" >
+            NEWS</button>
+          {% endif %}
+          {# {% if state == "stalk" %}
+            <button class="real picked space" name="home" value="stalk" >
+            STALK</button>
+          {% else %}
+            <button class="real unpicked space" name="home" value="stalk" >
+            STALK</button>
+          {% endif %} #}
+          {% if state == "stats" %}
+            <button class="real picked space" name="home" value="stats" >
+            STATS</button>
+          {% else %}
+            <button class="real unpicked space" name="home" value="stats" >
+            STATS</button>
+          {% endif %}
+          </form>
+        </div>
+        <div class="splayspace">
+        </div>
+      </div>  {# END menubar #}
+      
+    </div>  {# END main header #}
+    <hr />
+    {% if state== "stats" %}
+      <div class="splay pushdown" >  {# START sub-menubar #}
+        <div class="splayspace">
+        </div>
+        <form action="/stats" method='GET'>
+        {% if arrows == "yes" %}
+          <button class="utility" name="cycle" value="previous" >&larr;</button>
+          <button class="utility" name="cycle" value="next" >&rarr;</button>
+        {% else %}
+          <button class="disutility" name="cycle" value="previous" disabled>
+          &larr;</button>
+          <button class="disutility" name="cycle" value="next" disabled>
+          &rarr;</button>
+        {% endif %}
+        {% if screen == "statsinks" %}
+          <button class="real picked tight" name="screen" value="statsinks" >
+          SINKS</button>
+        {% else %}
+          <button class="real unpicked tight" name="screen" value="statsinks" >
+          SINKS</button>
+        {% endif %}
+        {% if screen == "raters" %}
+          <button class="real picked tight" name="screen" value="raters" >
+          RATERS</button>
+        {% else %}
+          <button class="real unpicked tight" name="screen" value="raters" >
+          RATERS</button>
+        {% endif %}
+        {% if screen == "stalk" %}
+          <button class="real picked tight" name="screen" value="stalk" >
+          STALK</button>
+        {% else %}
+          <button class="real unpicked tight" name="screen" value="stalk" >
+          STALK</button>
+        {% endif %}
+        {% if screen == "dust" %}
+          <button class="real picked tight" name="screen" value="dust" >
+          DUST</button>
+        {% else %}
+          <button class="real unpicked tight" name="screen" value="dust" >
+          DUST</button>
+        {% endif %}
+        {% if screen == "recent" %}
+          <button class="real picked tight" name="screen" value="recent" >
+          RECENT</button>
+        {% else %}
+          <button class="real unpicked tight" name="screen" value="recent" >
+          RECENT</button>
+        {% endif %}
+        <input type="hidden" name="page" value="{{page}}" />
+        <input type="hidden" name="screen" value="{{screen}}" />
+        </form>
+        <div class="splayspace">
+        </div>
+      </div>  {# END sub-menubar #}
+    {% endif %}   {# if stats #}
+    
+    {% block content %}
+    {% endblock %}
+      
+    <footer> {# tag is actually dead #}
+      <div class="splay">
+        <div id="leftflasher" class="splayspace"">
+        </div>
+      
+        <div id="flasher">
+          {% with messages = get_flashed_messages() %}
+            <p class="errormessage">
+            {% for message in messages %}
+              {{message}}
+              <br/>
+            {% endfor %}
+            </p>
+          {% endwith %}
+        </div>
+        
+        
+        <div class="splayspace" style="justify-content: flex-end;
+        overflow: hidden;">
+          <div class="edge pushdown" style="flex-shrink: 0;">
+          <p class="tiny">
+            The shadiest source of sink DXF files on the internet.<br/>
+            Also a questionable source of ARD'S, ASD'S, DWG's, EST's, &amp; TAG'S.<br/>
+            by: dustyweasel
+          </p>
+        </div>
+        
+      </div>
+    </footer>
+    
+    </div> {# END whole page like a stack of pancakes #}
+    <script type="text/javascript">
+      var filtersize=document.getElementById('filterbar').offsetWidth;
+      document.getElementById('mainbar').style.width=filtersize;
+    </script>
+  </body>
   
 </html>

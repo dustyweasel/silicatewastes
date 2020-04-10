@@ -2,16 +2,19 @@
 
 {% block content %}
 
-<div class="scoot standardspace">
-  <p class="vspace pushdown">Total Downloads = {{totaldownloads}} (since May 2019)</p>
-  <section class="splay">
+<div class="standardspace">
+<div class="splay">
+  <div class="splayspace"></div>
+  <div class="substandard">
+  <p class="pushdown">Total Downloads = {{totaldownloads}} (since May 2019)</p>
+  <div class="splay">
   <table>
     <thead>
       <tr>
         <th class="narrow">Rank</th>
-        <th class="narrow">Avg. Rating</th>
+        <th class="narrow"><span class="shrunk">Avg. Rating</span></th>
         <th class="superwide">Sink</th>
-        <th class="narrow"><span class="shrunk">Downloads</span></th>
+        <th class="narrow"><span class="shrunk">Down-loads</span></th>
       </tr>
     </thead>
     <tbody class="gridded">
@@ -35,7 +38,10 @@
     </form>
     </tbody>
   </table>
-  </section>
+  </div> {# END table splay #}
+  </div> {# END substandard #}
+  <div class="splayspace"></div>
+</div>
 </div>
 
 {% endblock %}

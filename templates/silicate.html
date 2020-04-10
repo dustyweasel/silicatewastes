@@ -2,18 +2,18 @@
 
 {% block content %}
 
-<p class="normalhide attention">Phone users: I haven't made a separate layout for phones this
-  time, you're getting the desktop version.  I'm working on an android app version instead.  In
-  the mean time try zooming or rotating and refreshing.  If you absolutely have to have a phone
-  version right now then let me know.</p>
+<p class="normalhide attention">Phone users: I'm working on a separate layout for phones now.  Probably be done in less than a week.</p>
 
 <div class="standardspace">
-  <section class="splay">
-    <table class="scoot">
-      <thead>
+  <div class="splay">
+    <div class="splayspace">
+    </div>
+    <table>
+      <thead id="tablehead">
         <th class="superwide">
           <form action="/" method='GET'>
-            <select style="background-color: {{selectcolor}}" class="pushdown" name="guy"
+            <select style="background-color: {{selectcolor}}" class="pushdown"
+            name="guy"
             onchange='if(this.value != 0) { this.form.submit(); }'>
             {% for guy in guys %}
               {% if selectdonor and selectdonor==guy %}
@@ -24,7 +24,8 @@
             {% endfor %}
             </select><span class="phonehide" >/</span>
           
-            <select style="background-color: {{selectcolor}}" class="pushdown" name="folder"
+            <select style="background-color: {{selectcolor}}"
+            class="pushdown" name="folder"
             onchange='if(this.value != 0) { this.form.submit(); }'>
             {% for folder in folders %}
               {% if selectfolder and selectfolder==folder %}
@@ -36,7 +37,7 @@
             </select><span class="phonehide" >/</span>
           </form>
         </th>
-        <th class="narrow">Average Rating</th>
+        <th class="narrow"><span class="shrunk">Avg. Rating</span></th>
       </thead>
       <tbody class="gridded">
         <form action="/sink" method='GET'>
@@ -44,24 +45,32 @@
         <tr>
           <td class="superwide"><button class="smallunguessed" name="cad" value="{{cad[1]}}">
           {{cad[0]}}</button></td>
-          <td style="color: {{cad[3]}}" class="narrow"><span class="rating">{{cad[2]}}</span></td>
+          <td style="color: {{cad[3]}}" class="narrow"><span class="rating">{{cad[2]}}
+          </span></td>
         </tr>
         {% endfor %}
         </form>
       </tbody>
     </table>
   
-    <div class="scrollable scoot vmorespace">
+    <div class="splayspace" style="min-width: 0;">
       {% if state == "blanco" and blancopackage %}
-        <p class="blancomessage edge">
-          blanco filter:</br>
+        <div id="blancoscroll" class="ul">
+        <ul class="blancomessage">
           {% for blanco in blancopackage %}
-            {{blanco}}<br/>
+            <li class="blancomessage">{{blanco}}</li>
           {% endfor %}
-        </p>
+        </ul>
+        </div>
       {% endif %}
     </div>
-  </section>
+    
+    <script type="text/javascript">
+    var headsize=document.getElementById('tablehead').offsetHeight;
+    document.getElementById('blancoscroll').style.margin=headsize;
+    </script>
+    
+  </div>
 </div>
   
 {% endblock %}
