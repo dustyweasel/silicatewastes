@@ -17,6 +17,7 @@ about javascript or google charts -->
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 <script type="text/javascript">
+let vw = window.innerWidth;
 // Load google charts
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);
@@ -34,8 +35,8 @@ function drawChart() {
   var chart = new google.visualization.PieChart(document.getElementById('piechart'));
   //chart.draw(data, options);
   chart.draw(data, {
-  width: 700,
-  height: 600,
+  width: vw,
+  height: vw,
   title: 'Are dust masks for crybabies?',
   backgroundColor: 'transparent',
   titleTextStyle: {

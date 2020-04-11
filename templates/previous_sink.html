@@ -10,7 +10,8 @@
       <table>
         <thead>
         <tr>
-          <th class="medium">User</th><th class="medium">Rating</th><th class="medium">Comment</th>
+          <th class="medium">User</th><th class="medium">
+          Rating</th><th class="medium">Comment</th>
         </tr>
         </thead>
         <tbody>
@@ -18,7 +19,7 @@
           <form action="/rate_sink" method='POST'>
           <input type="hidden" name="goal" value="{{sink.id}}" />
           <input type="hidden" name="cad" value="{{previous_sink.id}}" />
-          <td class="medium">{{username}}</td>
+          <td class="medium"><span class="phonetext">{{username}}</span></td>
           <td class="medium">
             <label style="color: {{ratecolors[0]}}" for="1">1</label>
             <input class="radio" id="1" type="radio"
@@ -30,9 +31,10 @@
             <input class="radio" id="3" type="radio"
             name="stars" value="3">
           </td>
-          <td class="medium"><input type="text" name="comment" value="" maxlength="60"></td>
-          <td>
-            <button class="real unpicked space" name="rate" value="rate">RATE</button>
+          <td class="medium"><input class="thickprompt" type="text" name="comment"
+          value="" maxlength="60"></td>
+          <td class="medium">
+            <button class="real unpicked pushdown" name="rate" value="rate">RATE</button>
             <button class="real unpicked" name="rate" value="later">LATER</button>
           </td>
           </form>

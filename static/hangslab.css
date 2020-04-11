@@ -44,6 +44,7 @@ a:focus, a:hover, a:active     {color: #cf0021}
   padding: 0;
   border: 0;
   box-sizing: border-box;
+  font-size: 1em;
 }
 
 h1 {
@@ -52,21 +53,11 @@ h1 {
   font-size: 2em;
 }
 
-/*p {
-  margin: 0em 2em 0em 0em;
-<<<<<<< HEAD
-}*/
-=======
-  word-break: break-word;
-}
->>>>>>> fcef43728232424734c989bed7b14ba23f3c10d4
-
 div.standard {
   display: flex;
   flex-direction: column;
   height: 100vh;
   /*overflow: hidden;*/
-  position: relative;
 }
 
 div.substandard {
@@ -95,20 +86,6 @@ div.splayspace {
   flex: 1;
 }
 
-<<<<<<< HEAD
-/*header {
-  margin: 0.5em 0em 0em 2em;
-}*/
-
-/*footer {
-=======
-footer {
-  /*flex: 0 1 auto;*/
-  min-height: 2em;
->>>>>>> fcef43728232424734c989bed7b14ba23f3c10d4
-  margin: 1em 0em 1em 2em;
-}*/
-
 body {
   font-family: "Patua One";
   background-color: #101010;
@@ -120,16 +97,6 @@ body {
   background-position: center center;
   background-image: url('scuffedstatic_dark1400x900_2.jpg');
 }
-
-/*select {
-  color: #101010;
-  font-family: 'Alegreya Sans SC';
-  font-size: 1.2em;
- 
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  overflow: hidden;
-}*/
 
 select {
   color: #101010;
@@ -168,34 +135,25 @@ table, div.ul {
   overflow: hidden;
 }
 
+table.static {
+  flex-shrink: 0;
+}
+
 table th {
   color: white;
 }
-
-/*table tbody {
-  display: inline-block;
-}*/
-
-/*table tbody.freeze {
-  overflow-y: hidden;
-}*/
 
 tbody.gridded {
   overflow-y: scroll;
   overflow-x: hidden;
 }
 
-/*tbody.static td {
-  padding-top: 0.1em;
-  padding-bottom: 0.1em;
-}*/
-
 tbody.gridded tr {
   outline: dotted thin gray;
 }
 
 thead th.narrow, tbody td.narrow {
-  width: 3em;
+  width: 4em;
 }
 
 thead th.medium, tbody td.medium {
@@ -203,7 +161,7 @@ thead th.medium, tbody td.medium {
 }
 
 thead th.wide, tbody td.wide {
-  width: 13em;
+  width: 14em;
 }
 
 thead th.superwide, tbody td.superwide {
@@ -332,7 +290,6 @@ button.smallunguessed:hover, button.main:hover{
   font-family: "Patua One";
   font-size: 1em;
   width: 8em;
-  /*padding: 0em 0em 0em 0.5em;*/
 }
 
 input {
@@ -357,8 +314,6 @@ input:focus {
 span.funtimes, button.funtimes, td.funtimes, li.funtimes {
   font-family: "Alegreya Sans SC";
   font-size: 1.2em;
-  /*color: sandybrown;*/
-  /*list-style-type: none;*/
   background-color: inherit;
   border: none;
 }
@@ -406,27 +361,30 @@ p.normalhide {
   display: none;
 }
 
-/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
-/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
-/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
-/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
-/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
-/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
-/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
-/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
-
-div.topedge {
-  position: absolute;
-  right: 2em;
-  top: 1em;
+.phonescroll, .phoneinlinescroll {
+  display: none;
 }
 
-div.bottomedge {
-  position: absolute;
-  right: 2em;
-  bottom: 1em;
+.normalscroll {
+  display: inherit;
 }
 
+.normalinlinescroll {
+  display: inline;
+}
+
+.normalinlineblockscroll {
+  display: inline-block;
+}
+
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
+/************************ALL GENERIC SPACING STUFF GOES HERE********************************/
 .space {
   margin-right: .25em;
 }
@@ -435,15 +393,6 @@ div.bottomedge {
   margin-right: 2em;
 }
 
-/*
-.vspace {
-  margin-top: .25em;
-}
-
-.vmorespace {
-  margin-top: 2em;
-}*/
-
 .lessscoot {
   margin-left: 1.0em;
 }
@@ -451,10 +400,6 @@ div.bottomedge {
 .scoot {
   margin-left: 2.0em;
 }
-
-/*.scootmore {
-  margin-left: 4.0em;
-}*/
 
 .pushdown {
   margin-bottom: 0.25em;
@@ -473,13 +418,135 @@ div.bottomedge {
 /**************************************************************************************/
 
 @media only screen and (max-device-width:640px){
+  
+.phonescroll {
+  display: inherit;
+}
 
+.phoneinlinescroll {
+  display: inline;
+}
+
+.normalscroll, .normalinlinescroll, .normalinlineblockscroll {
+  display: none;
+}
+  
 div.standard {
   display: flex;
   flex-direction: column;
   height: 100vh;
   height: calc(var(--vh, 1vh) * 100);
   /*overflow: hidden;*/
+}
+
+a {
+  font-size: 2.5em;
+}
+
+a[href^="mailto:"]
+{ 
+  font-size: 1.5em;
+}
+
+label, p {
+  font-size: 2em;
+}
+
+input[type=radio] {
+  border: 0px;
+  width: 1em;
+  height: 1em;
+}
+
+h1 {
+  font-family: "IM Fell DW Pica SC";
+  font-size: 3em;
+}
+
+input {
+  font-size: 2em;
+}
+
+select {
+  font-size: 3em;
+  width: 8em;
+}
+
+button.main {
+  font-size: 4em;
+}
+
+.thickprompt {
+  font-size: 2em;
+  width: 6em;
+}
+
+button.real {
+  width: 4.5em;
+  font-size: 2.5em;
+}
+
+button.tight {
+  font-size: 2.25em;
+  width: 4em;
+}
+
+button.utility {
+  font-size: 2em;
+  width: 3em;
+}
+
+button.disutility {
+  font-size: 2em;
+  width: 3em;
+}
+
+span.funtimes, button.funtimes, td.funtimes, li.funtimes {
+  font-size: 2em;
+}
+
+button.smallunguessed {
+  font-size: 2.5em;
+}
+
+thead th.narrow, tbody td.narrow {
+  width: 8em;
+}
+
+thead th.medium, tbody td.medium {
+  width: 15em;
+}
+
+thead th.wide, tbody td.wide {
+  width: 15em;
+}
+
+thead th.superwide, tbody td.superwide {
+  width: 50em;
+}
+
+span.shrunk {
+  font-size: 1.5em;
+}
+
+.rating {
+  font-size: 2.5em;
+}
+
+.phonetext {
+  font-size: 2em;
+}
+
+p.errormessage {
+  font-size: 4em;
+}
+
+.space {
+  margin-right: 0em;
+}
+
+.lessscoot {
+  margin-left: 0em;
 }
 
 p.phonehide {

@@ -6,78 +6,99 @@
   <div class="splay">
   <div class="splayspace"></div>
   <div class="substandard">
+    
     <div id="psink">
-    <p style="color: {{ratecolor}}" class="pushdown">{{sink.location}}</p>
-    <form action="/downloadfile" method='POST'>
-      <input type="hidden" name="cad" value="{{sink.id}}"/>
-      <input type="hidden" name="screen" value="{{screen}}"/>
-      <input type="hidden" name="page" value="{{page}}"/>
-      <button class="real unpicked pushdown" name='download'>DOWNLOAD</button>
-      <button class="real unpicked" name='cancel'>CANCEL</button>
-    </form>
-    <p>Total Downloads = {{sink.downloads}}  (hit refresh
-    <span class="rating">&#8635;</span>)</p>
-    {% if not sink.avg_rating or sink.avg_rating <=0 %}
-      <p class="errormessage">Warning!  No one has rated this sink!</p>
-    {% else %}
-      <p>Average Rating = <span style="color: {{ratecolor}}">{{sink.avg_rating}}</span></p>
-    {% endif %}
-    </br>
-    <p>Compress all your sink drawings to a zipfile and send them to me at:
-    <a href="mailto:dustyweasel@protonmail.com">dustyweasel@protonmail.com</a>. 
-    I don't care if we already have 10 versions of a sink.  Just send everything you have.
-    <br/><br/>
-    The team here at silicatewastes.com would like to remind everyone that
-    washing your hands in sinks gets rid of viruses, unlike when you
-    download sinks above and get viruses.  It's the ultimate
-    irony.
-    </p>
-    </div>
+    
+      <div class="splay pushdown">
+      <div class="splayspace"></div>
+      <div class="substandard">
+      <p style="color: {{ratecolor}}" class="pushdown">{{sink.location}}</p>
+      <form action="/downloadfile" method='POST'>
+        <input type="hidden" name="cad" value="{{sink.id}}"/>
+        <input type="hidden" name="screen" value="{{screen}}"/>
+        <input type="hidden" name="page" value="{{page}}"/>
+        <button class="normalinlinescroll real unpicked pushdown" name='download'>
+        DOWNLOAD</button>
+        <button style="width: 7em;" class="phoneinlinescroll real unpicked pushdown"
+        name='download'>DOWNLOAD</button>
+        <button class="real unpicked" name='cancel'>CANCEL</button>
+      </form>
+      <p>Total Downloads = {{sink.downloads}}</p>
+      {% if not sink.avg_rating or sink.avg_rating <=0 %}
+        <p class="errormessage">Warning!  No one has rated this sink!</p>
+      {% else %}
+        <p>Average Rating = <span style="color: {{ratecolor}}">{{sink.avg_rating}}</span></p>
+      {% endif %}
+      </div> {# END substandard #}
+      <div class="splayspace"></div>
+      </div>  {# END splay #}
+      
+      <hr/>
+
+      
+      <p>Compress all your sink drawings to a zipfile and send them to me at:
+      <a href="mailto:dustyweasel@protonmail.com">dustyweasel@protonmail.com</a>. 
+      I don't care if we already have 10 versions of a sink.  Just send everything you have.
+      <br/><br/>
+      The team here at silicatewastes.com would like to remind everyone that
+      washing your hands in sinks gets rid of viruses, unlike when you
+      download sinks above and get viruses.  It's the ultimate
+      irony.
+      </p>
+    </div>  {# psink #}
     <hr/>
   
     <h1>1-<span style="color: {{ratecolors[0]}}">remake&nbsp&nbsp&nbsp</span>
       2-<span style="color: {{ratecolors[1]}}">good enough</span>&nbsp&nbsp&nbsp3-
       <span style="color: {{ratecolors[1]}}">perfect</span></h1>
+    
+    <div id="psink2">
     <p class="pushdown">
       Don't guess.  Cut before you rate unless you're sure it's
       a remake.<br/><br/>
       If it's not a dxf and you can't use it then don't rate it.  It's here for the people who
       use that format.
     </p>
+    </div>
         
     <div class="splay">      
     <table>
       <thead id="tablesink">
         <tr>
-          <th class="wide">User</th>
+          <th class="medium">User</th>
           <th class="medium">Rating</th>
-          <th class="wide">Comment</th>
+          <th class="medium">Comment</th>
+          <th class="medium"></th>
         </tr>
       </thead>
       
       {% if user_rating %}
         <tr>
           <form action="/stalk" method='GET'>
-          <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+          <td class="medium"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
           onMouseOut="this.style.color='{{colors[user_rating.rater.memberlevel]}}'"
           style="color: {{colors[user_rating.rater.memberlevel]}};" name="member"
           value="{{user_rating.rater.id}}" >{{user_rating.rater.username}}</button></td>
           </form>
-          <td style="color: {{ratecolors[user_rating.stars-1]}}" class="medium pat">
-          {{user_rating.stars}}</td>
+          <td style="color: {{ratecolors[user_rating.stars-1]}}" class="medium">
+          <span class="rating">{{user_rating.stars}}</span></td>
           <input type="hidden" name="stars" value="{{user_rating.stars}}" />
-          <td class="wide">{{user_rating.comment}}</td>
-          <input type="hidden" name="comment" value="{{user_rating.comment}}">
+          <td class="medium"><span class="phonetext">{{user_rating.comment}}</span></td>
+          
+          {# why did i have a hidden input outside the forms #}
+          {# <input type="hidden" name="comment" value="{{user_rating.comment}}"> #}
+          
           <form action="/rate_sink" method='POST'>
           <input type="hidden" name="cad" value="{{sink.id}}" />
           <input type="hidden" name="goal" value="{{sink.id}}" />
-          <td><button class="real unpicked" name="rate" value="clear" >CLEAR</button></td>
+          <td class="medium"><button class="real unpicked" name="rate" value="clear" >
+          CLEAR</button></td>
           </form>
         </tr>
       {% else %}
         <tr>
           <form action="/stalk" method='GET'>
-          <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+          <td class="medium"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
           onMouseOut="this.style.color='{{colors[user.memberlevel]}}'"
           style="color: {{colors[user.memberlevel]}};" name="member"
           value="{{user.id}}">{{username}}</button></td>
@@ -93,8 +114,10 @@
             <label style="color: {{ratecolors[1]}}" for="3">&nbsp3</label>
             <input class="radio" id="3" type="radio" name="stars" value="3">
           </td>
-          <td class="superwide"><input type="text" name="comment" value="" maxlength="60">
-          &nbsp&nbsp<button class="real unpicked" name="rate" value="rate" >RATE</button></td>
+          <td class="medium"><input class="thickprompt" type="text" name="comment"
+          value="" maxlength="60"></td>
+          <td class="medium"><button class="real unpicked" name="rate" value="rate" >
+          RATE</button></td>
           </form>
         </tr>
       {% endif %} 
@@ -102,13 +125,15 @@
       <form action="/stalk" method='GET'>
       {% for rating in ratings %}
         <tr>
-          <td class="wide"><button class="funtimes"
+          <td class="medium"><button class="funtimes"
           onMouseOver="this.style.color='{{colors[0]}}'"
           onMouseOut="this.style.color='{{colors[rating.rater.memberlevel]}}'"
           style="color: {{colors[rating.rater.memberlevel]}};" name="member"
           value="{{rating.rater.id}}" >{{rating.rater.username}}</button></td>
-          <td style="color: {{ratecolors[rating.stars-1]}}" class="medium pat">{{rating.stars}}</td>
-          <td class="superwide">{{rating.comment}}</td>
+          <td style="color: {{ratecolors[rating.stars-1]}}" class="medium">
+          <span class="rating">{{rating.stars}}</span></td>
+          <td class="medium"><span class="phonetext">{{rating.comment}}</span></td>
+          <td class="medium"></td>
         </tr>
       {% endfor %}
       </form>
@@ -120,6 +145,7 @@
     <script type="text/javascript">
     var sinksize=document.getElementById('tablesink').offsetWidth;
     document.getElementById('psink').style.width=sinksize;
+    document.getElementById('psink2').style.width=sinksize;
     </script>
     
     <div class="splayspace"></div>

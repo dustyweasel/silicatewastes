@@ -11,10 +11,11 @@
   <table>
     <thead>
       <tr>
-        <th class="wide">Username</th>
+        <th class="wide"><span class="normalscroll">Username</span>
+        <span class="phonescroll shrunk">Username</span></th>
         <th class="wide center">Sink</th>
         <th class="narrow">Rating</th>
-        <th class="medium">Comment</th>
+        <th class="normalinlineblockscroll medium">Comment</th>
       </tr>
     </thead>
     <tbody class="gridded">
@@ -36,7 +37,7 @@
             name="cad" value="{{rating[6]}}">{{rating[0]}}</button>
         </td>
         <td class="narrow"><span class="rating">{{rating[2]}}</span></td>
-        <td class="medium">{{rating[3]}}</td>
+        <td class="normalinlineblockscroll medium">{{rating[3]}}</td>
       </form>
       </tr>
     {% endfor %}

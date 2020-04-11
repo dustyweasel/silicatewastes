@@ -2,8 +2,6 @@
 
 {% block content %}
 
-<p class="normalhide attention">Phone users: I'm working on a separate layout for phones now.  Probably be done in less than a week.</p>
-
 <div class="standardspace">
   <div class="splay">
     <div class="splayspace">
@@ -22,7 +20,7 @@
                 <option value="{{guy}}">{{guy}}</option>
               {% endif %}
             {% endfor %}
-            </select><span class="phonehide" >/</span>
+            </select><span class="normalinlinescroll" >/</span>
           
             <select style="background-color: {{selectcolor}}"
             class="pushdown" name="folder"
@@ -34,7 +32,7 @@
                 <option value="{{folder}}">{{folder}}</option>
               {% endif %}
             {% endfor %}
-            </select><span class="phonehide" >/</span>
+            </select><span class="normalinlinescroll" >/</span>
           </form>
         </th>
         <th class="narrow"><span class="shrunk">Avg. Rating</span></th>

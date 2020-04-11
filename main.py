@@ -715,6 +715,9 @@ def rate_sink():
       new_rating=Rating(stars,comment,user,sink)
       db.session.add(new_rating)
       db.session.commit()
+      if int(stars) == 1:
+        flash("Hey if this drawing sucked why don't you send me a good one?")
+        flash("dustyweasel@protonmail.com")
       user.avg_rating=func.round((Rating.query.with_entities(
         func.avg(Rating.stars).label('average')).filter(Rating.user_id==user.id)),2)
       #i have no idea what .label is for or what it doesn't work without it.

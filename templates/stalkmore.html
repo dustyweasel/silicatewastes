@@ -6,11 +6,11 @@
 <div class="splay">
 <div class="splayspace"></div>
 <div class="substandard">
-  <table class="scoot vspace">
+  <table class="static pushdown">
     <tr id="tablestalkmore">
       <th>ID</th>
       {# <th>Name</th> #}
-      <th>Downloads</th>
+      <th class="narrow">Down-loads</th>
       <th class="wide">Catchphrase</th>
       <th class="wide">Company</th>
       <th>State</th>
@@ -20,7 +20,7 @@
       <td><span class="rating">{{memberdata.id}}</span></td>
       {# <td style="color: {{colors[memberdata.memberlevel]}};" class="funtimes">
       {{memberdata.username}}</td> #}
-      <td><span class="rating">{{memberdata.benefactor}}</span></td>
+      <td class="narrow"><span class="rating">{{memberdata.benefactor}}</span></td>
       <td class="wide">{{memberdata.catchphrase}}</td>
       <td class="wide">{{memberdata.company}}</td>
       <td>{{memberdata.state}}</td>
