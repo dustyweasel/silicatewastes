@@ -18,6 +18,11 @@ about javascript or google charts -->
 
 <script type="text/javascript">
 let vw = window.innerWidth;
+if (vh * 100 < vw) {
+  vw = vh * 100;
+}
+
+  
 // Load google charts
 google.charts.load('current', {'packages':['corechart']});
 google.charts.setOnLoadCallback(drawChart);

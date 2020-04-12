@@ -28,7 +28,10 @@ whatever, it works, other stuff to do#}
                 style="color: {{colors[babble[1].babbler.memberlevel]}};"
                 name="member" value="{{babble[1].babbler.id}}">
                 {{babble[1].babbler.username}}: </button>
-                <span style="color: {{babble[0]}}" class="rating"> {{babble[1].babble}}</span>
+                <span style="color: {{babble[0]}}" class="normalinlinescroll funtimes">
+                {{babble[1].babble}}</span>
+                <span style="color: {{babble[0]}}" class="phoneinlinescroll shrunk">
+                {{babble[1].babble}}</span>
               </li>
             {% endfor %}
           {% endif %}

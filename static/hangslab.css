@@ -98,6 +98,22 @@ body {
   background-image: url('scuffedstatic_dark1400x900_2.jpg');
 }
 
+.osha {
+  background-size:     contain;
+  background-repeat:   no-repeat;
+  background-position: center center;
+  background-image: url('osha.png');
+  opacity: 0.2;
+}
+
+.lung {
+  background-size:     contain;
+  background-repeat:   no-repeat;
+  background-position: center center;
+  background-image: url('lung.png');
+  opacity: 0.2;
+}
+
 select {
   color: #101010;
   font-family: 'Alegreya Sans SC';
@@ -448,8 +464,12 @@ a[href^="mailto:"]
   font-size: 1.5em;
 }
 
-label, p {
+label {
   font-size: 2em;
+}
+
+p {
+  font-size: 1em;
 }
 
 input[type=radio] {
