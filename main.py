@@ -285,14 +285,19 @@ def require_login():
       del session['secret_pass']
     if 'password' in session:
       del session['password']
-    if 'state' in session and session['state']!="stats":
+    if 'state' in session and (session['state']!="stats" and session['state']!='search' and
+                               session['state']!='blanco'):
       del session['state']
     
     screen=""
+    page=0
     if request.args.get('screen') != None:
       screen=request.args.get('screen')
+    if request.args.get('page') != None:
+      page=request.args.get('page')
     
-    return redirect(url_for('index', screen=screen))
+    
+    return redirect(url_for('index', screen=screen, page=page))
   
 ##############################///////////////////////////########################################
 ##############################///////////////////////////########################################
@@ -1369,7 +1374,7 @@ def weaselwork():
       for val in dirs:
         dxfs.append(val)
       break
-      
+    
     return render_template('weasel.html',title="Weaselwork!", dxfs=dxfs, username=username)
   
   #clicked one of the buttons, do something
@@ -1438,7 +1443,7 @@ def weaselwork():
         dxfs.append(val)
       break
       
-    return render_template('weasel.html',title="Weaselwork!", dxfs=dxfs, adds=adds,
+    return render_template('weasel.html',title="Weasellwork!", dxfs=dxfs, adds=adds,
                            message=message, username=username)
   
 if __name__ == '__main__':
