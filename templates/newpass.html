@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="standardspace"></div>
+<div class="standardspace">
+  <div class="splay">
+    <div class="splayspace">
+    </div>
+    <div class="substandard">
+      <h1>Alter thy password.</h1>
+      <form action="/newpass" method="POST">
+        <table>
+        <tbody class="static">
+          <tr>
+            <td><label for="current_password">current password</label></td>
+            <td>
+              <input class="pushdown" name="current_password" type="password" maxlength="30" value="">
+            </td>
+          </tr>
+          <tr>
+            <td><label for="new_password">new password</label></td>
+            <td>
+              <input class="pushdown" name="new_password" type="password" maxlength="30" value="">
+            </td>
+          </tr>
+          <tr>
+            <td><label for="verify_new_password">verify new password</label></td>
+            <td>
+              <input class="pushdown" name="verify_new_password" type="password"
+              maxlength="30" value="">
+            </td>
+          </tr>
+        </tbody>
+        </table>
+        <button class="real unpicked pushdown" name="ALTER" value="ALTER">ALTER</button>
+      </form>
+      <form action="/" method="GET">
+        <button class="real unpicked pushdown" >CANCEL</button>
+      </form>
+    </div>  {# END standard #}
+    <div class="splayspace"></div>
+  </div> {# END splay #}
+</div>
+<div class="standardspace"></div>
+
+{% endblock %}

@@ -9,7 +9,7 @@
   <form action="/register" method="POST">
     <table>
     <tbody class="static"> {# i'm not indenting this #}
-      <tr>
+      <tr id="regtable">
         <td></td>
         <td><span class="normalscroll">REQUIRED:</span>
         <span class="phonescroll rating">REQUIRED:</span></td>
@@ -24,7 +24,8 @@
       <tr>
         <td><label for="password">Password</label></td>
         <td>
-          <input class="standard pushdown" id="password" name="password" type="password" maxlength="30">
+          <input class="standard pushdown" id="password" name="password" type="password"
+          maxlength="30">
         </td>
       </tr>
       <tr>
@@ -132,7 +133,15 @@
   <form action="/" method="GET">
     <button class="real unpicked scoot">CANCEL</button>
   </form>
+  <p id="preg" class="attention scoot"></br>If you forget your password you will be locked out
+  of your account forever.</p>
   </div> {# END substandard #}
+  
+  <script type="text/javascript">
+  var regsize=document.getElementById('regtable').offsetWidth;
+  document.getElementById('preg').style.width=regsize;
+  </script>
+  
   <div class="splayspace"></div>
   </div> {# END splay #}
 <div class="standardspace"></div>

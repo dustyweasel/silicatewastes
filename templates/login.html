@@ -3,18 +3,20 @@
 {% block content %}
 
 <div class="standardspace"></div>
-<div class="standardspace">
+<div>
   <div class="splay">
     <div class="splayspace">
       <div class="splayspace"></div>
-      <div class="splayspace osha"></div>
+      <div class="splayspace"><a 
+      href="https://www.osha.gov/dsg/topics/silicacrystalline/endsilicosis.html"
+      style="width: 100%; height: 100%;" target="_blank" class="osha"></a></div>
     </div>
     <div class="substandard">
       <h1>Wander the silicate wastes.</h1>
       <form action="/login" method="POST">
         <table>
         <tbody class="static">
-          <tr>
+          <tr id="logtable">
             <td><label for="username">username</label></td>
             <td>
               <input class="pushdown" name="username" type="text" maxlength="20" value="">
@@ -33,11 +35,22 @@
       <form action="/" method="GET">
         <button class="real unpicked pushdown" >CANCEL</button>
       </form>
-      <p>It's not just dust.</p>
-    </div>  {# END standard #}
+      <p class="pushdown">It's not just dust.</p>
+      <p id="plog" class=""></br>
+      <a href="https://www.helpguide.org/articles/healthy-living/how-to-improve-your-memory.htm">
+      Forgot your password?</a>
+      </p>
+      
+    </div>  {# END substandard #}
+    
+    <script type="text/javascript">
+    var logsize=document.getElementById('logtable').offsetWidth;
+    document.getElementById('plog').style.width=logsize;
+    </script>
+    
     <div class="splayspace"></div>
   </div> {# END splay #}
-</div>
+</div> {# END standardspace???? no.  pointless div#}
 <div class="standardspace"></div>
 
 {% endblock %}

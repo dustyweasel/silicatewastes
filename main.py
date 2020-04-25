@@ -272,7 +272,7 @@ def getstatuscolor(val):
 @app.before_request
 def require_login():
   allowed_routes = ['index', 'login', 'register', 'stats', 'verify', 'stalk', 'demos', 'dust',
-                    'statsinks', 'raters', 'recent']
+                    'statsinks', 'raters', 'recent', 'errata']
   #need that '/static/' part for css i think
   if (request.endpoint not in allowed_routes and 'username' not in session and
     '/static/' not in request.path):
@@ -834,6 +834,23 @@ def chat():
   return render_template("chat.html", babblings=babblings, username=username,
                          state=session['state'], colors=colors)
 
+##########################errata##############################################################
+##########################errata##############################################################
+##########################errata##############################################################
+##########################errata##############################################################
+##########################errata##############################################################
+##########################errata##############################################################
+##########################errata##############################################################
+##########################errata##############################################################
+
+@app.route('/errata', methods=['GET'])
+def errata():
+  username=""
+  if 'username' in session:
+    username=session['username']
+  
+  return render_template("errata.html", username=username, state=session['state'])
+
 ##########################/stats##################################################################
 ##########################/stats##################################################################
 ##########################/stats##################################################################
@@ -1345,6 +1362,63 @@ def verify():
     
   return redirect('/')
 
+######################################change password###########################################
+######################################change password###########################################
+######################################change password###########################################
+######################################change password###########################################
+######################################change password###########################################
+######################################change password###########################################
+######################################change password###########################################
+######################################change password###########################################
+
+@app.route('/newpass', methods=['POST', 'GET'])
+def newpass():
+  username=session['username']
+  
+  if request.method == 'POST':
+    current_password = request.form['current_password']
+    new_password = request.form['new_password']
+    verify_new_password = request.form['verify_new_password']
+  
+    user = User.query.filter_by(username=username).first()
+      
+    if(check_pw_hash(current_password,user.hashpass) and new_password==verify_new_password and
+       len(new_password) > 0 and len(new_password) < 31):
+      #now i'm used to java.  shouldn't the User class have a method to update its password?
+      #whatever
+      user.hashpass=make_pw_hash(new_password)
+      db.session.commit()
+      flash("You changed your password.  If you forget it then may God have mercy on your soul.")
+    else:
+      flash("Something went wrong.  Your password is unchanged.")
+    
+    return redirect('/')
+      
+  #just pass username in places like this to make sure you logged them out
+  return render_template("newpass.html", username=username)
+
+##########################/demos##################################################################
+##########################/demos##################################################################
+##########################/demos##################################################################
+##########################/demos##################################################################
+##########################/demos##################################################################
+##########################/demos##################################################################
+##########################/demos##################################################################
+##########################/demos##################################################################
+#this has nothing to do with sinks, just a page to download some old work
+@app.route("/demos", methods=['GET'])
+def demos():
+  if request.method=='GET':
+    if request.args.get('demofile') != None:
+      demofile=request.args.get('demofile')
+      
+      try:
+        return send_from_directory("../project5", demofile, as_attachment=True)
+      except Exception as e:
+        return ("<h1>Something went terribly wrong.  Email me if you want.</h1>")
+    
+    return render_template("demos.html")
+
 #########################################weaselwork###############################################
 #########################################weaselwork###############################################
 #########################################weaselwork###############################################
@@ -1357,6 +1431,8 @@ def verify():
 #make sure only dustyweasel can access this
 @app.route('/weaselwork', methods=['GET','POST'])
 def weaselwork():
+  return redirect('/')
+  
   username=""
   if 'username' in session:
     username=session['username']
