@@ -15,7 +15,7 @@
         <span class="phonescroll shrunk">Username</span></th>
         <th class="superwide center">Sink</th>
         <th class="narrow">Rating</th>
-        <th class="normalinlineblockscroll medium">Comment</th>
+        <th class="normalinlineblockscroll medium right">Comment</th>
       </tr>
     </thead>
     <tbody class="gridded">
@@ -31,13 +31,14 @@
       </form>
       <form action="/sink" method='GET'>
         <input type="hidden" name="screen" value="{{screen}}" />
-        <td class="superwide"><button class="smallunguessed" onMouseOver="this.style.color='{{colors[0]}}'"
+        <td class="superwide"><button class="smallunguessed"
+        onMouseOver="this.style.color='{{colors[0]}}'"
             onMouseOut="this.style.color='{{rating[8]}}'"
             style="color: {{rating[8]}};"
             name="cad" value="{{rating[6]}}">{{rating[0]}}</button>
         </td>
         <td class="narrow"><span class="rating">{{rating[2]}}</span></td>
-        <td class="normalinlineblockscroll medium">{{rating[3]}}</td>
+        <td class="normalinlineblockscroll medium right">{{rating[3]}}</td>
       </form>
       </tr>
     {% endfor %}

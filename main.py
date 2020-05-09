@@ -177,27 +177,16 @@ def initialize(donorval, cloneguys):
     
   return (guys, donor, cloneguys)
 
-#so reset is just for searchvals, initialize is... something else
-#def reset():
-#  session['searchval']=""
-#  session['blanco']=""
-
-#this just grabs a sink location and chops off the donor and folder
-#returns truncated location and the sink row
-#sets donor and current_folder
-#haven't used this, this time, maybe delete it
-#maybe i'll need it again when i get the sink page running again
 def sinksplit(sinkid):
   entry = Sink.query.filter_by(id=sinkid).first()
-  #try:
-       # session['donor']=Donator.query.filter_by(location=newdonor).first().location
-      #except Exception as e:
+  
   try:
     cad = entry.location
   except Exception as e:
     flash("Can't find sink.  Stop messing with the URL.")
-    entry = Sink.query.filter_by(id=1).first()
-    cad = entry.location
+    session['donor']=""
+    session['current_folder']=""
+    return redirect(url_for('index'))
   
   cadsplit = cad.split(os.path.sep)
   skip=False
@@ -211,17 +200,17 @@ def sinksplit(sinkid):
     break
   
   if not skip:
-    sink=cadsplit[2]
-    for ix in range(len(cadsplit)-3):
-      sink+=(os.path.sep+cadsplit[3+ix])
+    #sink=cadsplit[2]
+    #for ix in range(len(cadsplit)-3):
+    #  sink+=(os.path.sep+cadsplit[3+ix])
     session['current_folder']=cadsplit[1]
   else:
-    sink=cadsplit[1]
-    for ix in range(len(cadsplit)-2):
-      sink+=(os.path.sep+cadsplit[2+ix])
+    #sink=cadsplit[1]
+    #for ix in range(len(cadsplit)-2):
+    #  sink+=(os.path.sep+cadsplit[2+ix])
     session['current_folder']=""
   
-  return (sink, entry)
+  #return (sink, entry)
 
 GLOBALRATEVAL=4
 def getratecolor(val, seethrough):
@@ -377,6 +366,9 @@ def index():
         session['state']=""
       else:
         session['state']="blanco"
+    elif request.args.get('home') != None and request.args.get('home') == 'cad' and mode=="none":
+      sinksplit(request.args.get('cad'))
+      session['state']=""
     #'guy' and 'folder' in same form, have to make sure we really want to change donor
     elif ((request.args.get('guy') != None and request.args.get('guy') != session['donor'])
         and mode == "none"):

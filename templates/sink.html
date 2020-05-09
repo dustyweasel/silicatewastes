@@ -14,6 +14,7 @@
       <div class="substandard">
       <p style="color: {{ratecolor}}" class="pushdown"><span class="funtimes">
       {{sink.location}}</span></p>
+      <div style="display: flex; flex-direction: row;">
       <form action="/downloadfile" method='POST'>
         <input type="hidden" name="cad" value="{{sink.id}}"/>
         <input type="hidden" name="screen" value="{{screen}}"/>
@@ -22,8 +23,16 @@
         DOWNLOAD</button>
         <button style="width: 7em;" class="phoneinlinescroll real unpicked pushdown"
         name='download'>DOWNLOAD</button>
-        <button class="real unpicked" name='cancel'>CANCEL</button>
+        <button class="real unpicked space" name='cancel'>CANCEL</button>
       </form>
+      <form action="/" method="GET">
+        <input type="hidden" name="home" value="cad">
+        <input type="hidden" name="cad" value="{{sink.id}}">
+        <button class="normalinlinescroll real unpicked" name='directory'>DIRECTORY</button>
+        <button style="width: 7em;" class="phoneinlinescroll real unpicked" name='directory'>
+        DIRECTORY</button>
+      </form>
+      </div>
       <p>Total Downloads = {{sink.downloads}}</p>
       {% if not sink.avg_rating or sink.avg_rating <=0 %}
         <p class="errormessage">Warning!  No one has rated this sink!</p>
@@ -66,7 +75,7 @@
     <table>
       <thead id="tablesink">
         <tr>
-          <th class="medium">User</th>
+          <th class="wide">User</th>
           <th class="medium">Rating</th>
           <th class="medium">Comment</th>
           <th class="medium"></th>
@@ -76,7 +85,7 @@
       {% if user_rating %}
         <tr>
           <form action="/stalk" method='GET'>
-          <td class="medium"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+          <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
           onMouseOut="this.style.color='{{colors[user_rating.rater.memberlevel]}}'"
           style="color: {{colors[user_rating.rater.memberlevel]}};" name="member"
           value="{{user_rating.rater.id}}" >{{user_rating.rater.username}}</button></td>
@@ -99,7 +108,7 @@
       {% else %}
         <tr>
           <form action="/stalk" method='GET'>
-          <td class="medium"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
+          <td class="wide"><button class="funtimes" onMouseOver="this.style.color='{{colors[0]}}'"
           onMouseOut="this.style.color='{{colors[user.memberlevel]}}'"
           style="color: {{colors[user.memberlevel]}};" name="member"
           value="{{user.id}}">{{username}}</button></td>
@@ -126,7 +135,7 @@
       <form action="/stalk" method='GET'>
       {% for rating in ratings %}
         <tr>
-          <td class="medium"><button class="funtimes"
+          <td class="wide"><button class="funtimes"
           onMouseOver="this.style.color='{{colors[0]}}'"
           onMouseOut="this.style.color='{{colors[rating.rater.memberlevel]}}'"
           style="color: {{colors[rating.rater.memberlevel]}};" name="member"

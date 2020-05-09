@@ -459,6 +459,10 @@ a {
   font-size: 2.5em;
 }
 
+p a {
+  font-size: 1.5em;
+}
+
 a[href^="mailto:"]
 { 
   font-size: 1.5em;
@@ -469,7 +473,7 @@ label {
 }
 
 p {
-  font-size: 1em;
+  font-size: 1.5em;
 }
 
 input[type=radio] {
