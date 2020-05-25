@@ -1486,22 +1486,43 @@ def weaselwork():
         db.session.commit()
       new_donor = Donator.query.filter_by(location=orders).first()
       
+      #time for the hackiest hack ever (502 timeout, don't care about the 'right' way to do
+      #it right now
+      #ix=0
+      
       for root, dirs, files in os.walk(os.path.join("static","sinks",orders),topdown=False):
-        for val in files:
-          #for every file anywhere in the orders directory if the sink
-          #file isn't already in the sinks table stick it in
-          if cadchecker(val):
-          #if (val.lower().endswith('.dxf') or val.lower().endswith('.dwg') or
-          #    val.lower().endswith('.ard') or val.lower().endswith('.asd')):
+        #if len(root)<=28:
+        #  return root+str(len(root))
+        #okay probably scrap next if statement next time updating folder not as massive
+        #as silicatewastes
+        if len(root)>28 and root[28].lower() >= 'a' and root[28].lower() <= 'z':
+          for val in files:
+          #for ix in range(len(files)):
             
-            check = Sink.query.filter_by(location=(os.path.join(root,val)[13:])).scalar()
-            if not check:
-              #adds isn't serious, it's just for display
-              adds.append(os.path.join(root,val)[13:])
-              new_sink=Sink(os.path.join(root,val)[13:],new_donor)
-              
-              db.session.add(new_sink)
+            #fun=""
+            #for val in files:
+            #  fun+=val
+            #fun+=" "+root+" "+str(len(files))+" "+str(len(dirs))+" "+root[28]
+            #return fun
             
+            
+            #return str(len(files))
+            
+            #for every file anywhere in the orders directory if the sink
+            #file isn't already in the sinks table stick it in
+            if cadchecker(val):
+            #if (val.lower().endswith('.dxf') or val.lower().endswith('.dwg') or
+            #    val.lower().endswith('.ard') or val.lower().endswith('.asd')):
+                
+              check = Sink.query.filter_by(location=(os.path.join(root,val)[13:])).scalar()
+              if not check:
+                #adds isn't serious, it's just for display
+                adds.append(os.path.join(root,val)[13:])
+                new_sink=Sink(os.path.join(root,val)[13:],new_donor)
+                  
+                db.session.add(new_sink)
+                #ix+=1
+                
       db.session.commit()
       
     #same as in get request, do it again after folder possibly added

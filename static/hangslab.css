@@ -106,6 +106,13 @@ body {
   opacity: 0.2;
 }
 
+.wine {
+  background-size:     50%;
+  background-repeat:   no-repeat;
+  background-position: center center;
+  background-image: url('marsala.png');
+}
+
 .lung {
   background-size:     contain;
   background-repeat:   no-repeat;
