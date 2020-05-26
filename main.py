@@ -229,11 +229,11 @@ def getratecolor(val, seethrough):
   return color
 
 def getselectcolor(val):
-  if val=="":
+  if val==chr(0):
     color="#f4f4f0"
-  elif val=="search":
+  elif val==chr(1):
     color="lightblue"
-  elif val=="blanco":
+  elif val==chr(2):
     color="mediumaquamarine"
   else:
     color="red"
@@ -274,19 +274,22 @@ def require_login():
       del session['secret_pass']
     if 'password' in session:
       del session['password']
-    if 'state' in session and (session['state']!="stats" and session['state']!='search' and
-                               session['state']!='blanco'):
+    #if 'state' in session and (session['state']!="stats" and session['state']!='search' and
+    #                           session['state']!='blanco'):
+    if 'state' in session and (ord(session['state'][:1])!=4 and ord(session['state'][:1])!=1 and
+                               ord(session['state'][:1])!=2):
       del session['state']
     
-    screen=""
-    page=0
-    if request.args.get('screen') != None:
-      screen=request.args.get('screen')
-    if request.args.get('page') != None:
-      page=request.args.get('page')
+    #screen=""
+    #page=0
+    #if request.args.get('screen') != None:
+    #  screen=request.args.get('screen')
+    #if request.args.get('page') != None:
+    #  page=request.args.get('page')
     
     
-    return redirect(url_for('index', screen=screen, page=page))
+    #return redirect(url_for('index', screen=screen, page=page))
+    return redirect(url_for('index'))
   
 ##############################///////////////////////////########################################
 ##############################///////////////////////////########################################
@@ -298,10 +301,11 @@ def require_login():
 ##############################///////////////////////////########################################
 
 #setting this up so any donor folder either has all files in main folder or in subfolders.  if
-#any subfolders are detected that all files in donor folder are ignored
+#any subfolders are detected then all files in donor folder are ignored
 
 #i think this will crash if the file system doesn't exist or whatever.  
 #i'm not checking for it yet.  who cares.
+
 @app.route('/', methods=['GET'])
 def index():
   #well if i ever need POST it's indented already
@@ -311,7 +315,9 @@ def index():
     if 'searchval' not in session:
       session['searchval']=""
     if 'state' not in session:
-      session['state']=""
+      session['state']=chr(0)+chr(0)
+    if 'page' not in session:
+      session['page']=0
     
     #mode for forcing user to only make one decision at a time
     #state for if in searchmode or whatever
@@ -323,24 +329,57 @@ def index():
     #do two things at once but doing a lot of stuff regardless of 'mode'.  'mode' will
     #be a gatekeeper to certain statements
     
+    #session['state']
+    #byte 0 = main state
+    #0 = home
+    #1 = search
+    #2 = blanco
+    #3 = chat
+    #4 = stats
+    
+    #byte 1 = screen (stats)
+    #0 = sinks
+    #1 = raters
+    #2 = stalk
+    #3 = dust
+    #4 = recent
+    
+    #i think they meant integer
+    #Return the iteger that represents the character "h":
+    #x = ord("h")
+    
+    #chr() is what you're looking for:
+    #print chr(65) # will print "A"
+    
     #set "mode"
-    if ((request.args.get('home') == None and session['state']=='stats') or
+    #if ((request.args.get('home') == None and session['state']=='stats') or
+    if ((request.args.get('home') == None and ord(session['state'][:1])==4) or
         (request.args.get('home') != None and request.args.get('home') == 'stats')):
-      session['state']="stats"
-      screen=""
+      #session['state']="stats"
+      session['state']=chr(4)+session['state'][1:]
+      #screen=""
       if request.args.get('screen') != None:
-        screen=request.args.get('screen')
-      page=0
-      if request.args.get('page') != None:
-        page=request.args.get('page')
-      return redirect(url_for("stats",screen=screen, page=page))
+        #screen=request.args.get('screen')
+        session['state']=session['state'][:1]+chr(int(request.args.get('screen')))
+      #page=0
+      session['page']=0
+      #if request.args.get('page') != None:
+        #page=request.args.get('page')
+        #session['page']=request.args.get('page')
+      #return redirect(url_for("stats",screen=screen, page=page))
+      return redirect(url_for("stats"))
     elif request.args.get('home') != None and request.args.get('home') == 'chat':
       if 'username' in session:
-        session['state']="babble"
-      screen=""
-      if request.args.get('screen') != None:
-        screen=request.args.get('screen')
-      return redirect(url_for("chat",screen=screen))
+        #session['state']="babble"
+        session['state'] = chr(3) + session['state'][1:]
+        #text = 'abcdefg'
+        #text = text[:1] + 'Z' + text[2:]
+        
+      #screen=""
+      #if request.args.get('screen') != None:
+      #  screen=request.args.get('screen')
+      #return redirect(url_for("chat",screen=screen))
+      return redirect(url_for("chat"))
     elif request.args.get('home') != None and request.args.get('home') == 'search':
       mode="search"
       #need to make sure if 'home' == 'search' then form sends back 'searchval' too
@@ -349,13 +388,16 @@ def index():
       if len(session['searchval'])>10:
         flash("filter must be 10 chars or less")
         session['searchval']=""
-        session['state']=""
+        #session['state']=""
+        session['state'] = chr(0) + session['state'][1:]
       elif len(session['searchval'])<1:
         flash("Enter something into the searchbox")
-        session['state']=""
+        #session['state']=""
+        session['state'] = chr(0) + session['state'][1:]
       else:
         flash('Filtering out every filename that does not contain "'+session['searchval']+'"')
-        session['state']="search"
+        #session['state']="search"
+        session['state'] = chr(1) + session['state'][1:]
     elif ((request.args.get('home') != None and request.args.get('home') == 'blanco') and
           mode=="none"):
       mode="blanco"
@@ -363,13 +405,20 @@ def index():
       if len(session['searchval'])!=6 or not session['searchval'].isdigit():
         flash("Enter a 6 digit number")
         session['searchval']=""
-        session['state']=""
+        #session['state']=""
+        session['state'] = chr(0) + session['state'][1:]
       else:
-        session['state']="blanco"
+        #session['state']="blanco"
+        session['state'] = chr(2) + session['state'][1:]
     elif request.args.get('home') != None and request.args.get('home') == 'cad' and mode=="none":
       sinksplit(request.args.get('cad'))
-      session['state']=""
+      session['state']=chr(0)+chr(0)
     #'guy' and 'folder' in same form, have to make sure we really want to change donor
+    elif (ord(session['state'][:1])!=0 and ord(session['state'][:1])!=1 and
+          ord(session['state'][:1])!=2):
+      session['state']=chr(0)+chr(0)
+      return redirect(url_for("index"))
+    
     elif ((request.args.get('guy') != None and request.args.get('guy') != session['donor'])
         and mode == "none"):
       session['donor']=request.args.get('guy')
@@ -384,11 +433,13 @@ def index():
       if 'current_folder' in session:
         del session['current_folder']
       session['searchval']=""
-      session['state']=""
+      #session['state']=""
+      session['state']=chr(0)+chr(0)
       mode="home"
       
     #if search "state"
-    if session['state']=="search":
+    #if session['state']=="search":
+    if ord(session['state'][:1])==1:
       #the order stays intact in the Donator table, probably the only reason i'm grabbing it here
       guys=[]
       pull=Donator.query.with_entities(Donator.location)
@@ -404,7 +455,8 @@ def index():
               break
           if match == True:
             break
-    elif session['state']=="blanco":
+    #elif session['state']=="blanco":
+    elif ord(session['state'][:1])==2:
       guys=[]
       pull=Donator.query.with_entities(Donator.location)
       try:
@@ -441,7 +493,8 @@ def index():
         flash(e)
         flash("something went wrong, email me if you want")
         session['searchval']=""
-        session['state']=""
+        #session['state']=""
+        session['state']=chr(0)+chr(0)
         
       for eachpull in pull:
         match=False
@@ -479,7 +532,8 @@ def index():
     
     folders=[]
     if 'donor' in session:
-      if session['state']=="search":
+      #if session['state']=="search":
+      if ord(session['state'][:1])==1:
         #ok this works but there has to be a better way of doing this with deeper
         #understanding of os.walk
         for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
@@ -497,7 +551,8 @@ def index():
                 break;
           break
         folders=sorted(folders, key=str.casefold)
-      elif session['state']=="blanco":
+      #elif session['state']=="blanco":
+      elif ord(session['state'][:1])==2:
         for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
                                          topdown=True):
           for val in dirs:
@@ -540,15 +595,19 @@ def index():
         for val in files:
           if cadchecker(val):
             blancomatch=False
-            if session['state']=="blanco":
+            #if session['state']=="blanco":
+            if ord(session['state'][:1])==2:
               for ix in range(len(blancopackage)):
                 if blancopackage[ix] in val:
                   blancomatch=True
                   break
             
-            if (session['state']=="" or
-                (session['state']=="search" and session['searchval'].lower() in val.lower()) or
-                (session['state']=="blanco" and blancomatch==True)):
+            #if (session['state']=="" or
+            if (session['state'][:1]==chr(0) or    
+                #(session['state']=="search" and session['searchval'].lower() in val.lower()) or
+                (ord(session['state'][:1])==1 and session['searchval'].lower() in val.lower()) or
+                #(session['state']=="blanco" and blancomatch==True)):
+                (ord(session['state'][:1])==2 and blancomatch==True)):
               newval=os.path.join(root,val)
               rated_sink = Sink.query.filter_by(location=newval[len("static/sinks/"):]).first()
               
@@ -567,7 +626,7 @@ def index():
 
       #i only half understand this
       cads = sorted(cads, key=lambda tup: tup[0].lower())
-    selectcolor=getselectcolor(session['state'])
+    selectcolor=getselectcolor(session['state'][:1])
     username=""
     if 'username' in session:
       username=session['username']
@@ -581,7 +640,8 @@ def index():
       
     return render_template('silicate.html',title="silicatewastes", cads=cads, guys=guys,
                            folders=folders, searchval=session['searchval'], selectcolor=selectcolor,
-                           state=session['state'], blancopackage=blancopackage, username=username,
+                           state=ord(session['state'][:1]), blancopackage=blancopackage,
+                           username=username,
                            selectdonor=selectdonor, selectfolder=selectfolder)
 
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
@@ -620,16 +680,16 @@ def sink():
   user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
   ratings = Rating.query.filter(Rating.user_id != user.id, Rating.sink_id==sink.id).all()
   
-  screen=""
-  if request.args.get('screen') != None:
-    screen=request.args.get('screen')
-  page=0
-  if request.args.get('page') != None:
-    page=request.args.get('page')
+  #screen=""
+  #if request.args.get('screen') != None:
+  #  screen=request.args.get('screen')
+  #page=0
+  #if request.args.get('page') != None:
+  #  page=request.args.get('page')
   
   return render_template("sink.html", sink=sink, username=username, ratecolor=ratecolor,
                          ratings=ratings, user_rating=user_rating, colors=colors, user=user,
-                         ratecolors=ratecolors, screen=screen, page=page)
+                         ratecolors=ratecolors)
 
 ######################/previous_sink########################################################
 ######################/previous_sink########################################################
@@ -824,7 +884,7 @@ def chat():
     colors.append(getstatuscolor(ix))
   
   return render_template("chat.html", babblings=babblings, username=username,
-                         state=session['state'], colors=colors)
+                         state=ord(session['state'][:1]), colors=colors)
 
 ##########################errata##############################################################
 ##########################errata##############################################################
@@ -856,27 +916,37 @@ def stats():
   if 'username' in session:
     username=session['username']
   
+  if request.args.get('screen')!=None:
+    session['state']=session['state'][:1]+chr(int(request.args.get('screen')))
+  
   #if request.method=='GET':
-  if (request.args.get('screen') == None or request.args.get('screen') == "" or
-      request.args.get('screen') == 'statsinks'):
-    page=""
-    cycle=""
-    if request.args.get('page') != None:
-      page = request.args.get('page')
+  #if (request.args.get('screen') == None or request.args.get('screen') == "" or
+  #    request.args.get('screen') == 'statsinks'):
+  #  page=""
+  cycle=""
+  if ord(session['state'][1:2])==0:
+    #if request.args.get('page') != None:
+    #  page = request.args.get('page')
     if request.args.get('cycle') != None:
       cycle = request.args.get('cycle')
      #return redirect(url_for('previous_sink', cad=cad, pre_cad=user.lastsink)) 
-    return redirect(url_for('statsinks', page=page, cycle=cycle))
-  elif request.args.get('screen') == 'stalk':
+    #return redirect(url_for('statsinks', page=page, cycle=cycle))
+    return redirect(url_for('statsinks', cycle=cycle))
+  #elif request.args.get('screen') == 'stalk':
+  elif ord(session['state'][1:2])==2:
     return redirect('/stalk')
-  elif request.args.get('screen') == 'raters':
+  #elif request.args.get('screen') == 'raters':
+  elif ord(session['state'][1:2])==1:
     return redirect('/raters')
-  elif request.args.get('screen') == 'recent':
+  #elif request.args.get('screen') == 'recent':
+  elif ord(session['state'][1:2])==4:
     return redirect('/recent')
-  elif request.args.get('screen') == 'dust':
+  #elif request.args.get('screen') == 'dust':
+  elif ord(session['state'][1:2])==3:
     return redirect('/dust')
   else:
-    return "i don't know what just happened.  email me and we'll talk about it"
+    return ("i don't know what just happened.  email me and we'll talk about it"
+      +str(ord(session['state'][:1])))
 
 ##########################stalk##################################################################
 ##########################stalk##################################################################
@@ -914,7 +984,7 @@ def stalk():
         print(memberratings[0].location)
       except Exception as e:
         memberratings=None
-      return render_template("stalkmore.html", state=session['state'], screen="stalk",
+      return render_template("stalkmore.html", state=ord(session['state'][:1]), screen="stalk",
                              memberdata=memberdata, memberratings=memberratings, username=username,
                              colors=colors)
     else:
@@ -960,7 +1030,9 @@ def stalk():
       return redirect('/stalk')
   
   #should only be able to reach this on get request
-  return render_template("stalk.html", state=session['state'], screen="stalk", members=members,
+  return render_template("stalk.html", state=ord(session['state'][:1]),
+                         screen=ord(session['state'][1:2]),
+                         members=members,
                          username=username, colors=colors)
 
 
@@ -978,32 +1050,34 @@ def statsinks():
   username=""
   if 'username' in session:
     username=session['username']
-  if request.args.get('page') == None or request.args.get('page') == "":
-    page=0
-  else:
-    page=int(request.args.get('page'))
-    if request.args.get('cycle') != None:
-      cycle=request.args.get('cycle')
-      if cycle == "previous" and page > 0:
-        page-=1
-      elif cycle == "next":
-        page+=1
+  #if request.args.get('page') == None or request.args.get('page') == "":
+  #  page=0
+  #else:
+  #  page=int(request.args.get('page'))
+  if request.args.get('cycle') != None:
+    cycle=request.args.get('cycle')
+    if cycle == "previous" and session['page'] > 0:
+      session['page']-=1
+    elif cycle == "next":
+      session['page']+=1
   
   topdownloads=(Sink.query.with_entities(Sink.downloads, Sink.location, Sink.id,Sink.avg_rating)
-                .order_by(Sink.downloads.desc()).order_by(Sink.id).limit(100).offset(100*page))
+                .order_by(Sink.downloads.desc()).order_by(Sink.id).limit(100).offset(
+                  100*session['page']))
 
   totaldownloads=User.query.with_entities(func.sum(User.benefactor).label('total')).all()[0][0]
   
   supertopdownloads=[]
-  ix=1+(100*page)
+  ix=1+(100*session['page'])
   for download in topdownloads:
     supertopdownloads.append((ix,download.location, download.downloads,download.avg_rating,
                              download.id,getratecolor(download.avg_rating,"yes")))
     ix+=1
   
-  return render_template("stats.html", state=session['state'], screen="statsinks",
+  return render_template("stats.html", state=ord(session['state'][:1]),
+                         screen=ord(session['state'][1:2]),
                          topdownloads=supertopdownloads, totaldownloads=totaldownloads,
-                         arrows="yes", page=page, username=username)
+                         arrows="yes", page=session['page'], username=username)
 
 #######################################raters###############################################
 #######################################raters###############################################
@@ -1041,7 +1115,8 @@ def raters():
   superraters = sorted(superraters, key=lambda tup: (tup[5]), reverse = True)
   
   
-  return render_template("raters.html", state=session['state'], screen="raters",
+  return render_template("raters.html", state=ord(session['state'][:1]),
+                         screen=ord(session['state'][1:2]),
                          superraters=superraters, colors=colors, username=username,
                          totalrates=totalrates)
 
@@ -1078,7 +1153,8 @@ def recent():
     superratings.append((location,name,rating.stars,rating.comment,memberlevel,
                                rating.user_id,rating.sink_id,average,getratecolor(average,"no")))
     
-  return render_template("recent.html", state=session['state'], screen="recent",
+  return render_template("recent.html", state=ord(session['state'][:1]),
+                         screen=ord(session['state'][1:2]),
                          ratings=superratings, colors=colors, username=username)
 
 #######################################dust#################################################
@@ -1103,7 +1179,8 @@ def dust():
     username=session['username']
   
   # don't think we need page anymore
-  return render_template("dust.html", state=session['state'], username=username, screen="dust",
+  return render_template("dust.html", state=ord(session['state'][:1]), username=username,
+                         screen=ord(session['state'][1:2]),
                          page=0, yes=yes, no=no, abstain=abstain)
 
 ######################################login / logout##############################################

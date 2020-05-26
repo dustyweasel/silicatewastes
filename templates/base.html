@@ -48,39 +48,32 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
         </div>
         <div id="filterbar">
           <form action="/" method='GET'>
-          <input type="hidden" name="screen" value="{{screen}}" />
+          {# <input type="hidden" name="screen" value="{{screen}}" /> #}
           <input class="thickprompt space" type="text" name='searchval'
           value="{{searchval}}" maxlength="10">
             
-          {% if state == "search" %}
+          {% if state == 1 %}
             <button class="real picked space" name="home" value="search" >
             FILTER</button>
           {% else %}
             <button class="real unpicked space" name="home" value="search" >
             FILTER</button>
           {% endif %}
-          {% if state == "blanco" %}
+          {% if state == 2 %}
             <button class="real blancopicked space" name="home"
             value="blanco" >BLANCO</button>
           {% else %}
             <button class="real unpicked space" name="home"
             value="blanco" >BLANCO</button>
           {% endif %}
-          {% if state == "babble" %}
+          {% if state == 3 %}
             <button class="real picked space" name="home" value="chat" >
             NEWS</button>
           {% else %}
             <button class="real unpicked space" name="home" value="chat" >
             NEWS</button>
           {% endif %}
-          {# {% if state == "stalk" %}
-            <button class="real picked space" name="home" value="stalk" >
-            STALK</button>
-          {% else %}
-            <button class="real unpicked space" name="home" value="stalk" >
-            STALK</button>
-          {% endif %} #}
-          {% if state == "stats" %}
+          {% if state == 4 %}
             <button class="real picked space" name="home" value="stats" >
             STATS</button>
           {% else %}
@@ -95,7 +88,8 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
       
     </div>  {# END main header #}
     <hr />
-    {% if state== "stats" %}
+    {#<h1>{{state}}</h1>#}
+    {% if state == 4 %}
       <div class="splay pushdown" >  {# START sub-menubar #}
         <div class="splayspace">
         </div>
@@ -109,42 +103,42 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
           <button class="disutility" name="cycle" value="next" disabled>
           &rarr;</button>
         {% endif %}
-        {% if screen == "statsinks" %}
-          <button class="real picked tight" name="screen" value="statsinks" >
+        {% if screen == 0 %}
+          <button class="real picked tight" name="screen" value="0" >
           SINKS</button>
         {% else %}
-          <button class="real unpicked tight" name="screen" value="statsinks" >
+          <button class="real unpicked tight" name="screen" value="0" >
           SINKS</button>
         {% endif %}
-        {% if screen == "raters" %}
-          <button class="real picked tight" name="screen" value="raters" >
+        {% if screen == 1 %}
+          <button class="real picked tight" name="screen" value="1" >
           RATERS</button>
         {% else %}
-          <button class="real unpicked tight" name="screen" value="raters" >
+          <button class="real unpicked tight" name="screen" value="1" >
           RATERS</button>
         {% endif %}
-        {% if screen == "stalk" %}
-          <button class="real picked tight" name="screen" value="stalk" >
+        {% if screen == 2 %}
+          <button class="real picked tight" name="screen" value="2" >
           STALK</button>
         {% else %}
-          <button class="real unpicked tight" name="screen" value="stalk" >
+          <button class="real unpicked tight" name="screen" value="2" >
           STALK</button>
         {% endif %}
-        {% if screen == "dust" %}
-          <button class="real picked tight" name="screen" value="dust" >
+        {% if screen == 3 %}
+          <button class="real picked tight" name="screen" value="3" >
           DUST</button>
         {% else %}
-          <button class="real unpicked tight" name="screen" value="dust" >
+          <button class="real unpicked tight" name="screen" value="3" >
           DUST</button>
         {% endif %}
-        {% if screen == "recent" %}
-          <button class="real picked tight" name="screen" value="recent" >
+        {% if screen == 4 %}
+          <button class="real picked tight" name="screen" value="4" >
           RECENT</button>
         {% else %}
-          <button class="real unpicked tight" name="screen" value="recent" >
+          <button class="real unpicked tight" name="screen" value="4" >
           RECENT</button>
         {% endif %}
-        <input type="hidden" name="page" value="{{page}}" />
+        {#<input type="hidden" name="page" value="{{page}}" />#}
         <input type="hidden" name="screen" value="{{screen}}" />
         </form>
         <div class="splayspace">
