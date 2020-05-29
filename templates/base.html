@@ -26,8 +26,8 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
         </div>
       
         <div id="mainbar">
-          <form action="/" method='GET'>  
-            <button style="padding-left: 1em;" class="main" name="home" value="home">
+          <form action="/stateswitch" method='GET'>  
+            <button style="padding-left: 1em;" class="main" name="home" value="0">
             www.silicatewastes.com</button>
           </form>
         </div>
@@ -47,37 +47,37 @@ document.documentElement.style.setProperty('--vh', `${vh}px`);
         <div id="leftfilterbar" class="splayspace">
         </div>
         <div id="filterbar">
-          <form action="/" method='GET'>
+          <form action="/stateswitch" method='GET'>
           {# <input type="hidden" name="screen" value="{{screen}}" /> #}
           <input class="thickprompt space" type="text" name='searchval'
           value="{{searchval}}" maxlength="10">
             
           {% if state == 1 %}
-            <button class="real picked space" name="home" value="search" >
+            <button class="real picked space" name="home" value="1" >
             FILTER</button>
           {% else %}
-            <button class="real unpicked space" name="home" value="search" >
+            <button class="real unpicked space" name="home" value="1" >
             FILTER</button>
           {% endif %}
           {% if state == 2 %}
             <button class="real blancopicked space" name="home"
-            value="blanco" >BLANCO</button>
+            value="2" >BLANCO</button>
           {% else %}
             <button class="real unpicked space" name="home"
-            value="blanco" >BLANCO</button>
+            value="2" >BLANCO</button>
           {% endif %}
           {% if state == 3 %}
-            <button class="real picked space" name="home" value="chat" >
+            <button class="real picked space" name="home" value="3" >
             NEWS</button>
           {% else %}
-            <button class="real unpicked space" name="home" value="chat" >
+            <button class="real unpicked space" name="home" value="3" >
             NEWS</button>
           {% endif %}
           {% if state == 4 %}
-            <button class="real picked space" name="home" value="stats" >
+            <button class="real picked space" name="home" value="4" >
             STATS</button>
           {% else %}
-            <button class="real unpicked space" name="home" value="stats" >
+            <button class="real unpicked space" name="home" value="4" >
             STATS</button>
           {% endif %}
           </form>

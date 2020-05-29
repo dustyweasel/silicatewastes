@@ -152,31 +152,7 @@ def cadchecker(cadfile):
 #session['secret_pass']
 #session['password']
 
-#set donorval to "" to set back to silicatewastes
-#set cloneguys to "" to clear it.  silly but whatever
-#i think i can delete this riculousness now
-def initialize(donorval, cloneguys):
-  loadguys=Donator.query.all()
-  
-  guys=[]
-  for ix in range(len(loadguys)):
-    guys.append(loadguys[ix].location)
-
-  #should probably put a check here that all cloneguys in guys
-  if not donorval:
-    if len(guys)>0:
-      donor=guys[0]
-    else:
-      donor=""
-  else:
-    if len(guys)>0 and donorval in guys:
-      donor=donorval
-    else:
-      donor=""
-      cloneguys=""
-    
-  return (guys, donor, cloneguys)
-
+#set donor / folder based on cad id
 def sinksplit(sinkid):
   entry = Sink.query.filter_by(id=sinkid).first()
   
@@ -200,17 +176,9 @@ def sinksplit(sinkid):
     break
   
   if not skip:
-    #sink=cadsplit[2]
-    #for ix in range(len(cadsplit)-3):
-    #  sink+=(os.path.sep+cadsplit[3+ix])
     session['current_folder']=cadsplit[1]
   else:
-    #sink=cadsplit[1]
-    #for ix in range(len(cadsplit)-2):
-    #  sink+=(os.path.sep+cadsplit[2+ix])
     session['current_folder']=""
-  
-  #return (sink, entry)
 
 GLOBALRATEVAL=4
 def getratecolor(val, seethrough):
@@ -225,9 +193,12 @@ def getratecolor(val, seethrough):
     color = "orange"
   elif val < 1.5:
     color = "tomato"
+  else:
+    color = "yellow" #oops
     
   return color
 
+#i think this is just for coloring selectboxes based on state
 def getselectcolor(val):
   if val==chr(0):
     color="#f4f4f0"
@@ -236,11 +207,11 @@ def getselectcolor(val):
   elif val==chr(2):
     color="mediumaquamarine"
   else:
-    color="red"
+    color="red" #oops
     
   return color
 
-GLOBALSTATUSVAL=4
+GLOBALSTATUSVAL=4 #4 choices
 def getstatuscolor(val):
   if val==1:  #dictator
     color="sandybrown"
@@ -254,41 +225,42 @@ def getstatuscolor(val):
     color="red"
     
   return color
- 
+
+#just stuck this in a function in case i ever add another substate
+#then only have to fix one spot instead of 100
+def setstate(which,val):
+  if which=="reset":
+    session['state']=chr(0)+chr(0)
+  elif which=="main":
+    session['state']=val+session['state'][1:]
+  elif which=="substate":
+    session['state']=session['state'][:1]+val
+
+
 #wtf
 #127.0.0.1 - - [09/Apr/2020 05:11:06] "GET /favicon.ico HTTP/1.1" 302 -
 
 @app.before_request
 def require_login():
   allowed_routes = ['index', 'login', 'register', 'stats', 'verify', 'stalk', 'demos', 'dust',
-                    'statsinks', 'raters', 'recent', 'errata']
+                    'statsinks', 'raters', 'recent', 'errata', 'stateswitch']
   #need that '/static/' part for css i think
   if (request.endpoint not in allowed_routes and 'username' not in session and
     '/static/' not in request.path):
     
     flash("log in")
     
-    #if 'username' in session:
-    #  del session['username']
     if 'secret_pass' in session:
       del session['secret_pass']
     if 'password' in session:
       del session['password']
-    #if 'state' in session and (session['state']!="stats" and session['state']!='search' and
-    #                           session['state']!='blanco'):
+    
+    #if they get blocked but they're in stats, search, or blanco then let them stay on current
+    #screen instead of resetting
     if 'state' in session and (ord(session['state'][:1])!=4 and ord(session['state'][:1])!=1 and
                                ord(session['state'][:1])!=2):
       del session['state']
     
-    #screen=""
-    #page=0
-    #if request.args.get('screen') != None:
-    #  screen=request.args.get('screen')
-    #if request.args.get('page') != None:
-    #  page=request.args.get('page')
-    
-    
-    #return redirect(url_for('index', screen=screen, page=page))
     return redirect(url_for('index'))
   
 ##############################///////////////////////////########################################
@@ -303,31 +275,32 @@ def require_login():
 #setting this up so any donor folder either has all files in main folder or in subfolders.  if
 #any subfolders are detected then all files in donor folder are ignored
 
-#i think this will crash if the file system doesn't exist or whatever.  
-#i'm not checking for it yet.  who cares.
-
+#only states None,0,1,2 should get here
 @app.route('/', methods=['GET'])
 def index():
   #well if i ever need POST it's indented already
   if request.method == 'GET':
-    cads=[]
-    blancopackage=""
+    if request.args.get('cad')!=None:
+      #set donor / foder based on cad id
+      #(this is actually the only place this function is called these days)
+      sinksplit(request.args.get('cad'))
+      setstate("reset",None)
+    
     if 'searchval' not in session:
       session['searchval']=""
     if 'state' not in session:
-      session['state']=chr(0)+chr(0)
+      #session['state']=chr(0)+chr(0)
+      setstate("reset", None)
     if 'page' not in session:
       session['page']=0
     
-    #mode for forcing user to only make one decision at a time
-    #state for if in searchmode or whatever
-    #(mode can be "donor" but still be in search "state")
-    mode="none"
+    if ord(session['state'][:1])==3:
+      return redirect(url_for('chat'))
+    if ord(session['state'][:1])==4:
+      return redirect(url_for('stats'))
     
-    #was gonna make "state" too but just check if session['searchval'] for now
-    #i'm gonna use 'mode' to set what i'm doing throughout '/', don't let the user
-    #do two things at once but doing a lot of stuff regardless of 'mode'.  'mode' will
-    #be a gatekeeper to certain statements
+    cads=[]
+    blancopackage=""
     
     #session['state']
     #byte 0 = main state
@@ -351,95 +324,85 @@ def index():
     #chr() is what you're looking for:
     #print chr(65) # will print "A"
     
-    #set "mode"
-    #if ((request.args.get('home') == None and session['state']=='stats') or
-    if ((request.args.get('home') == None and ord(session['state'][:1])==4) or
-        (request.args.get('home') != None and request.args.get('home') == 'stats')):
-      #session['state']="stats"
-      session['state']=chr(4)+session['state'][1:]
-      #screen=""
-      if request.args.get('screen') != None:
-        #screen=request.args.get('screen')
-        session['state']=session['state'][:1]+chr(int(request.args.get('screen')))
-      #page=0
-      session['page']=0
-      #if request.args.get('page') != None:
-        #page=request.args.get('page')
-        #session['page']=request.args.get('page')
-      #return redirect(url_for("stats",screen=screen, page=page))
-      return redirect(url_for("stats"))
-    elif request.args.get('home') != None and request.args.get('home') == 'chat':
-      if 'username' in session:
-        #session['state']="babble"
-        session['state'] = chr(3) + session['state'][1:]
-        #text = 'abcdefg'
-        #text = text[:1] + 'Z' + text[2:]
-        
-      #screen=""
-      #if request.args.get('screen') != None:
-      #  screen=request.args.get('screen')
-      #return redirect(url_for("chat",screen=screen))
-      return redirect(url_for("chat"))
-    elif request.args.get('home') != None and request.args.get('home') == 'search':
-      mode="search"
-      #need to make sure if 'home' == 'search' then form sends back 'searchval' too
-      #not checking for session['searchval'] != None
-      session['searchval'] = request.args.get('searchval')
-      if len(session['searchval'])>10:
-        flash("filter must be 10 chars or less")
-        session['searchval']=""
-        #session['state']=""
-        session['state'] = chr(0) + session['state'][1:]
-      elif len(session['searchval'])<1:
-        flash("Enter something into the searchbox")
-        #session['state']=""
-        session['state'] = chr(0) + session['state'][1:]
-      else:
-        flash('Filtering out every filename that does not contain "'+session['searchval']+'"')
-        #session['state']="search"
-        session['state'] = chr(1) + session['state'][1:]
-    elif ((request.args.get('home') != None and request.args.get('home') == 'blanco') and
-          mode=="none"):
-      mode="blanco"
-      session['searchval'] = request.args.get('searchval')
-      if len(session['searchval'])!=6 or not session['searchval'].isdigit():
-        flash("Enter a 6 digit number")
-        session['searchval']=""
-        #session['state']=""
-        session['state'] = chr(0) + session['state'][1:]
-      else:
-        #session['state']="blanco"
-        session['state'] = chr(2) + session['state'][1:]
-    elif request.args.get('home') != None and request.args.get('home') == 'cad' and mode=="none":
-      sinksplit(request.args.get('cad'))
-      session['state']=chr(0)+chr(0)
-    #'guy' and 'folder' in same form, have to make sure we really want to change donor
-    elif (ord(session['state'][:1])!=0 and ord(session['state'][:1])!=1 and
-          ord(session['state'][:1])!=2):
-      session['state']=chr(0)+chr(0)
-      return redirect(url_for("index"))
-    
-    elif ((request.args.get('guy') != None and request.args.get('guy') != session['donor'])
-        and mode == "none"):
+    mode=""
+    if request.args.get('guy') != None and request.args.get('guy') != session['donor']:
       session['donor']=request.args.get('guy')
       mode="guy"
-    elif request.args.get('folder') != None and mode == "none":
+    elif request.args.get('folder') != None:
       session['current_folder']=request.args.get('folder')
-      mode="folder"
-    elif ((request.args.get('home') != None and request.args.get('home') == 'home') and
-          mode=="none"):
-      if 'donor' in session:
-        del session['donor']
-      if 'current_folder' in session:
-        del session['current_folder']
-      session['searchval']=""
-      #session['state']=""
-      session['state']=chr(0)+chr(0)
-      mode="home"
+      #mode="folder"
+        
+###################### state switch block ############################################
+###################### state switch block ############################################
+
+###########if state = default########################################################
+    if ord(session['state'][:1])==0:
+   
+#set guys / selected donor   
+      #guys = root folders based on database, not file structure
+      #(should be the same thing)
+      guys=[]
+      pull=Donator.query.with_entities(Donator.location)
+      #this just converts whatever datatype SQL returns to strings
+      #waste of time, probably something I don't know how to do right
+      for eachpull in pull:
+        guys.append(eachpull.location)
+      #verify donor valid here, verify current_folder after folders[] loaded
+      #session['donor'] not in guys should only happen if "hacked"
+      if 'donor' not in session or session['donor'] not in guys:
+        #initial load? set to silicatewastes
+        if guys:
+          session['donor']=guys[0]
+        elif 'donor' in session:
+          del session['donor']
+
+#set folders      
+      folders=[]
+      if 'donor' in session: #rest state stuff within this if statement
+        for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
+                                          topdown=True):
+          #set folders to all root folders in donor
+          folders=sorted(dirs, key=str.casefold)
+          break
+        
+#set current_folder / newpath
+        if folders:
+          if ('current_folder' not in session or session['current_folder'] not in folders or
+              mode == "guy"):
+            session['current_folder']=folders[0]
+              
+          newpath=os.path.join("static","sinks",session['donor'],session['current_folder'])
+        else:
+          if 'current_folder' in session:
+            del session['current_folder']
+          newpath=os.path.join("static","sinks",session['donor'])
+
+#load files        
+        #cads=[] moved this to top, has to exist
+        for root, dirs, files in os.walk(newpath, topdown=True):
+          for val in files:
+            if cadchecker(val):
+                
+              newval=os.path.join(root,val)
+              rated_sink = Sink.query.filter_by(location=newval[len("static/sinks/"):]).first()
+                  
+              #need the +1 for last '/'.
+              #just chopping of the directory info
+              if 'current_folder' in session:
+                newval=newval[len(os.path.join("static/sinks",session['donor'],
+                                              session['current_folder']))+1:]
+              else:
+                newval=newval[len(os.path.join("static/sinks",session['donor']))+1:]
+                  
+              newcad=(newval, rated_sink.id, rated_sink.avg_rating,
+                      getratecolor(rated_sink.avg_rating, "yes"))
+                  
+              cads.append(newcad)
+        
+##############if state=="search": ######################################################
+    elif ord(session['state'][:1])==1:
       
-    #if search "state"
-    #if session['state']=="search":
-    if ord(session['state'][:1])==1:
+#set guys / selected donor
       #the order stays intact in the Donator table, probably the only reason i'm grabbing it here
       guys=[]
       pull=Donator.query.with_entities(Donator.location)
@@ -455,10 +418,79 @@ def index():
               break
           if match == True:
             break
-    #elif session['state']=="blanco":
+      if 'donor' not in session or session['donor'] not in guys:
+        #initial load? set to silicatewastes
+        if guys:
+          session['donor']=guys[0]
+        elif 'donor' in session:
+          del session['donor']
+
+#set folders
+      folders=[]
+      if 'donor' in session:
+        #ok this works but there has to be a better way of doing this with deeper
+        #understanding of os.walk
+        for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
+                                          topdown=True):
+          for val in dirs:
+            match=False
+            for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"],val),
+                                          topdown=True):
+              for val2 in files:
+                if session['searchval'].lower() in val2.lower() and cadchecker(val2):
+                  folders.append(val)
+                  match=True
+                  break
+              if match==True:
+                break;
+          break
+        folders=sorted(folders, key=str.casefold)
+
+#set current_folder / newpath
+#(this part is the same for all 3 states.  that's why /index used to be monolithic with state
+#checks here and there but it was nasty to read.  now there's one state check.
+
+        if folders:
+          if ('current_folder' not in session or session['current_folder'] not in folders or
+              mode == "guy"):
+            session['current_folder']=folders[0]
+              
+          newpath=os.path.join("static","sinks",session['donor'],session['current_folder'])
+        else:
+          if 'current_folder' in session:
+            del session['current_folder']
+          newpath=os.path.join("static","sinks",session['donor'])
+          
+#load files
+        #cads=[] moved this to top, has to exist
+        for root, dirs, files in os.walk(newpath, topdown=True):
+          for val in files:
+            if cadchecker(val):
+      
+              if session['searchval'].lower() in val.lower():
+                newval=os.path.join(root,val)
+                rated_sink = Sink.query.filter_by(location=newval[len("static/sinks/"):]).first()
+                  
+                #need the +1 for last '/'.
+                #just chopping of the directory info
+                if 'current_folder' in session:
+                  newval=newval[len(os.path.join("static/sinks",session['donor'],
+                                                session['current_folder']))+1:]
+                else:
+                  newval=newval[len(os.path.join("static/sinks",session['donor']))+1:]
+                  
+                newcad=(newval, rated_sink.id, rated_sink.avg_rating,
+                        getratecolor(rated_sink.avg_rating, "yes"))
+                  
+                cads.append(newcad)
+            
+######if session['state']=="blanco" ########################################################
     elif ord(session['state'][:1])==2:
+      
+#set guys / selected donor 
       guys=[]
       pull=Donator.query.with_entities(Donator.location)
+      
       try:
         savesplit=""
         blancofile=open(os.path.join("static","blanco.txt"),'r')
@@ -472,10 +504,7 @@ def index():
             break
           #if we found one
         if savesplit:
-          if request.args.get('home') == 'blanco':
-            flash("Found matches.")
-            #flash("identical cutouts: "+savesplit)
-          #global, create list of 16 including hyphens
+          #create list of 16 including hyphens
           blancopackage=savesplit.strip('\n').split('\n')
           for ix in range(len(blancopackage)):
             blancopackage.append(blancopackage[ix][:3]+'-'+
@@ -486,16 +515,14 @@ def index():
           blancopackage.append(session['searchval'])
           blancopackage.append(session['searchval'][:3]+'-'+session['searchval'][3:])
           
-          flash("No matches on record.")
-          #flash("No identical cutouts.  Searching only for "+blancopackage[0]+
-          #      " and "+blancopackage[1])
       except Exception as e:
         flash(e)
         flash("something went wrong, email me if you want")
         session['searchval']=""
-        #session['state']=""
-        session['state']=chr(0)+chr(0)
+        setstate("reset",None)
         
+      #probably should collect files first and THEN collect folders, who
+      #cares for now
       for eachpull in pull:
         match=False
         for root, dirs, files in os.walk(os.path.join(
@@ -510,55 +537,23 @@ def index():
               break
           if match == True:
             break
-      
-    #not search state, load everything
-    else:
-      #set all main folders
-      guys=[]
-      pull=Donator.query.with_entities(Donator.location)
-      #this just converts whatever datatype SQL returns to strings
-      #waste of time, probably something I don't know how to do right
-      for eachpull in pull:
-        guys.append(eachpull.location)
-      
-    #verify donor valid here, verify current_folder after folders[] loaded
-    #session['donor'] not in guys should only happen if "hacked"
-    if 'donor' not in session or session['donor'] not in guys:
-      #initial load? set to silicatewastes
-      if guys:
-        session['donor']=guys[0]
-      elif 'donor' in session:
-        del session['donor']
-    
-    folders=[]
-    if 'donor' in session:
-      #if session['state']=="search":
-      if ord(session['state'][:1])==1:
-        #ok this works but there has to be a better way of doing this with deeper
-        #understanding of os.walk
+        
+      if 'donor' not in session or session['donor'] not in guys:
+        #initial load? set to silicatewastes
+        if guys:
+          session['donor']=guys[0]
+        elif 'donor' in session:
+          del session['donor']
+
+#set folders
+      folders=[]
+      if 'donor' in session:
         for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
-                                         topdown=True):
+                                          topdown=True):
           for val in dirs:
             match=False
             for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"],val),
-                                         topdown=True):
-              for val2 in files:
-                if session['searchval'].lower() in val2.lower() and cadchecker(val2):
-                  folders.append(val)
-                  match=True
-                  break
-              if match==True:
-                break;
-          break
-        folders=sorted(folders, key=str.casefold)
-      #elif session['state']=="blanco":
-      elif ord(session['state'][:1])==2:
-        for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
-                                         topdown=True):
-          for val in dirs:
-            match=False
-            for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"],val),
-                                         topdown=True):
+                                          topdown=True):
               for val2 in files:
                 for ix in range(len(blancopackage)):
                   if cadchecker(val2) and blancopackage[ix] in val2:
@@ -571,61 +566,55 @@ def index():
                 break;
           break
         folders=sorted(folders, key=str.casefold)
-      else:
-        for root, dirs, files in os.walk(os.path.join("static","sinks",session["donor"]),
-                                         topdown=True):
-          #set folders to all root folders in donor
-          folders=sorted(dirs, key=str.casefold)
-          break
-    
-      #verify current folder and set newpath
-      if folders:
-        if ('current_folder' not in session or session['current_folder'] not in folders or
-            mode == "guy"):
-          session['current_folder']=folders[0]
+
+#set current_folder / newpath
+        if folders:
+          if ('current_folder' not in session or session['current_folder'] not in folders or
+              mode == "guy"):
+            session['current_folder']=folders[0]
+              
+          newpath=os.path.join("static","sinks",session['donor'],session['current_folder'])
+        else:
+          if 'current_folder' in session:
+            del session['current_folder']
+          newpath=os.path.join("static","sinks",session['donor'])
           
-        newpath=os.path.join("static","sinks",session['donor'],session['current_folder'])
-      else:
-        if 'current_folder' in session:
-          del session['current_folder']
-        newpath=os.path.join("static","sinks",session['donor'])
-    
-      #cads=[] moved this to top, has to exist
-      for root, dirs, files in os.walk(newpath, topdown=True):
-        for val in files:
-          if cadchecker(val):
-            blancomatch=False
-            #if session['state']=="blanco":
-            if ord(session['state'][:1])==2:
+#load files
+        #cads=[] moved this to top, has to exist
+        for root, dirs, files in os.walk(newpath, topdown=True):
+          for val in files:
+            if cadchecker(val):
+              blancomatch=False
               for ix in range(len(blancopackage)):
                 if blancopackage[ix] in val:
                   blancomatch=True
                   break
-            
-            #if (session['state']=="" or
-            if (session['state'][:1]==chr(0) or    
-                #(session['state']=="search" and session['searchval'].lower() in val.lower()) or
-                (ord(session['state'][:1])==1 and session['searchval'].lower() in val.lower()) or
-                #(session['state']=="blanco" and blancomatch==True)):
-                (ord(session['state'][:1])==2 and blancomatch==True)):
-              newval=os.path.join(root,val)
-              rated_sink = Sink.query.filter_by(location=newval[len("static/sinks/"):]).first()
-              
-              #need the +1 for last '/'.
-              #just chopping of the directory info
-              if 'current_folder' in session:
-                newval=newval[len(os.path.join("static/sinks",session['donor'],
-                                              session['current_folder']))+1:]
-              else:
-                newval=newval[len(os.path.join("static/sinks",session['donor']))+1:]
-              
-              newcad=(newval, rated_sink.id, rated_sink.avg_rating,
-                      getratecolor(rated_sink.avg_rating, "yes"))
-              
-              cads.append(newcad)
-
-      #i only half understand this
-      cads = sorted(cads, key=lambda tup: tup[0].lower())
+                
+              if blancomatch==True:
+                newval=os.path.join(root,val)
+                rated_sink = Sink.query.filter_by(location=newval[len("static/sinks/"):]).first()
+                  
+                #need the +1 for last '/'.
+                #just chopping of the directory info
+                if 'current_folder' in session:
+                  newval=newval[len(os.path.join("static/sinks",session['donor'],
+                                                session['current_folder']))+1:]
+                else:
+                  newval=newval[len(os.path.join("static/sinks",session['donor']))+1:]
+                  
+                newcad=(newval, rated_sink.id, rated_sink.avg_rating,
+                        getratecolor(rated_sink.avg_rating, "yes"))
+                  
+                cads.append(newcad)
+      
+    else:
+      return "index failure "+str(ord(session['state'][:1]))
+    
+##################### end of state switch block #####################################################
+##################### end of state switch block #####################################################
+    
+    #i only half understand this
+    cads = sorted(cads, key=lambda tup: tup[0].lower())
     selectcolor=getselectcolor(session['state'][:1])
     username=""
     if 'username' in session:
@@ -643,6 +632,75 @@ def index():
                            state=ord(session['state'][:1]), blancopackage=blancopackage,
                            username=username,
                            selectdonor=selectdonor, selectfolder=selectfolder)
+
+######################/stateswitch/stateswitch/stateswitch#############################################
+######################/stateswitch/stateswitch/stateswitch#############################################
+######################/stateswitch/stateswitch/stateswitch#############################################
+######################/stateswitch/stateswitch/stateswitch#############################################
+######################/stateswitch/stateswitch/stateswitch#############################################
+######################/stateswitch/stateswitch/stateswitch#############################################
+######################/stateswitch/stateswitch/stateswitch#############################################
+######################/stateswitch/stateswitch/stateswitch#############################################
+
+@app.route('/stateswitch', methods=['GET'])
+def stateswitch():
+  #only way to get here supposed to be base html's menu buttons
+  #let it crash otherwise
+  home = int(request.args.get('home'))
+  
+  #0 trying to get back to default state, let them
+  if home==0:
+    if 'donor' in session:
+      del session['donor']
+    if 'current_folder' in session:
+      del session['current_folder']
+    session['searchval']=""
+    setstate("reset",None)
+    return redirect(url_for('index'))
+          
+  #1 trying to get to search state
+  elif home==1:
+    #need to make sure if 'home' == 'search' then form sends back 'searchval' too
+    #i'll let it crash
+    #session['searchval'] = request.args.get('searchval')
+    if len(request.args.get('searchval'))>10: #hackers only
+      flash("filter must be 10 chars or less")
+      session['searchval']=""
+    elif len(request.args.get('searchval'))<1:
+      flash("Enter something into the searchbox")
+      #setstate("reset", None)
+    else:
+      session['searchval'] = request.args.get('searchval')
+      flash('Filtering out every filename that does not contain "'+session['searchval']+'"')
+      setstate("main", chr(1))
+    return redirect(url_for('index'))
+          
+  #2 trying to get to blanco state
+  elif home==2:
+    #session['searchval'] = request.args.get('searchval')
+    if len(request.args.get('searchval'))!=6 or not request.args.get('searchval').isdigit():
+      flash("Enter a 6 digit number")
+    else:
+      session['searchval'] = request.args.get('searchval')
+      setstate("main",chr(2))
+    return redirect(url_for('index'))
+            
+  #3 trying to get to news state
+  elif home==3:
+    if 'username' in session:
+      setstate("main",chr(3))
+      return redirect(url_for('chat'))
+    else:
+      flash("log in")
+      return redirect(url_for('index'))
+      
+  #4 trying to get to stats state
+  elif int(request.args.get('home'))==4:
+    setstate("main",chr(4))
+    return redirect(url_for('stats'))
+  
+  else:
+    return "something went terribly wrong / stateswitch"
 
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
@@ -680,16 +738,9 @@ def sink():
   user_rating = Rating.query.filter_by(user_id=user.id, sink_id=sink.id).first()
   ratings = Rating.query.filter(Rating.user_id != user.id, Rating.sink_id==sink.id).all()
   
-  #screen=""
-  #if request.args.get('screen') != None:
-  #  screen=request.args.get('screen')
-  #page=0
-  #if request.args.get('page') != None:
-  #  page=request.args.get('page')
-  
   return render_template("sink.html", sink=sink, username=username, ratecolor=ratecolor,
                          ratings=ratings, user_rating=user_rating, colors=colors, user=user,
-                         ratecolors=ratecolors)
+                         ratecolors=ratecolors, state=ord(session['state'][:1]))
 
 ######################/previous_sink########################################################
 ######################/previous_sink########################################################
@@ -777,7 +828,7 @@ def rate_sink():
         flash("dustyweasel@protonmail.com")
       user.avg_rating=func.round((Rating.query.with_entities(
         func.avg(Rating.stars).label('average')).filter(Rating.user_id==user.id)),2)
-      #i have no idea what .label is for or what it doesn't work without it.
+      #i have no idea what .label is for or why it doesn't work without it.
       #what if i put something besides 'average'?
       sink.avg_rating=func.round((Rating.query.with_entities(
         func.avg(Rating.stars).label('average')).filter(Rating.sink_id==sink.id)),2)
@@ -802,13 +853,13 @@ def rate_sink():
 @app.route("/downloadfile", methods=['POST'])
 def downloadfile():
   if 'cancel' in request.form:
-    screen=""
-    if 'screen' in request.form:
-      screen = request.form['screen']
-    page=0
-    if 'page' in request.form:
-      page = request.form['page']
-    return redirect(url_for('index', screen=screen, page=page))
+    #screen=""
+    #if 'screen' in request.form:
+    #  screen = request.form['screen']
+    #page=0
+    #if 'page' in request.form:
+    #  page = request.form['page']
+    return redirect('/')
   #return redirect(url_for('previous_sink', cad=cad, pre_cad=user.lastsink)) 
   
   #this is protected by allowed_routes
@@ -857,18 +908,15 @@ def chat():
   
   if request.method == 'POST':
     if 'babble' in request.form:
-      if username:
-        babble = request.form['babble']
-        if len(babble)>60 or len(babble)<2:
-          flash("babblings must be 2-60 chars")
-        else:
-          ref_user = user = User.query.filter_by(username=username).first()
-          new_babble = Babblings(babble, ref_user)
-          
-          db.session.add(new_babble)
-          db.session.commit()
+      babble = request.form['babble']
+      if len(babble)>60 or len(babble)<2:
+        flash("babblings must be 2-60 chars")
       else:
-        flash("log in")
+        ref_user = user = User.query.filter_by(username=username).first()
+        new_babble = Babblings(babble, ref_user)
+          
+        db.session.add(new_babble)
+        db.session.commit()
   
   prebabblings = Babblings.query.order_by(Babblings.id.desc()).all()
   babblings=[]
@@ -884,7 +932,8 @@ def chat():
     colors.append(getstatuscolor(ix))
   
   return render_template("chat.html", babblings=babblings, username=username,
-                         state=ord(session['state'][:1]), colors=colors)
+                         state=ord(session['state'][:1]), colors=colors,
+                         searchval=session['searchval'])
 
 ##########################errata##############################################################
 ##########################errata##############################################################
@@ -897,11 +946,11 @@ def chat():
 
 @app.route('/errata', methods=['GET'])
 def errata():
-  username=""
-  if 'username' in session:
-    username=session['username']
+  #username=""
+  #if 'username' in session:
+  username=session['username']
   
-  return render_template("errata.html", username=username, state=session['state'])
+  return render_template("errata.html", username=username, state=session['state'][:1])
 
 ##########################/stats##################################################################
 ##########################/stats##################################################################
@@ -917,7 +966,8 @@ def stats():
     username=session['username']
   
   if request.args.get('screen')!=None:
-    session['state']=session['state'][:1]+chr(int(request.args.get('screen')))
+    #session['state']=session['state'][:1]+chr(int(request.args.get('screen')))
+    setstate("substate", chr(int(request.args.get('screen'))))
   
   #if request.method=='GET':
   #if (request.args.get('screen') == None or request.args.get('screen') == "" or
@@ -984,16 +1034,17 @@ def stalk():
         print(memberratings[0].location)
       except Exception as e:
         memberratings=None
-      return render_template("stalkmore.html", state=ord(session['state'][:1]), screen="stalk",
+      return render_template("stalkmore.html", state=ord(session['state'][:1]),
+                             screen=ord(session['state'][1:2]),
                              memberdata=memberdata, memberratings=memberratings, username=username,
-                             colors=colors)
+                             colors=colors, searchval=session['searchval'])
     else:
       if request.args.get('member') != None:
         flash("log in")
-        screen=""
-        if request.args.get('screen') != None:
-          screen = request.args.get('screen')
-        return redirect(url_for('index',screen=screen))
+        #screen=""
+        #if request.args.get('screen') != None:
+        #  screen = request.args.get('screen')
+        return redirect('index')
       #gonna have to make this grab 100 at a time like sink if i ever get 1000's of users
       members=User.query.with_entities(User.id, User.username, User.catchphrase, User.memberlevel,
                                    User.benefactor, User.state, User.company).all()
@@ -1033,7 +1084,7 @@ def stalk():
   return render_template("stalk.html", state=ord(session['state'][:1]),
                          screen=ord(session['state'][1:2]),
                          members=members,
-                         username=username, colors=colors)
+                         username=username, colors=colors, searchval=session['searchval'])
 
 
 ####################################statsinks###################################################
@@ -1077,7 +1128,8 @@ def statsinks():
   return render_template("stats.html", state=ord(session['state'][:1]),
                          screen=ord(session['state'][1:2]),
                          topdownloads=supertopdownloads, totaldownloads=totaldownloads,
-                         arrows="yes", page=session['page'], username=username)
+                         arrows="yes", page=session['page'], username=username,
+                         searchval=session['searchval'])
 
 #######################################raters###############################################
 #######################################raters###############################################
@@ -1118,7 +1170,7 @@ def raters():
   return render_template("raters.html", state=ord(session['state'][:1]),
                          screen=ord(session['state'][1:2]),
                          superraters=superraters, colors=colors, username=username,
-                         totalrates=totalrates)
+                         totalrates=totalrates, searchval=session['searchval'])
 
 ##########################################recent#############################################
 ##########################################recent#############################################
@@ -1155,7 +1207,8 @@ def recent():
     
   return render_template("recent.html", state=ord(session['state'][:1]),
                          screen=ord(session['state'][1:2]),
-                         ratings=superratings, colors=colors, username=username)
+                         ratings=superratings, colors=colors, username=username,
+                         searchval=session['searchval'])
 
 #######################################dust#################################################
 #######################################dust#################################################
@@ -1181,7 +1234,7 @@ def dust():
   # don't think we need page anymore
   return render_template("dust.html", state=ord(session['state'][:1]), username=username,
                          screen=ord(session['state'][1:2]),
-                         page=0, yes=yes, no=no, abstain=abstain)
+                         yes=yes, no=no, abstain=abstain, searchval=session['searchval'])
 
 ######################################login / logout##############################################
 ######################################login / logout##############################################
@@ -1498,6 +1551,8 @@ def demos():
 #########################################weaselwork###############################################
   
 #make sure only dustyweasel can access this
+#this approute is a mess but i'm the only one with access and i'm leaving it this way for now
+#figure out how to solve the timeouts without hacky workarounds someday
 @app.route('/weaselwork', methods=['GET','POST'])
 def weaselwork():
   return redirect('/')
