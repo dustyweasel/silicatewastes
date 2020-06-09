@@ -880,10 +880,18 @@ def downloadfile():
     
     cadsplit = sink.location.split(os.path.sep)
     #should be same as donor / folder
-    sinkdir=os.path.join(cadsplit[0],cadsplit[1])
+    if 'current_folder' in session:
+      sinkdir=os.path.join(cadsplit[0],cadsplit[1])
+    else:
+      sinkdir=os.path.join(cadsplit[0])
+    #flash(sinkdir)
     for ix in range(2,len(cadsplit)-1):
       sinkdir=os.path.join(sinkdir,cadsplit[ix])
     sinkname=cadsplit[len(cadsplit)-1]
+    
+    #flash(sinkdir)
+    #flash(sinkname)
+    #return redirect('/')
     
     return send_from_directory(os.path.join("static","sinks",sinkdir),
                                sinkname, as_attachment=True)
