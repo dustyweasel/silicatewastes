@@ -879,8 +879,9 @@ def downloadfile():
     db.session.commit()
     
     cadsplit = sink.location.split(os.path.sep)
+    #flash(len(cadsplit))
     #should be same as donor / folder
-    if 'current_folder' in session:
+    if len(cadsplit) != 2:
       sinkdir=os.path.join(cadsplit[0],cadsplit[1])
     else:
       sinkdir=os.path.join(cadsplit[0])
