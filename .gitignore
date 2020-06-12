@@ -2,4 +2,6 @@ static/sinks
 __pycache__
 venv
 static/*.jpg
-
+./garbage
+./doctor.py
+./out.txt

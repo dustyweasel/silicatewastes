@@ -1,0 +1,22 @@
+static/sinks/dustyweasel franke DIG62D91-GRA.ard franke_DIG62D91-GRA.ard
+13132
+13460
+underscore version has no ratings, deleting it
+static/sinks/dustyweasel/franke_DIG62D91-GRA.ard
+DELETE FROM sink WHERE id = 13460
+static/sinks/dustyweasel franke DIG61091-GRA.ard franke_DIG61091-GRA.ard
+13243
+13458
+45 2  1 13243
+46 1  1 13458
+static/sinks/dustyweasel OMNI OM-Z4161-16GA.ard OMNI_OM-Z4161-16GA.ard
+13308
+6041
+11 1  2 13308
+12 3  1 6041
+static/sinks/dustyweasel RENE r3-1002-car.ard RENE_r3-1002-car.ard
+13391
+5909
+15 3  2 13391
+13 1  1 5909
+14 2  2 5909

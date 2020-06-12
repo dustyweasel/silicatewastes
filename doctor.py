@@ -13,14 +13,11 @@ import random
 from hashutils import make_pw_hash, check_pw_hash
 from sqlalchemy.sql import func
 
-#you just set track mods, debus, and echo to False.  ran it forever without that.
-#see if it makes any difference
 app = Flask(__name__)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['DEBUG'] = False
+app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("SQLALCHEMY_DATABASE_URI")
 
-app.config['SQLALCHEMY_ECHO'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 
 #been awhile?
 #. ../../config.sh
@@ -763,10 +760,6 @@ def previous_sink():
   
   sink=Sink.query.filter_by(id=cad).first()
   previous_sink=Sink.query.filter_by(id=pre_cad).first()
-  if previous_sink == None:
-    user.lastsink=0
-    db.session.commit()
-    return redirect(url_for('sink', cad=cad))
   
   ratecolors=[]
   for ix in range(1,GLOBALRATEVAL):
@@ -1571,7 +1564,7 @@ def demos():
 #figure out how to solve the timeouts without hacky workarounds someday
 @app.route('/weaselwork', methods=['GET','POST'])
 def weaselwork():
-  #return redirect('/')
+  return redirect('/')
   
   username=""
   if 'username' in session:
@@ -1643,7 +1636,7 @@ def weaselwork():
         #  return root+str(len(root))
         #okay probably scrap next if statement next time updating folder not as massive
         #as silicatewastes
-        #if len(root)>28 and root[28].lower() >= 'a' and root[28].lower() <= 'z':
+        if len(root)>28 and root[28].lower() >= 'a' and root[28].lower() <= 'z':
           for val in files:
           #for ix in range(len(files)):
             

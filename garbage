@@ -1,0 +1,26 @@
+ """
+                #ratings = Rating.query.filter(Rating.sink_id==rated_sink.id).all()
+                #ratings2 = Rating.query.filter(Rating.sink_id==rated_sink2.id).all()
+                
+                #so if there's no ratings on underscore version just delete it
+                if not ratings2:
+                  print("okay to delete" + val2)
+                  os.remove(os.path.join("static","sinks","dustyweasel",val2))
+                  db.session.delete(rated_sink2)
+                  rated_sink.avg_rating=func.round((Rating.query.with_entities(
+                    func.avg(Rating.stars).label('average')).filter(Rating.sink_id==rated_sink.id)),2)
+                #else if there's no ratings on space version copy them over and delete it
+                elif not ratings:
+                  print("copying "+rated_sink2.location+"'s ratings over")
+                  for rating2 in ratings2:
+                    user=User.query.filter_by(id=rating2.user_id).first()
+                    copy_rating=Rating(rating2.stars,rating2.comment,user,rated_sink)
+                    db.session.add(copy_rating)
+                    #can i keep recycling copy_rating like this and do the db.session.commit() later?
+                    db.session.delete(rating2)
+                  print("and deleting it forever")
+                  os.remove(os.path.join("static","sinks","dustyweasel",val2))
+                  db.session.delete(rated_sink2)
+                  rated_sink.avg_rating=func.round((Rating.query.with_entities(
+                    func.avg(Rating.stars).label('average')).filter(Rating.sink_id==rated_sink.id)),2)
+                """
