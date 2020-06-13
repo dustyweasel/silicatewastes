@@ -5,3 +5,5 @@ I had an old website that I cobbled together with cgi bash scripting but I never
 So then I made this website.  Now instead of crossing your fingers and hoping you don't lose a few hundred dollars due to a bad drawing maybe someone else already tried it and rated the drawing good or bad.  I've got 300 registered users since May 31st, 2019.
 
 I suppose I need to pull the model code out and put it in a separate file from the contoller code.  Maybe I will someday.
+
+It all runs in main.py.  Also you might want to check out yo.py.  It's a script I wrote after I mistakenly loaded 1000's of duplicate files, one file name with an underscore and the other with a space.  Many files already had ratings.  I wrote yo.py to comb all the directories and find all duplicate files and if none or just one of the files had ratings, then put all the ratings on the space version and delete the underscore version.  If they both had ratings then I left both files up.

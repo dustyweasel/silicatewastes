@@ -670,7 +670,14 @@ def stateswitch():
       flash("filter must be 10 chars or less")
       session['searchval']=""
     elif len(request.args.get('searchval'))<1:
-      flash("Enter something into the searchbox")
+      #just stuffed next 6 lines in without thinking about it, didn't take time
+      #relearn code
+      if 'searchval' not in session or session['searchval']=="":
+        flash("Enter something into the searchbox")
+      else:
+        session['searchval']=""
+        setstate("reset",None)
+        return redirect(url_for('index'))
       #setstate("reset", None)
     else:
       session['searchval'] = request.args.get('searchval')
@@ -1566,12 +1573,12 @@ def demos():
 #########################################weaselwork###############################################
 #########################################weaselwork###############################################
   
-#make sure only dustyweasel can access this
-#this approute is a mess but i'm the only one with access and i'm leaving it this way for now
-#figure out how to solve the timeouts without hacky workarounds someday
+#this approute is a mess, never using use it again.  stupid timeouts
+#use scripts to update new sinks next time or update averages or anything like that
 @app.route('/weaselwork', methods=['GET','POST'])
 def weaselwork():
-  #return redirect('/')
+  #never access this route again.  leaving it here as a ruin.
+  return redirect('/')
   
   username=""
   if 'username' in session:
