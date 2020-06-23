@@ -346,8 +346,8 @@ def index():
       #(should be the same thing)
       guys=[]
       pull=Donator.query.with_entities(Donator.location)
-      #this just converts whatever datatype SQL returns to strings
-      #waste of time, probably something I don't know how to do right
+      #this just converts whatever datatype sqlalchemy returns (list of dictionaries?) to strings
+      #waste of time, i don't think there's any other way to do it?
       for eachpull in pull:
         guys.append(eachpull.location)
       #verify donor valid here, verify current_folder after folders[] loaded
@@ -1144,6 +1144,9 @@ def statsinks():
   supertopdownloads=[]
   ix=1+(100*session['page'])
   for download in topdownloads:
+    #all you're doing is adding ix and a color.  this whole loop is a waste of time.  might
+    #be possible to enumerate with the topdownloads query above, either way only need another
+    #list with colors here, not a whole new giant tuple
     supertopdownloads.append((ix,download.location, download.downloads,download.avg_rating,
                              download.id,getratecolor(download.avg_rating,"yes")))
     ix+=1
@@ -1575,6 +1578,8 @@ def demos():
   
 #this approute is a mess, never using use it again.  stupid timeouts
 #use scripts to update new sinks next time or update averages or anything like that
+#actually it might beat the timeouts if I used sql/sqlalchemy properly instead of doing
+#operations with python but pretty sure i'm never touching this again.
 @app.route('/weaselwork', methods=['GET','POST'])
 def weaselwork():
   #never access this route again.  leaving it here as a ruin.

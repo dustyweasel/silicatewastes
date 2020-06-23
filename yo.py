@@ -1,6 +1,12 @@
 #this is just a script to kill off 1000's of duplicate files that that i stupidly uploaded
-#remember to kill dustyweasel in mariadb after you're done with this
+#maybe kill dustyweasel in mariadb after you're done with this
 #make another script like this for updating folders, that weaselwork approute and its timouts suck.
+#no my password isn't "asdf", pop a pill
+
+#YOU FORGOT TO CARRY OVER DOWNLOADS FROM SINK.  whenever you deleted an underscore file you didn't
+#copy downloads over to the space version.  that data is lost.  if you ever use this script again fix
+#that.  total downloads is calculated with user.benefactor.  if you calculate with sink.downloads they're different by about 1,000 now.  not a big deal but there's hundreds of sinks that say zero
+#downloads and that's false
 
 import pymysql
 import os
