@@ -51,7 +51,8 @@
       </tbody>
     </table>
   
-    <div class="splayspace" style="min-width: 0;">
+    <div id="rightframe" class="splayspace" style="min-width: 0;">
+    <div class="substandard scrollable" style="">
       {% if state == 2 and blancopackage %}
         <div id="blancoscroll" class="ul">
         <ul class="blancomessage">
@@ -60,7 +61,59 @@
           {% endfor %}
         </ul>
         </div>
+      {# {% else %}
+        <a href="https://www.deviantart.com/sharpwriter/art/The-Donald-605337203" target="_blank">
+        <img class="normalscroll" src="static/trump.jpg" width="100%" alt="oops"></a>
+        <p style="padding-left: 1em;" class="normalscroll edge">
+        The silicatewastes reluctantly endorses Donald Trump for president.  The lesser of two evils.  
+        </p> #}
+        {% else %}
+        
+        
+        
+        {# <p class="normalscroll" style="margin: 1em 1em 1em 1em;">
+“The American press is a shame and a reproach to a civilized people. When a man is too lazy to work and too cowardly to steal, he becomes an editor and manufactures public opinion.”<br/>
+
+― William T. Sherman </p> #}
+<p class="normalscroll" style="margin: 0 0.5em 0 0.5em;">Google's been working tirelessly to shape your opinion so just do what
+you're told:<br/>
+<a class="space" href="https://pv-uploads1.s3.amazonaws.com/uploads/2019/06/SS1DocDump.pdf#page=39" target="_blank">
+the google pdf</a>
+<a class="space" href="https://www.youtube.com/watch?v=FRf9UxsM-NE&feature=emb_err_woyt" target="_blank">
+the google tape</a>
+<a class="space" href="https://www.youtube.com/watch?v=ueCMWBixP4Y" target="_blank">
+ted cruz</a>
+<br/>
+Remember, these are highly educated people who know what's best and compared to them we are scum.</p>
+<br/>
+<p style="color: white;" class="lessscoot normalscroll attention pushdown">vote now!</p>
+{% if username %}
+<p class="normalscroll scoot">
+    {% if vote == 0 %}
+    <form action="/vote" method="POST">
+    <input class="radio lessscoot" id="biden" type="radio" name="vote" value="biden">
+    <label for="biden">BIDEN</label><br/>
+    <input class="radio lessscoot" id="trump" type="radio" name="vote" value="trump">
+    <label for="trump">TRUMP</label><br/>
+    <button style="margin-top: 0.5em;" class="lessscoot real unpicked">VOTE</button>
+    </form>
+    {% elif vote == 1 %}
+    You voted for Biden.
+    {% elif vote == 2 %}
+    You voted for Trump.
+    {% endif %}
+    </p>
+    
+    {% else %}
+    <p class="normalscroll lessscoot errormessage">log in!</p>
+    {% endif %}
+    
+    <div class="normalscroll" id="piechart"></div>
+    <p class="normalscroll">***This is a silly, unscientific internet poll.  You still need to vote in real life.</p>
+    
+
       {% endif %}
+    </div>
     </div>
     
     <script type="text/javascript">
@@ -71,5 +124,50 @@
   </div>
 
 </div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script type="text/javascript">
+/*let vw = window.innerWidth;
+if (vh * 100 < vw) {
+  vw = vh * 100;
+}*/
+ var rightframesize=document.getElementById('rightframe').offsetWidth;
+
+  
+// Load google charts
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+// Draw the chart and set the chart values
+function drawChart() {
+  var data = google.visualization.arrayToDataTable([
+  ['Vote', 'members'],
+  ['Biden', {{biden}}],
+  ['Trump', {{trump}}],
+  ['Abstain', {{abstain}}]
+]);
+
+  // Display the chart inside the <div> element with id="piechart"
+  var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+  //chart.draw(data, options);
+  chart.draw(data, {
+  height: rightframesize,
+  width: rightframesize,
+  title: 'USA!',
+  backgroundColor: 'transparent',
+  titleTextStyle: {
+        color: 'white'
+    },
+  legend: {
+        textStyle: {
+            color: 'white'
+        }
+    },
+  colors: ['blue', 'red', 'white'],
+  is3D: true
+});
+}
+</script>
   
 {% endblock %}

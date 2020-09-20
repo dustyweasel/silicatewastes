@@ -12,6 +12,7 @@ import string
 import random
 from hashutils import make_pw_hash, check_pw_hash
 from sqlalchemy.sql import func
+from datetime import date
 
 #you just set track mods, debus, and echo to False.  ran it forever without that.
 #see if it makes any difference
@@ -85,6 +86,8 @@ class User(db.Model):
   #could probably move all that to a function somewhere
   memberlevel = db.Column(db.Integer)
   avg_rating = db.Column(db.Float)
+  #ALTER TABLE silicatewastes.user ADD vote INT NOT NULL DEFAULT(0);
+  vote = db.Column(db.Integer) #0, 1=biden, 2=trump
   #double backref.  sigh.
   elephant = db.relationship('Rating', backref="rater")
   tiger = db.relationship('Babblings', backref="babbler")
@@ -101,6 +104,7 @@ class User(db.Model):
     self.lastsink=0
     self.memberlevel=3 #standard user
     self.avg_rating = None
+    self.vote=0
     
 class Rating(db.Model):
   id = db.Column(db.Integer, primary_key=True)
@@ -630,11 +634,21 @@ def index():
     if 'current_folder' in session:
       selectfolder=session['current_folder']
       
+    vote=0
+    if username:
+      user = User.query.filter_by(username=username).first()
+      vote = user.vote
+      
+    biden = User.query.with_entities(func.count(User.vote)).filter_by(vote=1).first()[0]
+    trump = User.query.with_entities(func.count(User.vote)).filter_by(vote=2).first()[0]
+    abstain = User.query.with_entities(func.count(User.vote)).filter_by(vote=0).first()[0]
+      
     return render_template('silicate.html',title="silicatewastes", cads=cads, guys=guys,
                            folders=folders, searchval=session['searchval'], selectcolor=selectcolor,
                            state=ord(session['state'][:1]), blancopackage=blancopackage,
                            username=username,
-                           selectdonor=selectdonor, selectfolder=selectfolder)
+                           selectdonor=selectdonor, selectfolder=selectfolder, biden=biden,
+                           trump=trump, abstain=abstain, vote=vote)
 
 ######################/stateswitch/stateswitch/stateswitch#############################################
 ######################/stateswitch/stateswitch/stateswitch#############################################
@@ -711,6 +725,22 @@ def stateswitch():
   
   else:
     return "something went terribly wrong / stateswitch"
+
+@app.route('/vote', methods=['POST'])
+def vote():
+  username=session['username']
+  user = User.query.filter_by(username=username).first()
+  
+  if 'vote' not in request.form:
+    user.vote = 0
+  elif request.form['vote'] == 'biden':
+    user.vote = 1
+  elif request.form['vote'] == 'trump':
+    user.vote = 2
+  
+  db.session.commit()
+  
+  return redirect(url_for('index'))
 
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
 ######################/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink/sink###############
@@ -915,6 +945,34 @@ def downloadfile():
     flash(sink.location)
     flash(str(e))
     return redirect('/')
+  
+##########################/kenosha##############################################################
+##########################/kenosha##############################################################
+##########################/kenosha##############################################################
+##########################/kenosha##############################################################
+##########################/kenosha##############################################################
+##########################/kenosha##############################################################
+##########################/kenosha##############################################################
+##########################/kenosha##############################################################
+
+@app.route("/kenosha", methods=['POST'])
+def kenosha():    
+  try:
+    val = request.form['val']
+    funfile=open(os.path.join("static","kenosha.txt"),'a')
+    funfile.write(str(date.today())+": ")
+    funfile.write(val+" ")
+    funfile.write(session['username']+"\n")
+    funfile.close
+    return send_from_directory(os.path.join("static","kenosha"),
+                               val, as_attachment=True)
+  except Exception as e:
+    flash("Something went terribly wrong.  Email me all this if you want:")
+    flash(os.path.join("static","kenosha"))
+    flash(val)
+    flash(str(e))
+    return redirect('/')
+
 
 ##########################/chat##################################################################
 ##########################/chat##################################################################

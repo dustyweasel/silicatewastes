@@ -95,7 +95,9 @@ body {
   background-size:     cover;
   background-repeat:   no-repeat;
   background-position: center center;
-  background-image: url('scuffedstatic_dark1400x900_2.jpg');
+  background-image: url('speaker2.jpg');
+  /*background-image: url('scuffedstatic_dark1400x900_2.jpg'), url('jackson.png');*/
+  background-blend-mode: lighten;
 }
 
 .osha {
@@ -389,7 +391,6 @@ p.normalhide {
 }
 
 .normalscroll {
-  display: inherit;
 }
 
 .normalinlinescroll {
